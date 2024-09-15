@@ -16,6 +16,12 @@ class Note
     #[ORM\Column(nullable: true)]
     private ?int $Valeur = null;
 
+    #[ORM\ManyToOne(inversedBy: 'UserNotes')]
+    private ?Utilisateur $utilisateur = null;
+
+    #[ORM\ManyToOne(inversedBy: 'recettesNote')]
+    private ?Recette $recettes = null;
+
     //   // hydrate 
     //   public function hydrate(array $init)
     //   {
@@ -49,6 +55,30 @@ class Note
     public function setValeur(?int $Valeur): static
     {
         $this->Valeur = $Valeur;
+
+        return $this;
+    }
+
+    public function getUtilisateur(): ?Utilisateur
+    {
+        return $this->utilisateur;
+    }
+
+    public function setUtilisateur(?Utilisateur $utilisateur): static
+    {
+        $this->utilisateur = $utilisateur;
+
+        return $this;
+    }
+
+    public function getRecettes(): ?Recette
+    {
+        return $this->recettes;
+    }
+
+    public function setRecettes(?Recette $recettes): static
+    {
+        $this->recettes = $recettes;
 
         return $this;
     }

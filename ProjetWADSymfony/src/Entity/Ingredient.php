@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\IngredientRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: IngredientRepository::class)]
@@ -18,6 +20,12 @@ class Ingredient
 
     #[ORM\Column(nullable: true)]
     private ?int $quantite = null;
+
+    /**
+     * @var Collection<int, DetailCourses>
+     */
+    #[ORM\OneToMany(targetEntity: DetailCourses::class, mappedBy: 'ingredient')]
+    private Collection $DetailsCouresIng;
 
      // hydrate 
       public function hydrate(array $init)
@@ -37,6 +45,7 @@ class Ingredient
       public function __construct(array $init = [])
       {
           $this->hydrate($init);
+          $this->DetailsCouresIng = new ArrayCollection();
       }
 
     public function getId(): ?int
@@ -64,6 +73,36 @@ class Ingredient
     public function setQuantite(?int $quantite): static
     {
         $this->quantite = $quantite;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, DetailCourses>
+     */
+    public function getDetailsCouresIng(): Collection
+    {
+        return $this->DetailsCouresIng;
+    }
+
+    public function addDetailsCouresIng(DetailCourses $detailsCouresIng): static
+    {
+        if (!$this->DetailsCouresIng->contains($detailsCouresIng)) {
+            $this->DetailsCouresIng->add($detailsCouresIng);
+            $detailsCouresIng->setIngredient($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDetailsCouresIng(DetailCourses $detailsCouresIng): static
+    {
+        if ($this->DetailsCouresIng->removeElement($detailsCouresIng)) {
+            // set the owning side to null (unless already changed)
+            if ($detailsCouresIng->getIngredient() === $this) {
+                $detailsCouresIng->setIngredient(null);
+            }
+        }
 
         return $this;
     }

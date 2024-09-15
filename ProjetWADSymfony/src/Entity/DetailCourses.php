@@ -16,6 +16,12 @@ class DetailCourses
     #[ORM\Column(nullable: true)]
     private ?int $quantite = null;
 
+    #[ORM\ManyToOne(inversedBy: 'detailsCourses')]
+    private ?CoursesList $coursesList = null;
+
+    #[ORM\ManyToOne(inversedBy: 'DetailsCouresIng')]
+    private ?Ingredient $ingredient = null;
+
     // hydrate
       public function hydrate(array $init)
       {
@@ -49,6 +55,30 @@ class DetailCourses
     public function setQuantite(?int $quantite): static
     {
         $this->quantite = $quantite;
+
+        return $this;
+    }
+
+    public function getCoursesList(): ?CoursesList
+    {
+        return $this->coursesList;
+    }
+
+    public function setCoursesList(?CoursesList $coursesList): static
+    {
+        $this->coursesList = $coursesList;
+
+        return $this;
+    }
+
+    public function getIngredient(): ?Ingredient
+    {
+        return $this->ingredient;
+    }
+
+    public function setIngredient(?Ingredient $ingredient): static
+    {
+        $this->ingredient = $ingredient;
 
         return $this;
     }

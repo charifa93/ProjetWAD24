@@ -20,6 +20,12 @@ class Commentaire
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $dateCommentaire = null;
 
+    #[ORM\ManyToOne(inversedBy: 'commentaires')]
+    private ?Utilisateur $utilisateur = null;
+
+    #[ORM\ManyToOne(inversedBy: 'recetteCom')]
+    private ?Recette $recettes = null;
+
 
     // hydrate  
       public function hydrate(array $init)
@@ -68,6 +74,30 @@ class Commentaire
     public function setDateCommentaire(?\DateTimeInterface $dateCommentaire): static
     {
         $this->dateCommentaire = $dateCommentaire;
+
+        return $this;
+    }
+
+    public function getUtilisateur(): ?Utilisateur
+    {
+        return $this->utilisateur;
+    }
+
+    public function setUtilisateur(?Utilisateur $utilisateur): static
+    {
+        $this->utilisateur = $utilisateur;
+
+        return $this;
+    }
+
+    public function getRecettes(): ?Recette
+    {
+        return $this->recettes;
+    }
+
+    public function setRecettes(?Recette $recettes): static
+    {
+        $this->recettes = $recettes;
 
         return $this;
     }

@@ -17,6 +17,7 @@ class CommentaireFixtures extends Fixture
             $commentaire = new Commentaire([
                 'contenu' => $faker->text(),
                 'dateCommentaire' => $faker->dateTime(),
+                'utilisateur' => $this->getReference('utilisateur'.$i),
             ]);
            
 

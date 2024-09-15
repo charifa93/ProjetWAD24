@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UtilisateurRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -33,6 +35,38 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nom = null;
+
+    /**
+     * @var Collection<int, Note>
+     */
+    #[ORM\OneToMany(targetEntity: Note::class, mappedBy: 'utilisateur')]
+    private Collection $UserNotes;
+
+    /**
+     * @var Collection<int, Commentaire>
+     */
+    #[ORM\OneToMany(targetEntity: Commentaire::class, mappedBy: 'utilisateur')]
+    private Collection $commentaires;
+
+    /**
+     * @var Collection<int, Recette>
+     */
+    #[ORM\OneToMany(targetEntity: Recette::class, mappedBy: 'utilisateur')]
+    private Collection $recettes;
+
+    /**
+     * @var Collection<int, CoursesList>
+     */
+    #[ORM\OneToMany(targetEntity: CoursesList::class, mappedBy: 'utilisateur')]
+    private Collection $listCourses;
+
+    public function __construct()
+    {
+        $this->UserNotes = new ArrayCollection();
+        $this->commentaires = new ArrayCollection();
+        $this->recettes = new ArrayCollection();
+        $this->listCourses = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -117,6 +151,126 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     public function setNom(?string $nom): static
     {
         $this->nom = $nom;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Note>
+     */
+    public function getUserNotes(): Collection
+    {
+        return $this->UserNotes;
+    }
+
+    public function addUserNote(Note $userNote): static
+    {
+        if (!$this->UserNotes->contains($userNote)) {
+            $this->UserNotes->add($userNote);
+            $userNote->setUtilisateur($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserNote(Note $userNote): static
+    {
+        if ($this->UserNotes->removeElement($userNote)) {
+            // set the owning side to null (unless already changed)
+            if ($userNote->getUtilisateur() === $this) {
+                $userNote->setUtilisateur(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Commentaire>
+     */
+    public function getCommentaires(): Collection
+    {
+        return $this->commentaires;
+    }
+
+    public function addCommentaire(Commentaire $commentaire): static
+    {
+        if (!$this->commentaires->contains($commentaire)) {
+            $this->commentaires->add($commentaire);
+            $commentaire->setUtilisateur($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommentaire(Commentaire $commentaire): static
+    {
+        if ($this->commentaires->removeElement($commentaire)) {
+            // set the owning side to null (unless already changed)
+            if ($commentaire->getUtilisateur() === $this) {
+                $commentaire->setUtilisateur(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Recette>
+     */
+    public function getRecettes(): Collection
+    {
+        return $this->recettes;
+    }
+
+    public function addRecette(Recette $recette): static
+    {
+        if (!$this->recettes->contains($recette)) {
+            $this->recettes->add($recette);
+            $recette->setUtilisateur($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRecette(Recette $recette): static
+    {
+        if ($this->recettes->removeElement($recette)) {
+            // set the owning side to null (unless already changed)
+            if ($recette->getUtilisateur() === $this) {
+                $recette->setUtilisateur(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, CoursesList>
+     */
+    public function getListCourses(): Collection
+    {
+        return $this->listCourses;
+    }
+
+    public function addListCourse(CoursesList $listCourse): static
+    {
+        if (!$this->listCourses->contains($listCourse)) {
+            $this->listCourses->add($listCourse);
+            $listCourse->setUtilisateur($this);
+        }
+
+        return $this;
+    }
+
+    public function removeListCourse(CoursesList $listCourse): static
+    {
+        if ($this->listCourses->removeElement($listCourse)) {
+            // set the owning side to null (unless already changed)
+            if ($listCourse->getUtilisateur() === $this) {
+                $listCourse->setUtilisateur(null);
+            }
+        }
 
         return $this;
     }

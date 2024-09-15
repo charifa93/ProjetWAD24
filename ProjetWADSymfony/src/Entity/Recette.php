@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\RecetteRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -34,6 +36,21 @@ class Recette
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $image = null;
+
+    #[ORM\ManyToOne(inversedBy: 'recettes')]
+    private ?Utilisateur $utilisateur = null;
+
+    /**
+     * @var Collection<int, Commentaire>
+     */
+    #[ORM\OneToMany(targetEntity: Commentaire::class, mappedBy: 'recettes')]
+    private Collection $recetteCom;
+
+    /**
+     * @var Collection<int, Note>
+     */
+    #[ORM\OneToMany(targetEntity: Note::class, mappedBy: 'recettes')]
+    private Collection $recettesNote;
  
 
      // hydrate ////
@@ -54,6 +71,8 @@ class Recette
       public function __construct(array $init = [])
       {
           $this->hydrate($init);
+          $this->recetteCom = new ArrayCollection();
+          $this->recettesNote = new ArrayCollection();
       }
     public function getId(): ?int
     {
@@ -140,6 +159,78 @@ class Recette
     public function setImage(?string $image): static
     {
         $this->image = $image;
+
+        return $this;
+    }
+
+    public function getUtilisateur(): ?Utilisateur
+    {
+        return $this->utilisateur;
+    }
+
+    public function setUtilisateur(?Utilisateur $utilisateur): static
+    {
+        $this->utilisateur = $utilisateur;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Commentaire>
+     */
+    public function getRecetteCom(): Collection
+    {
+        return $this->recetteCom;
+    }
+
+    public function addRecetteCom(Commentaire $recetteCom): static
+    {
+        if (!$this->recetteCom->contains($recetteCom)) {
+            $this->recetteCom->add($recetteCom);
+            $recetteCom->setRecettes($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRecetteCom(Commentaire $recetteCom): static
+    {
+        if ($this->recetteCom->removeElement($recetteCom)) {
+            // set the owning side to null (unless already changed)
+            if ($recetteCom->getRecettes() === $this) {
+                $recetteCom->setRecettes(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Note>
+     */
+    public function getRecettesNote(): Collection
+    {
+        return $this->recettesNote;
+    }
+
+    public function addRecettesNote(Note $recettesNote): static
+    {
+        if (!$this->recettesNote->contains($recettesNote)) {
+            $this->recettesNote->add($recettesNote);
+            $recettesNote->setRecettes($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRecettesNote(Note $recettesNote): static
+    {
+        if ($this->recettesNote->removeElement($recettesNote)) {
+            // set the owning side to null (unless already changed)
+            if ($recettesNote->getRecettes() === $this) {
+                $recettesNote->setRecettes(null);
+            }
+        }
 
         return $this;
     }

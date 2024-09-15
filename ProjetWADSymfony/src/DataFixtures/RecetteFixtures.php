@@ -23,6 +23,9 @@ class RecetteFixtures extends Fixture
             'datePublication' => $faker->dateTimeBetween('-1 year', 'now'),
             'tempsDePreparation' => new \DateTime($faker->time()),
             'tempsDeCuison' => new \DateTime($faker->time()),
+            'utilisateur' => $this->getReference('utilisateur'.$i),
+            'recetteCom' => $this->getReference('commentaire'.$i),
+            'recettesNote' => $this->getReference('note'.$i),
            ]);
            
            $manager->persist($recette);
