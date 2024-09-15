@@ -31,11 +31,8 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?string $password = null;
 
-    #[ORM\Column(length: 155, nullable: true)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $nom = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $motDePasse = null;
 
     public function getId(): ?int
     {
@@ -120,18 +117,6 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     public function setNom(?string $nom): static
     {
         $this->nom = $nom;
-
-        return $this;
-    }
-
-    public function getMotDePasse(): ?string
-    {
-        return $this->motDePasse;
-    }
-
-    public function setMotDePasse(string $motDePasse): static
-    {
-        $this->motDePasse = $motDePasse;
 
         return $this;
     }
