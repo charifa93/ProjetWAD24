@@ -24,7 +24,7 @@ class Commentaire
     private ?Utilisateur $utilisateur = null;
 
     #[ORM\ManyToOne(inversedBy: 'recetteCom')]
-    private ?Recette $recettes = null;
+    private ?Recette $recette = null;
 
 
     // hydrate  
@@ -90,14 +90,14 @@ class Commentaire
         return $this;
     }
 
-    public function getRecettes(): ?Recette
+    public function getRecette(): ?Recette
     {
-        return $this->recettes;
+        return $this->recette;
     }
 
-    public function setRecettes(?Recette $recettes): static
+    public function setRecette(?Recette $recette): static
     {
-        $this->recettes = $recettes;
+        $this->recette = $recette;
 
         return $this;
     }

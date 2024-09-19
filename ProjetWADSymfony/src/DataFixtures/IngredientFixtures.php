@@ -16,8 +16,11 @@ class IngredientFixtures extends Fixture
         for ($i = 0; $i < 10; $i++) {
             $ingredient = new Ingredient([
                 'nom' => $faker->word,
-                'quantite' => $faker->numberBetween(1, 10),
+                
+                
             ]);
+
+            $this->addReference('ingredient' . $i, $ingredient);
 
             $manager->persist($ingredient);
         }
