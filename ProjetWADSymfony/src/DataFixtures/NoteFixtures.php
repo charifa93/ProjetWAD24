@@ -22,7 +22,7 @@ class NoteFixtures extends Fixture implements DependentFixtureInterface
             $this->addReference('note' . $i, $note);
 
             $note->setUtilisateur($this->getReference('utilisateur' . rand(0, 4)));
-            $note->setRecettes($this->getReference('recette' . rand(0, 9)));
+            $note->setRecette($this->getReference('recette' . rand(0, 9)));
             
         }
 

@@ -49,7 +49,7 @@ class Recette
     /**
      * @var Collection<int, Note>
      */
-    #[ORM\OneToMany(targetEntity: Note::class, mappedBy: 'recettes')]
+    #[ORM\OneToMany(targetEntity: Note::class, mappedBy: 'recette')]
     private Collection $recettesNote;
  
 
@@ -187,7 +187,7 @@ class Recette
     {
         if (!$this->recetteCom->contains($recetteCom)) {
             $this->recetteCom->add($recetteCom);
-            $recetteCom->setRecettes($this);
+            $recetteCom->setRecette($this);
         }
 
         return $this;
@@ -197,8 +197,8 @@ class Recette
     {
         if ($this->recetteCom->removeElement($recetteCom)) {
             // set the owning side to null (unless already changed)
-            if ($recetteCom->getRecettes() === $this) {
-                $recetteCom->setRecettes(null);
+            if ($recetteCom->getRecette() === $this) {
+                $recetteCom->setRecette(null);
             }
         }
 
@@ -217,7 +217,7 @@ class Recette
     {
         if (!$this->recettesNote->contains($recettesNote)) {
             $this->recettesNote->add($recettesNote);
-            $recettesNote->setRecettes($this);
+            $recettesNote->setRecette($this);
         }
 
         return $this;
@@ -227,8 +227,8 @@ class Recette
     {
         if ($this->recettesNote->removeElement($recettesNote)) {
             // set the owning side to null (unless already changed)
-            if ($recettesNote->getRecettes() === $this) {
-                $recettesNote->setRecettes(null);
+            if ($recettesNote->getRecette() === $this) {
+                $recettesNote->setRecette(null);
             }
         }
 

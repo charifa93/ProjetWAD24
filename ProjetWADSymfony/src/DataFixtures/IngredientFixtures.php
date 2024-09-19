@@ -19,6 +19,8 @@ class IngredientFixtures extends Fixture
                 'quantite' => $faker->numberBetween(1, 10),
             ]);
 
+            $this->addReference('ingredient' . $i, $ingredient);
+
             $manager->persist($ingredient);
         }
             

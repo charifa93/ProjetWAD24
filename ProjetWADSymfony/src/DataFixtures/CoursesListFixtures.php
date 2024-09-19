@@ -19,6 +19,8 @@ class CoursesListFixtures extends Fixture implements DependentFixtureInterface
                 'nom' => $faker->sentence(3)     
             ]);
 
+            $coursesList->setUtilisateur($this->getReference('utilisateur'.rand(0,4)));
+            $this->addReference('coursesList' . $i, $coursesList);
             $manager->persist($coursesList);
         }
 
