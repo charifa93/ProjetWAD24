@@ -16,8 +16,7 @@ class GestionRecettesController extends AbstractController
        $ALLRecettes = $recettes->findAll();
 
        return $this->render('gestion_recettes/afficherRcettes.html.twig', [
-           'recettes' => $ALLRecettes
-       ]);
+           'recettes' => $ALLRecettes]);
    }
 
 }

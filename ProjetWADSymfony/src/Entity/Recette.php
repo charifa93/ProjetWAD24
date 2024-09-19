@@ -51,6 +51,21 @@ class Recette
      */
     #[ORM\OneToMany(targetEntity: Note::class, mappedBy: 'recette')]
     private Collection $recettesNote;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $nombrePortions = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $saison = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $origine = null;
+
+    /**
+     * @var Collection<int, DetailRecette>
+     */
+    #[ORM\OneToMany(targetEntity: DetailRecette::class, mappedBy: 'recette', orphanRemoval: true)]
+    private Collection $detailRecette;
  
 
      // hydrate ////
@@ -73,6 +88,7 @@ class Recette
           $this->hydrate($init);
           $this->recetteCom = new ArrayCollection();
           $this->recettesNote = new ArrayCollection();
+          $this->detailRecette = new ArrayCollection();
       }
     public function getId(): ?int
     {
@@ -229,6 +245,72 @@ class Recette
             // set the owning side to null (unless already changed)
             if ($recettesNote->getRecette() === $this) {
                 $recettesNote->setRecette(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getNombrePortions(): ?int
+    {
+        return $this->nombrePortions;
+    }
+
+    public function setNombrePortions(?int $nombrePortions): static
+    {
+        $this->nombrePortions = $nombrePortions;
+
+        return $this;
+    }
+
+    public function getSaison(): ?string
+    {
+        return $this->saison;
+    }
+
+    public function setSaison(?string $saison): static
+    {
+        $this->saison = $saison;
+
+        return $this;
+    }
+
+    public function getOrigine(): ?string
+    {
+        return $this->origine;
+    }
+
+    public function setOrigine(?string $origine): static
+    {
+        $this->origine = $origine;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, DetailRecette>
+     */
+    public function getDetailRecette(): Collection
+    {
+        return $this->detailRecette;
+    }
+
+    public function addDetailRecette(DetailRecette $detailRecette): static
+    {
+        if (!$this->detailRecette->contains($detailRecette)) {
+            $this->detailRecette->add($detailRecette);
+            $detailRecette->setRecette($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDetailRecette(DetailRecette $detailRecette): static
+    {
+        if ($this->detailRecette->removeElement($detailRecette)) {
+            // set the owning side to null (unless already changed)
+            if ($detailRecette->getRecette() === $this) {
+                $detailRecette->setRecette(null);
             }
         }
 

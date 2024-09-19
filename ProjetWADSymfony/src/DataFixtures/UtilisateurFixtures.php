@@ -37,7 +37,7 @@ class UtilisateurFixtures extends Fixture
 
             $user = new Utilisateur();
             $user->setEmail("user" . $i . "@gmail.com");
-            // $user->setRoles(['ROLE_USER']);
+             $user->setRoles(['ROLE_USER']);
 
             // on crée un password hashé
             $hashedPassword = $this->passwordHasher->hashPassword($user, 'lepassword');
