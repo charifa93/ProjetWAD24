@@ -2,12 +2,13 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\CoursesList;
 use Faker\Factory;
+use App\Entity\CoursesList;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 
-class CoursesListFixtures extends Fixture
+class CoursesListFixtures extends Fixture implements DependentFixtureInterface
 {
     public function load(ObjectManager $manager): void
     {
@@ -24,5 +25,8 @@ class CoursesListFixtures extends Fixture
         
 
         $manager->flush();
+    }
+    public function getDependencies(){
+        return ([UtilisateurFixtures::class]);
     }
 }

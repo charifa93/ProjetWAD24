@@ -6,8 +6,9 @@ use Faker\Factory;
 use App\Entity\Recette;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 
-class RecetteFixtures extends Fixture
+class RecetteFixtures extends Fixture implements DependentFixtureInterface
 {
     public function load(ObjectManager $manager): void
     {
@@ -23,13 +24,19 @@ class RecetteFixtures extends Fixture
             'datePublication' => $faker->dateTimeBetween('-1 year', 'now'),
             'tempsDePreparation' => new \DateTime($faker->time()),
             'tempsDeCuison' => new \DateTime($faker->time()),
-            'utilisateur' => $this->getReference('utilisateur'.$i),
-            'recetteCom' => $this->getReference('commentaire'.$i),
-            'recettesNote' => $this->getReference('note'.$i),
+            'utilisateur' => $this->getReference('utilisateur'.rand(0,4)), // attention!! nombre users
+            
            ]);
            
+           $this->addReference('recette' . $i, $recette);
+
            $manager->persist($recette);
        }
        $manager->flush();
+    }
+
+    public function getDependencies(){
+        return ([UtilisateurFixtures::class,
+                ]);
     }
 }
