@@ -19,7 +19,7 @@
 
 	{% if app.user %}
 		Connecté:
-		{{ app.user.email }}
+		{{ app.user.nom}}
 		{# et toutes les options dispo
 		                uniquement avec connexion #}
 		<a href="{{ path ('app_logout') }}">Logout</a>

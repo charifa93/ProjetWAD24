@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}AjouterRecette{% endblock %}
+
+{% block body %}
+
+  <h1>Recette</h1>
+
+    
+
+    {{ form_start(AjouterRecetteForm) }}
+        {{ form_row(AjouterRecetteForm.titre) }}
+        {{ form_row(AjouterRecetteForm.description) }}
+        {{ form_row(AjouterRecetteForm.theme)}}
+        {{ form_row(AjouterRecetteForm.datePublication) }}
+        {{ form_row(AjouterRecetteForm.tempsDeCuison) }}
+        {{ form_row(AjouterRecetteForm.tempsDePreparation)}}
+        {{ form_row(AjouterRecetteForm.difficulte) }}
+        {{ form_row(AjouterRecetteForm.nombreProtions) }}
+        {{ form_row(AjouterRecetteForm.saison) }}
+        {{ form_row(AjouterRecetteForm.origine) }}
+        {{ form_row(AjouterRecetteForm.photo) }}
+
+
+
+
+        {# {{ form_row(registrationForm.agreeTerms) }} #}
+
+        <button type="submit" class="btn">enregistrer</button>
+    {{ form_end(AjouterRecetteForm) }}
+
+{% endblock %}
