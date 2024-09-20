@@ -1,7 +1,7 @@
 {# navigation, pour toutes les pages  #}
 <nav>
 	{# liens sans connexion  #}
-	<a href="">Option 1 publique</a>
+	<a href="{{ path('accueil') }}">Acceuil</a>
 	<a href="">Option 2 publique</a>
 
 	{# liens pour l'admin  #}
@@ -13,8 +13,10 @@
 	{# liens pour les users connectés,
 				peu importe le role #}
 	{% if is_granted ('ROLE_USER') %}
-		<a href="">Option 5 user</a>
-		<a href="">Option 6 user</a>
+		<a href="{{ path('ajouter')}}">ajouterRecette</a>
+		<a href="{{ path('afficher')}}">AfficherRecettes</a>
+		{# <a href="{{ path('modifier')}}">AfficherRecettes</a> #}
+		
 	{% endif %}
 
 	{% if app.user %}

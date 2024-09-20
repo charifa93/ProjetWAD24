@@ -8,18 +8,17 @@
 
     
 
-    {{ form_start(AjouterRecetteForm) }}
-        {{ form_row(AjouterRecetteForm.titre) }}
-        {{ form_row(AjouterRecetteForm.description) }}
-        {{ form_row(AjouterRecetteForm.theme)}}
-        {{ form_row(AjouterRecetteForm.datePublication) }}
-        {{ form_row(AjouterRecetteForm.tempsDeCuison) }}
-        {{ form_row(AjouterRecetteForm.tempsDePreparation)}}
-        {{ form_row(AjouterRecetteForm.difficulte) }}
-        {{ form_row(AjouterRecetteForm.nombreProtions) }}
-        {{ form_row(AjouterRecetteForm.saison) }}
-        {{ form_row(AjouterRecetteForm.origine) }}
-        {{ form_row(AjouterRecetteForm.photo) }}
+    {{ form_start(form) }}
+        {{ form_row(form.titre) }}
+        {{ form_row(form.description) }}
+        {{ form_row(form.datePublication) }}
+        {{ form_row(form.tempsDeCuison) }}
+        {{ form_row(form.tempsDePreparation)}}
+        {{ form_row(form.difficulte) }}
+        {{ form_row(form.nombrePortions) }}
+        {{ form_row(form.saison) }}
+        {{ form_row(form.origine) }}
+        {{ form_row(form.image) }}
 
 
 
@@ -27,6 +26,6 @@
         {# {{ form_row(registrationForm.agreeTerms) }} #}
 
         <button type="submit" class="btn">enregistrer</button>
-    {{ form_end(AjouterRecetteForm) }}
+    {{ form_end(form) }}
 
 {% endblock %}

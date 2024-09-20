@@ -29,12 +29,7 @@ class AjouterRecetteFormType extends AbstractType
             ->add('image')
             ->add('nombrePortions')
             ->add('saison')
-            ->add('origine')
-            ->add('utilisateur', EntityType::class, [
-                'class' => Utilisateur::class,
-                'choice_label' => 'id',
-            ])
-        ;
+            ->add('origine');
     }
 
     public function configureOptions(OptionsResolver $resolver): void
