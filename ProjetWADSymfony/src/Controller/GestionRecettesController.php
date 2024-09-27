@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Serializer\SerializerInterface;
 
 class GestionRecettesController extends AbstractController
 {
@@ -19,15 +20,18 @@ class GestionRecettesController extends AbstractController
     {
         $this->doctrine = $doctrine;
     }
-    #[Route('/gestion/recettes/afficher', name : 'afficher')] 
+    // //////// afficher toutes les recettes //////////
+    #[Route('/gestion/recettes/afficherttRecettes', name : 'afficher')] 
    public function selectAll(RecetteRepository $recettes)
    {
        $ALLRecettes = $recettes->findAll();
 
-       return $this->render('gestion_recettes/afficherRcettes.html.twig', [
-           'recettes' => $ALLRecettes]);
+       $vars =['recettes' => $ALLRecettes];
+
+       return $this->render('gestion_recettes/afficher_recettes.html.twig',$vars);
    }
 
+    ////////// ajouter une nouvelle recette //////////
    #[Route('/gestion/recettes/ajouter', name : 'ajouter')]
    public function ajouter(Request $req)
    {
@@ -36,6 +40,8 @@ class GestionRecettesController extends AbstractController
        array('action' => $this->generateUrl('ajouter'), 'method' => 'POST'));
       $form->handleRequest($req);
 
+      $recette->setUtilisateur($this->getUser());
+
       if($form->isSubmitted() && $form->isValid()){
           $em = $this->doctrine->getManager();
           $em->persist($recette);
@@ -43,14 +49,13 @@ class GestionRecettesController extends AbstractController
 
         return $this->redirectToRoute('afficher');
       }
-      
-
       return $this->render('gestion_recettes/ajouterRecette.html.twig', [
           'form' => $form->createView()
       ]);
-
    }
-   #[Route('/gestion/recettes/modifier/{id}', name : 'modifier')]
+
+   ////////// modifier unerecette //////////
+   #[Route('/gestion/recettes/modifier/{id}', name : 'modifierRecette')]
    public function modifier(Recette $recette, Request $req)
    {
        $form = $this->createForm(AjouterRecetteFormType::class, $recette);
@@ -68,18 +73,95 @@ class GestionRecettesController extends AbstractController
            'form' => $form->createView()
        ]);
    }
-   #[Route('/gestion/recettes/rechercher', name : 'rechercher')]
-   public function rechercher(Request $req , RecetteRepository $recette)
+
+   ////////// affichage du form pour rechercher une recette //////////
+   #[Route('/gestion/recettes/recherche/form', name : 'rechercherParTitre')]
+   public function rechercheForm(Request $req)
    {     
         $form = $this->createForm(RechercheRecetteType::class);
         $form ->handleRequest($req);
         if ($form->isSubmitted() && $form->isValid()) {
-            $recette = $this->doctrine->getRepository(Recette::class)->findBy(['titre' => $recette->getTitre()]);
-            return $this->render('gestion_recettes/afficherRcettes.html.twig', ['recette' => $recette]);
+            
+            return $this->redirectToRoute('rechercheParTitreResultat', ['filtre' => json_encode ($form->getData())]);
         }
+        
+        $vars = ['form' => $form];
+        return $this->render('gestion_recettes/recherche_form.html.twig', $vars);
+        
+    }
     
-    return $this->render('gestion_recettes/rechercherRecette.html.twig', ['form' => $form]);
- 
-   }
+    ////////// rechercher une recette et l'afficher sans ajax //////////
+    
+    #[Route('/gestion/recettes/recherche/resultats', name : 'rechercheParTitreResultat')]
+    public function rechercheResultat(Request $req, RecetteRepository $rep){
+        // dd($req->get('filtre'));
+        $filtreArray = json_decode($req->get('filtre'), true);
+        $recettes = $rep->recherche($filtreArray);
+    
+        $vars = ['recettes'=>$recettes];
+        return $this->render('gestion_recettes/afficher_recettes.html.twig',$vars);
+        
+    }
+
+/////////////// afficher une recette sans ajax //////////////
+#[Route('/gestion/recettes/afficher/{id}', name : 'afficherUneRecette')]
+public function afficherUneRecette(RecetteRepository $recette, $id)
+{
+    $recette = $recette->find($id);
+
+    if (!$recette) {
+        throw $this->createNotFoundException('Recette non trouvée.');
+    }
+
+    $vars = ['recette' => $recette];
+
+    return $this->render('gestion_recettes/afficher_une_recette.html.twig', $vars);
+}
+
+
+/////////////// recherche avec ajax //////////////
+
+#[Route('/gestion/recettes/rechercheAjax', name : 'rechercheParTitreAjax')]
+public function rechercheAjax(Request $req, RecetteRepository $rep, SerializerInterface $serializer)
+{
+    $form = $this->createForm(RechercheRecetteType::class);
+    $form ->handleRequest($req);
+
+    if ($form->isSubmitted() ){
+
+        $recettes = $rep->recherche($form->getData());
+        $recettesJson = $serializer->serialize($recettes, 'json');
+         return new Response($recettesJson);
+    }
+    $vars = ['form' => $form];
+
+    return $this->render('gestion_recettes/recherche_form.html.twig', $vars);
+}
+
+#[Route('/gestion/recettes/rechercheAjax/resultats', name : 'rechercheParTitreResultatAjax')]
+public function rechercheResultatAjax(){
+    return $this->render('gestion_recettes/afficher_recettes.html.twig');
+    
+}
+
+
+
+
+
+/////////////// supprimer une recette //////////////
+#[Route('/gestion/recettes/supprimer/{id}', name : 'supprimerUneRecette')]
+public function supprimerUneRecette(RecetteRepository $recette , $id)
+{
+    $recette = $recette->find($id);
+
+    if (!$recette) {
+        throw $this->createNotFoundException('Recette non trouvée.');
+    }
+
+    $em = $this->doctrine->getManager();
+    $em->remove($recette);
+    $em->flush();
+    return $this->redirectToRoute('afficher');
+}
 }
 

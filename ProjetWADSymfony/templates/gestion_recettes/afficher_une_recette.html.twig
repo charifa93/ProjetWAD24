@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}La recette {% endblock %}
+
+{% block body %}
+{# {% if app.recette %}
+    le recette : {{ app.recette.titre}} 
+{% endif %} #}
+    <h1> la recette </h1>
+    
+            <ul>
+                
+                    <li>
+                        <h2>{{ recette.titre }}</h2>
+                        <h3>{{ recette.utilisateur.nom}}</h3>
+                        <p><strong>Description :</strong> {{ recette.description }}</p>
+                        <p><strong>Date de publication :</strong> {{ recette.datePublication|date('d-m-Y') }}</p>
+                        <p><strong>Temps de préparation :</strong> {{ recette.tempsDePreparation |date('H:i:s')}} minutes</p>
+                        <p><strong>Temps de cuisson :</strong> {{ recette.tempsDeCuison|date('H:i:s') }} minutes</p>
+                        <p><strong>Difficulté :</strong> {{ recette.difficulte }}/5</p>
+                        <img src="{{ recette.image }}" alt="Image de la recette" class="recette-image">
+                        {% if recette.recetteCom %}
+                            {% for commentaire in recette.recetteCom %}
+                               <p> {{ commentaire.contenu }}  </p>                          
+                            {% endfor %}
+                        {% endif %}
+                        {% if recette.recettesNote %}
+                            {% for note in recette.recettesNote %}
+                                <p>{{ note.valeur }} </p>                           
+                            {% endfor %}
+                        {% endif %}
+
+                        
+                     </li> 
+                    
+                
+            </ul>
+            <a href="{{ path('modifierRecette', {'id': recette.id}) }}">modifier la recette </a> <br>
+            {# <a href="{{ path('supprimerUneRecette', {'id': recette.id}) }}">supprimer la recette </a> #}
+             <a href="{{ path('supprimerUneRecette', { id: recette.id }) }}" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette recette ?');">Supprimer</a>
+
+       
+{% endblock %}

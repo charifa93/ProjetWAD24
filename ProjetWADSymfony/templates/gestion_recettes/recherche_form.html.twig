@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}recherche par titre {% endblock %}
+
+{% block body %}
+
+{{ form_start (form, {'action': path('rechercherParTitre'), 'method': 'POST'}) }}
+{{ form_row(form.titre)}}
+<input type="submit" value="Chercher!">
+{{ form_end(form) }} 
+
+{# appel ajax  #}
+
+<script>
+let form = document.getElementById('recher_form');
+
+form.addEventlistener('input',function(){
+    console.log("on a modifier la form");
+
+    let formData = new FormData(form);
+
+    axios.post('/gestion/recettes/rechercheAjax', formData).then( response =>{
+
+        console.log (response.data);
+    
+    });
+
+});
+
+</script>
+
+
+{% endblock %}

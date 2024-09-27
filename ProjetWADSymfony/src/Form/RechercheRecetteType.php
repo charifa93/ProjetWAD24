@@ -22,7 +22,7 @@ class RechercheRecetteType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Recette::class,
+            // 'data_class' => Recette::class,
         ]);
     }
 }

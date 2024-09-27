@@ -1,17 +1,12 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}AjouterRecette{% endblock %}
+{% block title %}modifier Recette{% endblock %}
 
 {% block body %}
 
-  <h1>Recette</h1>
-
-    
+  <h1>modifier Recette</h1>
 
     {{ form_start(form) }}
-        {{ form_row(form.titre) }}
-
-        <button type="submit" class="btn">recherche </button>
     {{ form_end(form) }}
 
 {% endblock %}

@@ -43,7 +43,7 @@ class Recette
     /**
      * @var Collection<int, Commentaire>
      */
-    #[ORM\OneToMany(targetEntity: Commentaire::class, mappedBy: 'recettes')]
+    #[ORM\OneToMany(targetEntity: Commentaire::class, mappedBy: 'recette')]
     private Collection $recetteCom;
 
     /**
