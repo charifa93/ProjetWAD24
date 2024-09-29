@@ -62,6 +62,9 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: CoursesList::class, mappedBy: 'utilisateur')]
     private Collection $listCourses;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $prenom = null;
+
     public function __construct()
     {
         $this->UserNotes = new ArrayCollection();
@@ -273,6 +276,18 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
                 $listCourse->setUtilisateur(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getPrenom(): ?string
+    {
+        return $this->prenom;
+    }
+
+    public function setPrenom(?string $prenom): static
+    {
+        $this->prenom = $prenom;
 
         return $this;
     }

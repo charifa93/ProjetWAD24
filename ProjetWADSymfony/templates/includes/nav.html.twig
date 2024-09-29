@@ -1,8 +1,8 @@
 {# navigation, pour toutes les pages  #}
-<nav>
-	{# liens sans connexion  #}
+<nav class="navbar bg-body-tertiary">
+	<div class="container-fluid">
 	<a href="{{ path('accueil') }}">Acceuil</a>
-	<a href="">Option 2 publique</a>
+	<a href="{{ path('app_recette_index')}}">les recettes</a>
 
 	{# liens pour l'admin  #}
 	{% if is_granted ('ROLE_ADMIN') %}
@@ -13,8 +13,8 @@
 	{# liens pour les users connectés,
 				peu importe le role #}
 	{% if is_granted ('ROLE_USER') %}
-		<a href="{{ path('ajouter')}}">ajouterRecette</a>
-		<a href="{{ path('afficher')}}">AfficherRecettes</a>
+		<a href="{{ path('app_recette_new')}}">ajouterRecette</a>
+		
 		
 		{# <a href="{{ path('modifier')}}">AfficherRecettes</a> #}
 		
@@ -22,11 +22,21 @@
 
 	{% if app.user %}
 		Connecté:
-		{{ app.user.nom}}
+		{{ app.user.prenom}}
 		{# et toutes les options dispo
 		                uniquement avec connexion #}
 		<a href="{{ path ('app_logout') }}">Logout</a>
 	{% else %}
 		<a href="{{ path ('app_login') }}">Login</a>
 	{% endif %}
+	
+	 
+		</div>
+	  
+
+
+
+		
 </nav>
+
+	

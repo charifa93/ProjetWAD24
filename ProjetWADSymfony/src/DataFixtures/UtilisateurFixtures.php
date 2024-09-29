@@ -43,6 +43,7 @@ class UtilisateurFixtures extends Fixture
             $hashedPassword = $this->passwordHasher->hashPassword($user, 'lepassword');
 
             $user->setNom("nom" . $i);
+            $user->setPrenom("prenom" . $i); 
             $user->setPassword($hashedPassword);
 
             // accesible
