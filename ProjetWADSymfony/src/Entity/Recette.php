@@ -16,7 +16,9 @@ class Recette
     #[ORM\Column]
     private ?int $id = null;
 
+
     #[ORM\Column(length: 255)]
+    
     private ?string $titre = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]

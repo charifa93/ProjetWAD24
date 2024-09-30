@@ -4,28 +4,59 @@
 
 {% block body %}
 
-{{ form_start (form, {'action': path('rechercherParTitre'), 'method': 'POST'}) }}
+{{ form_start(form, {'attr':{'id':'recherche_form'}}) }}
 {{ form_row(form.titre)}}
-<input type="submit" value="Chercher!">
+<button type="submit">Rechercher</button>
 {{ form_end(form) }} 
+
+<div id = "divResultats" ></div>
 
 {# appel ajax  #}
 
 <script>
-let form = document.getElementById('recher_form');
 
-form.addEventlistener('input',function(){
+
+let form = document.getElementById('recherche_form');
+
+form.addEventListener ('input',function(){
+
     console.log("on a modifier la form");
-
-    let formData = new FormData(form);
-
-    axios.post('/gestion/recettes/rechercheAjax', formData).then( response =>{
-
-        console.log (response.data);
     
+    let formData = new FormData (form);
+
+    //obtenir le div qui contiendra la resultat 
+    let divResultats = document.getElementById('divResultats');
+    
+
+      axios.post ('/gestion/recettes/rechercheAjax', formData)
+        .then (Response => {
+            console.log (Response.data);
+
+            // pas besoin de parser la reponse car AXIOS le fait par défaut
+
+            // ceci est déjà un array d'objets
+            let arrayRecette = Response.data;  
+
+            // vider le div
+            divResultats.innerHTML = "";
+            
+            let ul = document.createElement ('ul');
+
+            for (index in arrayRecette){
+                let li = document.createElement ('li');
+                li.innerText = arrayRecette[index].titre;
+                ul.appendChild (li);
+            }
+            divResultats.appendChild (ul);
+            })
+            .catch(error => {
+                console.error("Erreur lors de la requête : ", error);
+                divResultats.innerHTML = "<p>Une erreur est survenue lors de la récupération des résultats.</p>";
+         
     });
 
 });
+
 
 </script>
 

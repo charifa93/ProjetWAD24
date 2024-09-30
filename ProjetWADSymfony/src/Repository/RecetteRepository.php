@@ -16,14 +16,16 @@ class RecetteRepository extends ServiceEntityRepository
         parent::__construct($registry, Recette::class);
     }
 
-    public function recherche(array $filtre){
+    public function rechercheRecetteFiltres(array $filtres){
         $em = $this->getEntityManager();
         $query = $em->createQuery('SELECT R FROM App\Entity\Recette R WHERE R.titre LIKE UPPER (:titre)' );
-        $query ->setParameter("titre" , "%". mb_strtoupper($filtre['titre']). "%");
+        $query ->setParameter("titre" , "%". mb_strtoupper($filtres['titre']). "%");
         $Recettes = $query->getResult();
         return $Recettes ;
     }
 
+
+    
     public function supprimer($id){
 
         $em = $this->getEntityManager();

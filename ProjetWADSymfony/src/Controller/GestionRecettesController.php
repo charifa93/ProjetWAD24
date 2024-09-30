@@ -3,15 +3,20 @@
 namespace App\Controller;
 
 use App\Entity\Recette;
-use App\Form\AjouterRecetteFormType;
 use App\Form\RechercheRecetteType;
+use App\Form\AjouterRecetteFormType;
 use App\Repository\RecetteRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Serializer\SerializerInterface;
+
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Serializer\Serializer;
 
 class GestionRecettesController extends AbstractController
 {
@@ -90,48 +95,52 @@ class GestionRecettesController extends AbstractController
         
     }
     
-    ////////// rechercher une recette et l'afficher sans ajax //////////
+//     ////////// rechercher une recette et l'afficher sans ajax //////////
     
-    #[Route('/gestion/recettes/recherche/resultats', name : 'rechercheParTitreResultat')]
-    public function rechercheResultat(Request $req, RecetteRepository $rep){
-        // dd($req->get('filtre'));
-        $filtreArray = json_decode($req->get('filtre'), true);
-        $recettes = $rep->recherche($filtreArray);
+//     #[Route('/gestion/recettes/recherche/resultats', name : 'rechercheParTitreResultat')]
+//     public function rechercheResultat(Request $req, RecetteRepository $rep){
+//         // dd($req->get('filtre'));
+//         $filtreArray = json_decode($req->get('filtre'), true);
+//         $recettes = $rep->recherche($filtreArray);
     
-        $vars = ['recettes'=>$recettes];
-        return $this->render('gestion_recettes/afficher_recettes.html.twig',$vars);
+//         $vars = ['recettes'=>$recettes];
+//         return $this->render('gestion_recettes/afficher_recettes.html.twig',$vars);
         
-    }
+//     }
 
-/////////////// afficher une recette sans ajax //////////////
-#[Route('/gestion/recettes/afficher/{id}', name : 'afficherUneRecette')]
-public function afficherUneRecette(RecetteRepository $recette, $id)
-{
-    $recette = $recette->find($id);
+// /////////////// afficher une recette sans ajax //////////////
+// #[Route('/gestion/recettes/afficher/{id}', name : 'afficherUneRecette')]
+// public function afficherUneRecette(RecetteRepository $recette, $id)
+// {
+//     $recette = $recette->find($id);
 
-    if (!$recette) {
-        throw $this->createNotFoundException('Recette non trouvée.');
-    }
+//     if (!$recette) {
+//         throw $this->createNotFoundException('Recette non trouvée.');
+//     }
 
-    $vars = ['recette' => $recette];
+//     $vars = ['recette' => $recette];
 
-    return $this->render('gestion_recettes/afficher_une_recette.html.twig', $vars);
-}
+//     return $this->render('gestion_recettes/afficher_une_recette.html.twig', $vars);
+// }
 
 
 /////////////// recherche avec ajax //////////////
 
 #[Route('/gestion/recettes/rechercheAjax', name : 'rechercheParTitreAjax')]
-public function rechercheAjax(Request $req, RecetteRepository $rep, SerializerInterface $serializer)
+public function rechercheAjax(Request $req, RecetteRepository $rep, SerializerInterface $serializer) : Response
 {
     $form = $this->createForm(RechercheRecetteType::class);
     $form ->handleRequest($req);
 
-    if ($form->isSubmitted() ){
+    if ($form->isSubmitted() && $form->isValid()) {
+        
+        $recettes = $rep->rechercheRecetteFiltres($form->getData());  //($form->getData()) c un array 
+        // dd($recettes);
 
-        $recettes = $rep->recherche($form->getData());
-        $recettesJson = $serializer->serialize($recettes, 'json');
-         return new Response($recettesJson);
+        
+        $recettesJson = $serializer->serialize($recettes,'json', [AbstractNormalizer::ATTRIBUTES => ['id','titre', 'description', 'image','utilisateur' => ['nom']]]);
+
+        return new Response($recettesJson);
     }
     $vars = ['form' => $form];
 
@@ -143,8 +152,6 @@ public function rechercheResultatAjax(){
     return $this->render('gestion_recettes/afficher_recettes.html.twig');
     
 }
-
-
 
 
 

@@ -3,10 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\Utilisateur;
+use App\Form\RegistrationFormType;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 
 class ProfilUserController extends AbstractController
 {
@@ -25,6 +27,29 @@ class ProfilUserController extends AbstractController
         $vars = ['user' => $user];
         return $this->render('profil_user/afficher_utilisateur.html.twig', $vars);
     }
+
+
+    #[Route('/profil/modifier/{id}', name: 'modifierUser')]
+    public function modifierUser( Utilisateur $user , Request $request ): Response
+    {
+
+        $form = $this->createForm(RegistrationFormType::class, $user);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em = $this->doctrine->getManager();
+            $em->persist($user);
+            $em->flush();
+
+            return $this->redirectToRoute('afficherUser');
+        }
+
+        
+
+        return $this->render('profil_user/modificationProfil.html.twig');
+    }
+
+    
 
 
 }

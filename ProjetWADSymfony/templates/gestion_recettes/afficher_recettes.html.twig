@@ -15,7 +15,7 @@
                 {% for recette in recettes %}
                     <li class="recette-item">
                         <h2>{{ recette.titre }}</h2>
-                        <h3>{{ recette.utilisateur.nom }}</h3> 
+                        <h3>{{ recette.utilisateur.nom }}  {{ recette.utilisateur.prenom }}</h3> 
                         <p><strong>Description :</strong> {{ recette.description }}</p>
                         <p><strong>Date de publication :</strong> {{ recette.datePublication|date('d-m-Y') }}</p>
                         <p><strong>Temps de préparation :</strong> {{ recette.tempsDePreparation |date('H:i:s')}} minutes</p>
