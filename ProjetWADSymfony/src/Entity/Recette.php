@@ -68,6 +68,9 @@ class Recette
      */
     #[ORM\OneToMany(targetEntity: DetailRecette::class, mappedBy: 'recette', orphanRemoval: true)]
     private Collection $detailRecette;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $typeDePlat = null;
  
 
      // hydrate ////
@@ -315,6 +318,18 @@ class Recette
                 $detailRecette->setRecette(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getTypeDePlat(): ?string
+    {
+        return $this->typeDePlat;
+    }
+
+    public function setTypeDePlat(?string $typeDePlat): static
+    {
+        $this->typeDePlat = $typeDePlat;
 
         return $this;
     }

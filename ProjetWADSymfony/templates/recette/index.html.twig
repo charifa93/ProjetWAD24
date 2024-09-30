@@ -45,6 +45,14 @@
         {% endfor %}
         </tbody>
     </table>
-
     <a href="{{ path('app_recette_new') }}">Create new</a>
+    {# block de script propre, js et css #}
+    {% block customJS %}
+        {{ encore_entry_script_tags ('autre') }}
+    {% endblock %}
+
+    {% block customCSS %}
+        {{ encore_entry_link_tags ('autre') }}		
+    {% endblock %}
+
 {% endblock %}

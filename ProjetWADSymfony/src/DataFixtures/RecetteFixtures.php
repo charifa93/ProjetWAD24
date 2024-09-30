@@ -26,6 +26,7 @@ class RecetteFixtures extends Fixture implements DependentFixtureInterface
             'tempsDeCuison' => new \DateTime($faker->time()),
             'nombrePortions' => $faker->numberBetween(1, 10),
             'saison' => $faker->sentence(1),
+            'typeDePlat' => $faker->sentence(1),
             'origine' => $faker->sentence(2),
             'utilisateur' => $this->getReference('utilisateur'.rand(0,4)), // attention!! nombre users
             'ingredient' => $this->getReference('ingredient'.rand(0,9)),

@@ -153,6 +153,51 @@ public function rechercheResultatAjax(){
     
 }
 
+/////////////// afficher les recettes par saison //////////////
+
+#[Route('/gestion/recettes/afficher/{saison}', name : 'afficherRecetteParType')]
+public function afficherRecetteParSaison(RecetteRepository $recette, $saison){
+
+    $recettes = $recette->rechercheRecetteFiltresSaison(['saison' => $saison]);
+
+    $vars = ['recettes' => $recettes];
+
+    return $this->render('gestion_recettes/afficher_recettes.html.twig', $vars);
+}
+
+/////////////// afficher les recettes par typeDePlat //////////////
+
+#[Route('/gestion/recettes/afficher/{typeDePlat}', name : 'afficherRecetteParTypeDePlat')]
+public function afficherRecetteParTypeDePlat(RecetteRepository $recette, $typeDePlat){
+
+    $recettes = $recette->rechercheRecetteFiltresTypeDePlat(['typeDePlat' => $typeDePlat]);
+
+    $vars = ['recettes' => $recettes];
+
+    return $this->render('gestion_recettes/afficher_recettes.html.twig', $vars);    
+}
+
+/////////////// afficher les recettes de meme origine //////////////
+
+#[Route('/gestion/recettes/afficher/{origine}', name : 'afficherRecetteParOrigine')]
+public function afficherRecetteParOrigine(RecetteRepository $recette, $origine){
+    
+    $recettes = $recette->rechercheRecetteFiltresOrigine(['origine' => $origine]);
+
+    $vars = ['recettes' => $recettes];
+
+    return $this->render('gestion_recettes/afficher_recettes.html.twig', $vars);
+}
+ 
+    
+
+
+
+
+
+
+
+
 
 
 /////////////// supprimer une recette //////////////

@@ -24,6 +24,29 @@ class RecetteRepository extends ServiceEntityRepository
         return $Recettes ;
     }
 
+    public function rechercheRecetteFiltresSaison(array $filtres){
+        $em = $this->getEntityManager();
+        $query = $em->createQuery('SELECT R FROM App\Entity\Recette R WHERE R.saison LIKE UPPER (:saison)' );
+        $query ->setParameter("saison" , $filtres['saison']);
+        $Recettes = $query->getResult();
+        return $Recettes ;
+        
+    }
+    public function rechercheRecetteFiltresTypeDePlat(array $filtres){
+        $em = $this->getEntityManager();
+        $query = $em->createQuery('SELECT R FROM App\Entity\Recette R WHERE R.typeDePlat LIKE UPPER (:typeDePlat)' );
+        $query ->setParameter("typeDePlat" , $filtres['typeDePlat']);
+        $Recettes = $query->getResult();
+        return $Recettes ; 
+    }
+    public function rechercheRecetteFiltresOrigine(array $filtres){
+        $em = $this->getEntityManager();
+        $query = $em->createQuery('SELECT R FROM App\Entity\Recette R WHERE R.origine LIKE UPPER (:origine)' );
+        $query ->setParameter("origine" , $filtres['origine']);
+        $Recettes = $query->getResult();
+        return $Recettes ;
+        
+    }
 
     
     public function supprimer($id){
