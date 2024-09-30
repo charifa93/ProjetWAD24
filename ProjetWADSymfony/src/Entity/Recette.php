@@ -57,11 +57,6 @@ class Recette
     #[ORM\Column(nullable: true)]
     private ?int $nombrePortions = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $saison = null;
-
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $origine = null;
 
     /**
      * @var Collection<int, DetailRecette>
@@ -71,6 +66,12 @@ class Recette
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $typeDePlat = null;
+
+    /**
+     * @var Collection<int, Origine>
+     */
+    #[ORM\ManyToMany(targetEntity: Origine::class, mappedBy: 'OrigineRecette')]
+    private Collection $origines;
  
 
      // hydrate ////
@@ -94,6 +95,7 @@ class Recette
           $this->recetteCom = new ArrayCollection();
           $this->recettesNote = new ArrayCollection();
           $this->detailRecette = new ArrayCollection();
+          $this->origines = new ArrayCollection();
       }
     public function getId(): ?int
     {
@@ -267,31 +269,6 @@ class Recette
 
         return $this;
     }
-
-    public function getSaison(): ?string
-    {
-        return $this->saison;
-    }
-
-    public function setSaison(?string $saison): static
-    {
-        $this->saison = $saison;
-
-        return $this;
-    }
-
-    public function getOrigine(): ?string
-    {
-        return $this->origine;
-    }
-
-    public function setOrigine(?string $origine): static
-    {
-        $this->origine = $origine;
-
-        return $this;
-    }
-
     /**
      * @return Collection<int, DetailRecette>
      */
@@ -330,6 +307,33 @@ class Recette
     public function setTypeDePlat(?string $typeDePlat): static
     {
         $this->typeDePlat = $typeDePlat;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Origine>
+     */
+    public function getOrigines(): Collection
+    {
+        return $this->origines;
+    }
+
+    public function addOrigine(Origine $origine): static
+    {
+        if (!$this->origines->contains($origine)) {
+            $this->origines->add($origine);
+            $origine->addOrigineRecette($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOrigine(Origine $origine): static
+    {
+        if ($this->origines->removeElement($origine)) {
+            $origine->removeOrigineRecette($this);
+        }
 
         return $this;
     }
