@@ -33,7 +33,8 @@ class GestionRecettesController extends AbstractController
        $ALLRecettes = $recettes->findAll();
 
        $vars =['recettes' => $ALLRecettes,
-                'saisons' => Saison::cases(),];       
+                'saisons' => Saison::cases(),
+                'typeDePlats' => TypeDePlat::cases()];       
 
        return $this->render('gestion_recettes/afficher_recettes.html.twig',$vars);
    }
@@ -177,13 +178,19 @@ public function afficherRecetteParSaison(RecetteRepository $recette, $saison , S
 /////////////// afficher les recettes par typeDePlat //////////////
 
 #[Route('/gestion/recettes/afficher/{typeDePlat}', name : 'afficherRecetteParTypeDePlat')]
-public function afficherRecetteParTypeDePlat(RecetteRepository $recette, $typeDePlat){
-
+public function afficherRecetteParTypeDePlat(RecetteRepository $recette, $typeDePlat , SerializerInterface $serializer) : Response
+{
+   
+  if ($typeDePlat){
     $recettes = $recette->rechercheRecetteFiltresTypeDePlat(['typeDePlat' => $typeDePlat]);
+    $recettesJson = $serializer->serialize($recettes,'json', [AbstractNormalizer::ATTRIBUTES => ['id','titre', 'image','utilisateur' => ['nom']]]); 
 
-    $vars = ['recettes' => $recettes];
+    return new Response($recettesJson, 200, [], true);
+  }
 
-    return $this->render('gestion_recettes/afficher_recettes.html.twig', $vars);    
+  $vars = ['TypeDePlat' => TypeDePlat::cases()];
+
+  return $this->render('gestion_recettes/afficher_recettes.html.twig', $vars);
 }
 
 /////////////// afficher les recettes de meme origine //////////////

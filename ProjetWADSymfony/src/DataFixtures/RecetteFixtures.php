@@ -37,6 +37,7 @@ class RecetteFixtures extends Fixture implements DependentFixtureInterface
 
         //    enum saison/////
            $recette->setSaison(Saison::cases()[rand(0,4)]);
+           $recette->setTypeDePlat(TypeDePlat::cases()[rand(0,7)]);
 
 
            $this->addReference('recette' . $i, $recette);

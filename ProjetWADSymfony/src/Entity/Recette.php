@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Enum\Saison;
+use App\Enum\TypeDePlat;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\RecetteRepository;
@@ -44,6 +45,9 @@ class Recette
     #[ORM\Column (type:"string" , enumType: Saison::class)]
     private Saison $saison;
 
+    #[ORM\Column(type: "string", enumType: TypeDePlat::class)]
+    private TypeDePlat $typeDePlat;
+
     #[ORM\ManyToOne(inversedBy: 'recettes')]
     private ?Utilisateur $utilisateur = null;
 
@@ -68,9 +72,6 @@ class Recette
      */
     #[ORM\OneToMany(targetEntity: DetailRecette::class, mappedBy: 'recette', orphanRemoval: true)]
     private Collection $detailRecette;
-
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $typeDePlat = null;
 
     /**
      * @var Collection<int, Origine>
@@ -311,18 +312,6 @@ class Recette
         return $this;
     }
 
-    public function getTypeDePlat(): ?string
-    {
-        return $this->typeDePlat;
-    }
-
-    public function setTypeDePlat(?string $typeDePlat): static
-    {
-        $this->typeDePlat = $typeDePlat;
-
-        return $this;
-    }
-
     /**
      * @return Collection<int, Origine>
      */
@@ -390,6 +379,26 @@ class Recette
     public function setSaison($saison) : self
     {
         $this->saison = $saison;
+
+        return $this;
+    }
+
+     /**
+     * Get the value of TypeDePlat
+     */ 
+    public function getTypeDePlat(): TypeDePlat
+    {
+        return $this->TypeDePlat;
+    }
+
+    /**
+     * Set the value of TypeDePlat
+     *
+     * @return  self
+     */ 
+    public function setTypeDePlat($TypeDePlat) : self
+    {
+        $this->TypeDePlat = $TypeDePlat;
 
         return $this;
     }

@@ -35,7 +35,7 @@ class RecetteRepository extends ServiceEntityRepository
     }
     public function rechercheRecetteFiltresTypeDePlat(array $filtres){
         $em = $this->getEntityManager();
-        $query = $em->createQuery('SELECT R FROM App\Entity\Recette R WHERE R.typeDePlat LIKE UPPER (:typeDePlat)' );
+        $query = $em->createQuery('SELECT R FROM App\Entity\Recette R WHERE R.typeDePlat = :typeDePlat');
         $query ->setParameter("typeDePlat" , $filtres['typeDePlat']);
         $Recettes = $query->getResult();
         return $Recettes ; 

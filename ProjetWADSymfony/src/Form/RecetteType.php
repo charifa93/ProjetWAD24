@@ -29,6 +29,7 @@ class RecetteType extends AbstractType
             ->add('image')
             ->add('nombrePortions')
             ->add('saison')
+            ->add('TypeDePlat')
             ->add('origine')
             ->add('utilisateur', EntityType::class, [
                 'class' => Utilisateur::class,
