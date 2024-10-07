@@ -1,24 +1,22 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}recherche par titre {% endblock %}
+{% block title %}Liste des Recettes{% endblock %}
 
 {% block body %}
+    <h1>Liste des Recettes</h1>
 
-
-
-{{ form_start(form, {'attr':{'id':'recherche_form'}}) }}
-{{ form_row(form.titre)}}
-<button type="submit">Rechercher</button>
-{{ form_end(form) }} 
+    {% for saison in saisons %}
+        <a href="{{ path('afficherRecetteParSaison' ,  {'saison': saison.value }) }}" value = 'lienSaison'>{{saison.value }}</a>
+    {% endfor %}
 
 <div id = "divResultats" ></div>
 
 {# appel ajax  #}
 
 <script>
-let form = document.getElementById('recherche_form');
+let lien = document.getElementById('lienSaison');
 
-form.addEventListener ('input',function(){
+form.addEventListener ('click',function(){
 
     console.log("on a modifier la form");
     
@@ -46,6 +44,9 @@ form.addEventListener ('input',function(){
                 let li = document.createElement ('li');
                 li.innerText = arrayRecette[index].titre;
                 ul.appendChild (li);
+
+
+
             }
             divResultats.appendChild (ul);
             })
@@ -53,12 +54,5 @@ form.addEventListener ('input',function(){
                 console.error("Erreur lors de la requête : ", error);
                 // divResultats.innerHTML = "<p>Une erreur est survenue lors de la récupération des résultats.</p>";
          
-    });
-
-});
-
-
-</script>
-
-
+    
 {% endblock %}

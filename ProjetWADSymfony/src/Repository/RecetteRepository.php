@@ -26,7 +26,8 @@ class RecetteRepository extends ServiceEntityRepository
 
     public function rechercheRecetteFiltresSaison(array $filtres){
         $em = $this->getEntityManager();
-        $query = $em->createQuery('SELECT R FROM App\Entity\Recette R WHERE R.saison LIKE UPPER (:saison)' );
+        // $query = $em->createQuery('SELECT R FROM App\Entity\Recette R WHERER.saison LIKE UPPER (:saison)' );
+        $query = $em->createQuery('SELECT R FROM App\Entity\Recette R WHERE R.saison = :saison');
         $query ->setParameter("saison" , $filtres['saison']);
         $Recettes = $query->getResult();
         return $Recettes ;

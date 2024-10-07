@@ -4,6 +4,7 @@ namespace App\DataFixtures;
 
 use Faker\Factory;
 use App\Entity\Recette;
+use App\Enum\Saison;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
@@ -25,12 +26,19 @@ class RecetteFixtures extends Fixture implements DependentFixtureInterface
             'tempsDePreparation' => new \DateTime($faker->time()),
             'tempsDeCuison' => new \DateTime($faker->time()),
             'nombrePortions' => $faker->numberBetween(1, 10),
-            'origine' => $this->getReference('origine'.rand(0,3)),
             'utilisateur' => $this->getReference('utilisateur'.rand(0,4)), // attention!! nombre users
             'ingredient' => $this->getReference('ingredient'.rand(0,9)),
+
             
            ]);
-           
+            //  pour ajouter des origines et remplir la table de relation 
+           $recette->addOrigine($this->getReference('origine'.rand(0,4)));
+           $recette->addOrigine($this->getReference('origine'.rand(5,9)));
+
+        //    enum saison/////
+           $recette->setSaison(Saison::cases()[rand(0,4)]);
+
+
            $this->addReference('recette' . $i, $recette);
 
            $manager->persist($recette);

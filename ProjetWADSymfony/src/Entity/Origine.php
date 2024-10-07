@@ -40,6 +40,7 @@ class Origine
     }
     public function __construct(array $init = [])
     {
+        $this->hydrate($init);
         $this->OrigineRecette = new ArrayCollection();
     }
 

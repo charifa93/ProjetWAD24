@@ -2,21 +2,22 @@
 
 namespace App\Controller;
 
+use App\Enum\Saison;
 use App\Entity\Recette;
 use App\Form\RechercheRecetteType;
 use App\Form\AjouterRecetteFormType;
 use App\Repository\RecetteRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 
-use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
-
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Serializer\Serializer;
 
 class GestionRecettesController extends AbstractController
 {
@@ -31,7 +32,8 @@ class GestionRecettesController extends AbstractController
    {
        $ALLRecettes = $recettes->findAll();
 
-       $vars =['recettes' => $ALLRecettes];
+       $vars =['recettes' => $ALLRecettes,
+                'saisons' => Saison::cases(),];       
 
        return $this->render('gestion_recettes/afficher_recettes.html.twig',$vars);
    }
@@ -155,15 +157,22 @@ public function rechercheResultatAjax(){
 
 /////////////// afficher les recettes par saison //////////////
 
-#[Route('/gestion/recettes/afficher/{saison}', name : 'afficherRecetteParType')]
-public function afficherRecetteParSaison(RecetteRepository $recette, $saison){
-
+#[Route('/gestion/recettes/afficher/{saison}', name : 'afficherRecetteParSaison')]
+public function afficherRecetteParSaison(RecetteRepository $recette, $saison , SerializerInterface $serializer) : Response
+{
+    if($saison){
     $recettes = $recette->rechercheRecetteFiltresSaison(['saison' => $saison]);
 
-    $vars = ['recettes' => $recettes];
+    $recettesJson = $serializer->serialize($recettes,'json', [AbstractNormalizer::ATTRIBUTES => ['id','titre', 'image','utilisateur' => ['nom']]]);
+
+    return new Response($recettesJson, 200, [], true);
+    }
+
+    $vars = ['saisons' => Saison::cases()];
 
     return $this->render('gestion_recettes/afficher_recettes.html.twig', $vars);
 }
+ 
 
 /////////////// afficher les recettes par typeDePlat //////////////
 

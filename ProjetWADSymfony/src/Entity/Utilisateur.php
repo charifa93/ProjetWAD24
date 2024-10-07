@@ -67,12 +67,19 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $prenom = null;
 
+    /**
+     * @var Collection<int, Recette>
+     */
+    #[ORM\ManyToMany(targetEntity: Recette::class, mappedBy: 'favoris')]
+    private Collection $FavorisRecette;
+
     public function __construct()
     {
         $this->UserNotes = new ArrayCollection();
         $this->commentaires = new ArrayCollection();
         $this->recettes = new ArrayCollection();
         $this->listCourses = new ArrayCollection();
+        $this->FavorisRecette = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -290,6 +297,33 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPrenom(?string $prenom): static
     {
         $this->prenom = $prenom;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Recette>
+     */
+    public function getFavorisRecette(): Collection
+    {
+        return $this->FavorisRecette;
+    }
+
+    public function addFavorisRecette(Recette $favorisRecette): static
+    {
+        if (!$this->FavorisRecette->contains($favorisRecette)) {
+            $this->FavorisRecette->add($favorisRecette);
+            $favorisRecette->addFavori($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFavorisRecette(Recette $favorisRecette): static
+    {
+        if ($this->FavorisRecette->removeElement($favorisRecette)) {
+            $favorisRecette->removeFavori($this);
+        }
 
         return $this;
     }

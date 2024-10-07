@@ -2,11 +2,12 @@
 
 namespace App\Entity;
 
-use App\Repository\RecetteRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use App\Enum\Saison;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\RecetteRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 
 #[ORM\Entity(repositoryClass: RecetteRepository::class)]
 class Recette
@@ -38,6 +39,10 @@ class Recette
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $image = null;
+    
+    // enum type//////
+    #[ORM\Column (type:"string" , enumType: Saison::class)]
+    private Saison $saison;
 
     #[ORM\ManyToOne(inversedBy: 'recettes')]
     private ?Utilisateur $utilisateur = null;
@@ -72,6 +77,12 @@ class Recette
      */
     #[ORM\ManyToMany(targetEntity: Origine::class, mappedBy: 'OrigineRecette')]
     private Collection $origines;
+
+    /**
+     * @var Collection<int, Utilisateur>
+     */
+    #[ORM\ManyToMany(targetEntity: Utilisateur::class, inversedBy: 'FavorisRecette')]
+    private Collection $favoris;
  
 
      // hydrate ////
@@ -96,6 +107,7 @@ class Recette
           $this->recettesNote = new ArrayCollection();
           $this->detailRecette = new ArrayCollection();
           $this->origines = new ArrayCollection();
+          $this->favoris = new ArrayCollection();
       }
     public function getId(): ?int
     {
@@ -337,4 +349,49 @@ class Recette
 
         return $this;
     }
+
+    /**
+     * @return Collection<int, Utilisateur>
+     */
+    public function getFavoris(): Collection
+    {
+        return $this->favoris;
+    }
+
+    public function addFavori(Utilisateur $favori): static
+    {
+        if (!$this->favoris->contains($favori)) {
+            $this->favoris->add($favori);
+        }
+
+        return $this;
+    }
+
+    public function removeFavori(Utilisateur $favori): static
+    {
+        $this->favoris->removeElement($favori);
+
+        return $this;
+    }
+
+    /**
+     * Get the value of saison
+     */ 
+    public function getSaison(): Saison
+    {
+        return $this->saison;
+    }
+
+    /**
+     * Set the value of saison
+     *
+     * @return  self
+     */ 
+    public function setSaison($saison) : self
+    {
+        $this->saison = $saison;
+
+        return $this;
+    }
+
 }
