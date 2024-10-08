@@ -2,8 +2,10 @@
 
 namespace App\Entity;
 
+
 use App\Enum\Saison;
 use App\Enum\TypeDePlat;
+use App\Enum\Origine;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\RecetteRepository;
@@ -45,8 +47,12 @@ class Recette
     #[ORM\Column (type:"string" , enumType: Saison::class)]
     private Saison $saison;
 
-    #[ORM\Column(type: "string", enumType: TypeDePlat::class)]
+    #[ORM\Column (type:'string' , enumType: TypeDePlat::class)]
     private TypeDePlat $typeDePlat;
+
+    #[ORM\Column (type:"string" , enumType: Origine::class)]
+    private Origine $origine;
+
 
     #[ORM\ManyToOne(inversedBy: 'recettes')]
     private ?Utilisateur $utilisateur = null;
@@ -73,11 +79,6 @@ class Recette
     #[ORM\OneToMany(targetEntity: DetailRecette::class, mappedBy: 'recette', orphanRemoval: true)]
     private Collection $detailRecette;
 
-    /**
-     * @var Collection<int, Origine>
-     */
-    #[ORM\ManyToMany(targetEntity: Origine::class, mappedBy: 'OrigineRecette')]
-    private Collection $origines;
 
     /**
      * @var Collection<int, Utilisateur>
@@ -107,7 +108,6 @@ class Recette
           $this->recetteCom = new ArrayCollection();
           $this->recettesNote = new ArrayCollection();
           $this->detailRecette = new ArrayCollection();
-          $this->origines = new ArrayCollection();
           $this->favoris = new ArrayCollection();
       }
     public function getId(): ?int
@@ -311,34 +311,6 @@ class Recette
 
         return $this;
     }
-
-    /**
-     * @return Collection<int, Origine>
-     */
-    public function getOrigines(): Collection
-    {
-        return $this->origines;
-    }
-
-    public function addOrigine(Origine $origine): static
-    {
-        if (!$this->origines->contains($origine)) {
-            $this->origines->add($origine);
-            $origine->addOrigineRecette($this);
-        }
-
-        return $this;
-    }
-
-    public function removeOrigine(Origine $origine): static
-    {
-        if ($this->origines->removeElement($origine)) {
-            $origine->removeOrigineRecette($this);
-        }
-
-        return $this;
-    }
-
     /**
      * @return Collection<int, Utilisateur>
      */
@@ -383,24 +355,40 @@ class Recette
         return $this;
     }
 
-     /**
-     * Get the value of TypeDePlat
-     */ 
-    public function getTypeDePlat(): TypeDePlat
+
+    public function getType(): TypeDePlat
     {
-        return $this->TypeDePlat;
+        return $this->typeDePlat;
     }
 
-    /**
-     * Set the value of TypeDePlat
-     *
-     * @return  self
-     */ 
-    public function setTypeDePlat($TypeDePlat) : self
+    public function setType($typeDePlat): self
     {
-        $this->TypeDePlat = $TypeDePlat;
+        $this->typeDePlat = $typeDePlat;
 
         return $this;
     }
+
+    /**
+     * Get the value of origine
+     */ 
+    public function getOrigine(): Origine
+    {
+        return $this->origine;
+    }
+
+    /**
+     * Set the value of origine
+     *
+     * @return  self
+     */ 
+    public function setOrigine($origine) : self
+    {
+        $this->origine = $origine;
+
+        return $this;
+    }
+
+   
+
 
 }

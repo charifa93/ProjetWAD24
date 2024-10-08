@@ -2,11 +2,14 @@
 
 namespace App\Form;
 
+use App\Enum\Saison;
+use App\Enum\Origine;
 use App\Entity\Recette;
+use App\Enum\TypeDePlat;
 use App\Entity\Utilisateur;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class RecetteType extends AbstractType
@@ -28,9 +31,16 @@ class RecetteType extends AbstractType
             ->add('difficulte')
             ->add('image')
             ->add('nombrePortions')
-            ->add('saison')
-            ->add('TypeDePlat')
-            ->add('origine')
+            ->add('saison', EntityType::class, [
+                'class' => Saison::class,
+            ])
+            ->add('typeDePlat', EntityType::class, [ 
+                'class' => TypeDePlat::class,   
+            ])
+            ->add('origine', EntityType::class, [
+                'class' => Origine::class,
+            ])
+            
             ->add('utilisateur', EntityType::class, [
                 'class' => Utilisateur::class,
                 'choice_label' => 'id',

@@ -3,8 +3,10 @@
 namespace App\DataFixtures;
 
 use Faker\Factory;
-use App\Entity\Recette;
 use App\Enum\Saison;
+use App\Enum\Origine;
+use App\Entity\Recette;
+use App\Enum\TypeDePlat;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
@@ -31,13 +33,11 @@ class RecetteFixtures extends Fixture implements DependentFixtureInterface
 
             
            ]);
-            //  pour ajouter des origines et remplir la table de relation 
-           $recette->addOrigine($this->getReference('origine'.rand(0,4)));
-           $recette->addOrigine($this->getReference('origine'.rand(5,9)));
 
-        //    enum saison/////
+        //////////////// enum ////////////////
            $recette->setSaison(Saison::cases()[rand(0,4)]);
-           $recette->setTypeDePlat(TypeDePlat::cases()[rand(0,7)]);
+           $recette->setType(TypeDePlat::cases()[rand(0,7)]);
+           $recette->setOrigine(Origine::cases()[rand(0,8)]);
 
 
            $this->addReference('recette' . $i, $recette);
@@ -50,7 +50,6 @@ class RecetteFixtures extends Fixture implements DependentFixtureInterface
     public function getDependencies(){
         return ([UtilisateurFixtures::class,
                 IngredientFixtures::class,
-                OrigineFixtures::class
             ]);
               
     }

@@ -4,49 +4,44 @@
 
 {% block body %}
 
-    <h1>Recette index</h1>
+    <h1>les recettes </h1>
 
-    <table class="table" >
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Titre</th>
-                <th>Description</th>
-                <th>DatePublication</th>
-                <th>TempsDePreparation</th>
-                <th>TempsDeCuison</th>
-                <th>Difficulte</th>
-                <th>Image</th>
-                <th>NombrePortions</th>
-                <th>Saison</th>
-                <th>Origine</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for recette in recettes %}
+ {# Button pour afficher les saisons #}
+<button id="showSeasonsBtn">SAISON</button>
+<div id="saisonLinks" style="display:none;">  {# Ajout d'un style pour masquer par défaut #}
+    {% for saison in saisons %}
+        <a href="#" class="saison-link" data-saison="{{ saison.value }}">{{ saison.value }}</a>
+    {% endfor %}
+</div>
 
-        <div class="row row-cols-1 row-cols-md-3 g-4">
-            <div class="col">
-                <div class="card h-100">
-            <img src="{{ recette.image }}" class="card-img-top" alt="...">
-            <div class="card-body">
-              <h5 class="card-title">{{ recette.titre }}</h5>
-              <p class="card-text">{{ recette.description }}</p>
-              <a href="{{ path('app_recette_show', {'id': recette.id}) }}" class="btn btn-primary">Go somewhere</a>
-            </div>
-          </div>
-          </div>
-        </div>
-
+{# Button pour afficher les types de plat #}
+<button id="showPlatsBtn">TYPE DE PLAT</button>
+<div id="TypePlatLinks" style="display:none;">  {# Ajout d'un style pour masquer par défaut #}
+    {% for typeDePlat in typeDePlats %}  {# Correction ici pour itérer sur typeDePlat #}
+        <a href="#" class="typeDePlat-link" data-typeDePlat="{{ typeDePlat.value }}">{{ typeDePlat.value }}</a>
+    {% endfor %}
+</div>
+<div id="divResultats" class="recettes-container">
+        {% if recettes is empty %}
+            <p>Aucune recette disponible pour le moment.</p>
         {% else %}
-            <tr>
-                <td colspan="12">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-    <a href="{{ path('app_recette_new') }}">Create new</a>
+            <ul>
+                {% for recette in recettes %}
+                    <li class="recette-item">
+                        <h2>{{ recette.titre }}</h2>
+                        <h3>{{ recette.utilisateur.nom }}  {{ recette.utilisateur.prenom }}</h3> 
+                        <p><strong>Difficulté :</strong> {{ recette.difficulte }}/5</p>
+                        <p><strong>Saison :</strong> {{ recette.Saison.value }}</p>
+                         <a href="{{ path('app_recette_show', {'id': recette.id}) }}" class="btn btn-primary">Go somewhere</a>
+                        <img src="{{ recette.image }}" alt="Image de la recette" class="recette-image">
+                    </li>
+                {% endfor %}
+            </ul>  
+        {% endif %}
+    </div>
+ </div>
+    </div>
+    
     {# block de script propre, js et css #}
     {% block customJS %}
         {{ encore_entry_script_tags ('autre') }}
@@ -55,5 +50,62 @@
     {% block customCSS %}
         {{ encore_entry_link_tags ('autre') }}		
     {% endblock %}
+
+  
+    <script>
+  // const saisonLinks = document.querySelectorAll('.saison-link');
+            // const divResultats = document.getElementById('divResultats');
+            // const showSeasonsBtn = document.getElementById('showSeasonsBtn');
+            // const saisonList = document.getElementById('saisonLinks');
+
+            //  showSeasonsBtn.addEventListener('click', function() {
+            //     if (saisonList.style.display === "none" || saisonList.style.display === "") {
+            //         saisonList.style.display = "block"; // Afficher la liste des saisons
+            //     } else {
+            //         saisonList.style.display = "none"; // Masquer la liste des saisons
+            //     }
+            // });
+
+            // saisonLinks.forEach(function(link) {
+            //     link.addEventListener('click', function(event) {
+            //         event.preventDefault();  // Empêcher le comportement par défaut du lien
+
+            //         let saisonValue = this.getAttribute('data-saison');  // Récupérer la valeur de la saison cliquée
+
+            //         // Vider le contenu précédent et afficher un message de chargement
+            //         divResultats.innerHTML = '<p>Chargement des recettes...</p>';
+
+            //         // Utiliser Axios pour faire une requête AJAX
+            //         axios.get(`/gestion/recettes/afficher/${saisonValue}`)
+            //         .then(response => {
+            //             // Récupérer les recettes depuis la réponse
+            //             const recettes = response.data;  // Données déjà en JSON grâce à JsonResponse
+
+            //             divResultats.innerHTML = '';
+
+            //             // Vérifier si des recettes sont trouvées
+            //             if (recettes.length > 0) {
+            //                 recettes.forEach(recette => {
+            //                     const recetteItem = document.createElement('div');
+            //                     recetteItem.classList.add('recette-item');
+
+            //                     recetteItem.innerHTML = `<h2>${recette.titre}</h2>
+            //                         <h3>${recette.utilisateur.nom}</h3>
+            //                         <img src="${recette.image}" alt="Image de la recette" class="recette-image">`;
+
+            //                     divResultats.appendChild(recetteItem);
+            //                 });
+            //             } else {
+            //                 divResultats.innerHTML = '<p>Aucune recette trouvée pour cette saison.</p>';
+            //             }
+            //         })
+            //         .catch(error => {
+            //             console.error('Erreur lors de la requête:', error);
+            //             divResultats.innerHTML = '<p>Une erreur est survenue lors du chargement des recettes.</p>';
+            //         });
+            //     });
+            // });
+   
+</script>
 
 {% endblock %}

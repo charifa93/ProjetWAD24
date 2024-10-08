@@ -6,18 +6,34 @@
 
 {% block body %}
     <h1>Liste des Recettes</h1>
-     <button id="showSeasonsBtn">Afficher les saisons</button>
 
-    <div id="saisonLinks">
-        {% for saison in saisons %}
-            <a href="#" class="saison-link" data-saison="{{ saison.value }}">{{ saison.value }}</a>
-        {% endfor %}
-    </div>
+    {# Button pour afficher les saisons #}
+<button id="showSaisonsBtn">SAISON</button>
+<div id="saison" style="display:none;">  {# Ajout d'un style pour masquer par défaut #}
+    {% for saison in saisons %}
+        <a href="#" class="saison-link" data-valeur="{{ saison.value }}">{{ saison.value }}</a>
+    {% endfor %}
+</div>
 
-    <div id="divResultats" class="recettes-container">
-        {% if recettes is empty %}
-            <p>Aucune recette disponible pour le moment.</p>
-        {% else %}
+{# Button pour afficher les types de plats #}
+<button id="showPlatsBtn">TYPE DE PLAT</button>
+<div id="typeDePlat" style="display:none;"> 
+    {% for typeDePlat in typeDePlats %} 
+        <a href="#" class="typeDePlat-link" data-valeur="{{ typeDePlat.value }}">{{ typeDePlat.value }}</a>
+    {% endfor %}
+</div>
+
+    {# Button pour afficher les Origines #}
+<button id="showOriginesBtn">ORIGINE</button>
+
+<div id="origine" style="display:none;">
+    {% for origine in origines %} 
+        <a href="#" class="origine-link" data-valeur="{{ origine.value }}">{{ origine.value }}</a>
+    {% endfor %}
+</div>
+
+   <div id="divResultats">
+        {% if recettes %}
             <ul>
                 {% for recette in recettes %}
                     <li class="recette-item">
@@ -28,7 +44,8 @@
                         <p><strong>Temps de préparation :</strong> {{ recette.tempsDePreparation |date('H:i:s')}} minutes</p>
                         <p><strong>Temps de cuisson :</strong> {{ recette.tempsDeCuison|date('H:i:s') }} minutes</p>
                         <p><strong>Difficulté :</strong> {{ recette.difficulte }}/5</p>
-                        <p><strong>Saison :</strong> {{ recette.Saison.value }}/5</p>
+                        <p><strong>Saison :</strong> {{ recette.Saison.value }}</p>
+                    
 
                         <img src="{{ recette.image }}" alt="Image de la recette" class="recette-image">
                         {% if recette.recetteCom %}
@@ -46,65 +63,77 @@
             </ul>  
         {% endif %}
     </div>
-    {#  #}
- </div>
-    {# appel ajax  #}
-
+    
     <script>
-       
-            const saisonLinks = document.querySelectorAll('.saison-link');
-            const divResultats = document.getElementById('divResultats');
-            const showSeasonsBtn = document.getElementById('showSeasonsBtn');
-            const saisonList = document.getElementById('saisonLinks');
+    function setupSaisonRecetteHandler({ LinkSelector, divResultatsId, showBtnId, ListId }) {
+    const links = document.querySelectorAll(LinkSelector);
+    const divResultats = document.getElementById(divResultatsId);
+    const showBtn = document.getElementById(showBtnId);
+    const list = document.getElementById(ListId);
 
-             showSeasonsBtn.addEventListener('click', function() {
-                if (saisonList.style.display === "none" || saisonList.style.display === "") {
-                    saisonList.style.display = "block"; // Afficher la liste des saisons
-                } else {
-                    saisonList.style.display = "none"; // Masquer la liste des saisons
-                }
-            });
+    // Gérer l'affichage des listes (saison/type de plat/origines)
+    showBtn.addEventListener('click', function () {
+        if (list.style.display === "none" || list.style.display === "") {
+            list.style.display = "block";  // Afficher la liste
+        } else {
+            list.style.display = "none";  // Masquer la liste
+        }
+    });
 
-            saisonLinks.forEach(function(link) {
-                link.addEventListener('click', function(event) {
-                    event.preventDefault();  // Empêcher le comportement par défaut du lien
+    // Gérer les clics sur les liens
+    links.forEach(function (link) {
+        link.addEventListener('click', function (event) {
+            event.preventDefault();  // Empêcher le comportement par défaut du lien
 
-                    let saisonValue = this.getAttribute('data-saison');  // Récupérer la valeur de la saison cliquée
+            let valeur = this.getAttribute('data-valeur') || '';  
+        
+               // Vider le contenu précédent et afficher un message de chargement
+            divResultats.innerHTML = '<p>Chargement des recettes...</p>';
 
-                    // Vider le contenu précédent et afficher un message de chargement
-                    divResultats.innerHTML = '<p>Chargement des recettes...</p>';
+            let idParent = event.target.parentElement.id;
 
-                    // Utiliser Axios pour faire une requête AJAX
-                    axios.get(`/gestion/recettes/afficher/${saisonValue}`)
-                    .then(response => {
-                        // Récupérer les recettes depuis la réponse
-                        const recettes = response.data;  // Données déjà en JSON grâce à JsonResponse
+            // Construire l'URL en fonction des filtres (saison et/ou type de plat)
+            let url = '/gestion/recettes/afficher';
+            url += `/${idParent}/${valeur}`;  // Seule la saison
 
-                        divResultats.innerHTML = '';
+            console.log(url);
 
-                        // Vérifier si des recettes sont trouvées
-                        if (recettes.length > 0) {
-                            recettes.forEach(recette => {
-                                const recetteItem = document.createElement('div');
-                                recetteItem.classList.add('recette-item');
+            // Utiliser Axios pour faire une requête AJAX
+            axios.get(url).then(response => {
+                    const recettes = response.data;  // Données en JSON
+                    divResultats.innerHTML = '';  // Vider le contenu précédent
 
-                                recetteItem.innerHTML = `<h2>${recette.titre}</h2>
-                                    <h3>${recette.utilisateur.nom}</h3>
-                                    <img src="${recette.image}" alt="Image de la recette" class="recette-image">`;
+                    // Vérifier si des recettes sont trouvées
+                    if (recettes.length > 0) {
+                        recettes.forEach(recette => {
+                            const recetteItem = document.createElement('div');
+                            recetteItem.classList.add('recette-item');
 
-                                divResultats.appendChild(recetteItem);
-                            });
-                        } else {
-                            divResultats.innerHTML = '<p>Aucune recette trouvée pour cette saison.</p>';
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Erreur lors de la requête:', error);
-                        divResultats.innerHTML = '<p>Une erreur est survenue lors du chargement des recettes.</p>';
-                    });
+                            recetteItem.innerHTML = `<img src="${recette.image}" alt="Image de la recette" class="recette-image">
+                            <h2>${recette.titre}</h2>
+                            <h3>${recette.utilisateur.nom}</h3>`;
+
+                            divResultats.appendChild(recetteItem);
+                        });
+                    } else {
+                        divResultats.innerHTML = '<p>Aucune recette trouvée pour cette sélection.</p>';
+                    }
+                })
+                .catch(error => {
+                    console.error('Erreur lors de la requête:', error);
+                    divResultats.innerHTML = '<p>Une erreur est survenue lors du chargement des recettes.</p>';
                 });
-            });
-       
+        });
+    });
+}
+
+
+setupSaisonRecetteHandler({LinkSelector: '.saison-link',divResultatsId: 'divResultats',showBtnId: 'showSaisonsBtn',ListId: 'saison'});
+
+setupSaisonRecetteHandler({LinkSelector: '.typeDePlat-link',divResultatsId: 'divResultats',showBtnId: 'showPlatsBtn',ListId: 'typeDePlat'});
+
+setupSaisonRecetteHandler({LinkSelector: '.origine-link',divResultatsId: 'divResultats',showBtnId: 'showOriginesBtn',ListId: 'origine'});
+
     </script>
 {% endblock %}
 
