@@ -6,6 +6,7 @@ use App\Enum\Saison;
 use App\Enum\Origine;
 use App\Entity\Recette;
 use App\Enum\TypeDePlat;
+use App\Enum\Preparations;
 use App\Form\RechercheRecetteType;
 use App\Form\AjouterRecetteFormType;
 use App\Repository\OrigineRepository;
@@ -39,6 +40,7 @@ class GestionRecettesController extends AbstractController
             'saisons' => Saison::cases(),
             'typeDePlats' => TypeDePlat::cases(),
             'origines' => Origine::cases(),
+            'preparations' => Preparations::cases(),
         ];
 
         return $this->render('gestion_recettes/afficher_recettes.html.twig', $vars);
@@ -163,8 +165,7 @@ class GestionRecettesController extends AbstractController
         return $this->render('gestion_recettes/afficher_recettes.html.twig');
     }
 
-    /////////////// afficher les recettes par saison //////////////
-
+    /////////////// afficher les recettes par categorie //////////////
     #[Route('/gestion/recettes/afficher/{typeRecherche}/{valeur}', name: 'afficherRecetteRecherche')]
     public function afficherRecetteRecherche(RecetteRepository $rep, SerializerInterface $serializer, Request $req): Response
     {
@@ -182,47 +183,20 @@ class GestionRecettesController extends AbstractController
             $recettesJson = $serializer->serialize($recettes, 'json', [AbstractNormalizer::ATTRIBUTES => ['id', 'titre', 'image', 'utilisateur' => ['nom']]]);
 
             return new Response($recettesJson);
-        }
-        // switch ($typeRecherche) {
-        //     case 'saison':
-
-        // }
-
-        // return $this->render('gestion_recettes/afficher_recettes.html.twig');//, $vars);
+        }  
     }
 
-
-    /////////////// afficher les recettes par typeDePlat //////////////
-
-    #[Route('/gestion/recettes/afficher/typeDePlat/{typeDePlat}', name: 'afficherRecetteParTypeDePlat')]
-    public function afficherRecetteParTypeDePlat(RecetteRepository $recette, $typeDePlat, SerializerInterface $serializer): Response
+    /////////////// afficher les recettes les 4 dernières ajoutées //////////////
+    #[Route('/gestion/recettes/afficher4Recettes', name: 'afficher4Recettes')]
+    public function afficher4Recettes(RecetteRepository $rep, SerializerInterface $serializer): Response
     {
+     $recettes = $rep->findBy([], ['id' => 'DESC'], 4, 0);
+     $recettesJson = $serializer->serialize($recettes, 'json', [AbstractNormalizer::ATTRIBUTES => ['id', 'titre', 'image', 'utilisateur' => ['nom']]]);
 
-        if ($typeDePlat) {
-            $recettes = $recette->rechercheRecetteFiltresTypeDePlat(['typeDePlat' => $typeDePlat]);
-            $recettesJson = $serializer->serialize($recettes, 'json', [AbstractNormalizer::ATTRIBUTES => ['id', 'titre', 'image', 'utilisateur' => ['nom']]]);
-
-            return new Response($recettesJson);
-        }
-
-        $vars = ['typeDePlats' => TypeDePlat::cases()];
-
-        return $this->render('gestion_recettes/afficher_recettes.html.twig', $vars);
+     return new Response($recettesJson);
     }
 
-    ///////////////// afficher les recettes par Origine //////////////
-    #[Route('/gestion/recettes/afficher/origine/{origine}', name: 'afficherRecetteParOrigine')]
-    public function afficherRecetteParOrigine(RecetteRepository $recette, $origine, SerializerInterface $serializer): Response
-    {
-        if ($origine) {
-            $recettes = $recette->rechercheRecetteFiltresOrigine(['origine' => $origine]);
-            $recettesJson = $serializer->serialize($recettes, 'json', [AbstractNormalizer::ATTRIBUTES => ['id', 'titre', 'image', 'utilisateur' => ['nom']]]);
-
-            return new Response($recettesJson);
-        }
-
-        $vars = ['origines' => Origine::cases()];
-
-        return $this->render('gestion_recettes/afficher_recettes.html.twig', $vars);
-    }
+   
 }
+
+  

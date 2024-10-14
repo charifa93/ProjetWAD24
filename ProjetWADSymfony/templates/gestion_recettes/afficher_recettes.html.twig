@@ -32,6 +32,16 @@
     {% endfor %}
 </div>
 
+   {# Button pour afficher les preparations #}
+<button id="showPreparationsBtn">preparation</button>
+<div id="preparation" style="display:none;">  {# Ajout d'un style pour masquer par défaut #}
+    {% for preparation in preparations %}
+        <a href="#" class="preparation-link" data-valeur="{{ preparation.value }}">{{ preparation.value }}</a>
+    {% endfor %}
+</div>
+
+
+
    <div id="divResultats">
         {% if recettes %}
             <ul>
@@ -62,7 +72,9 @@
                 {% endfor %}
             </ul>  
         {% endif %}
-    </div>
+    </div> 
+
+
     
     <script>
     function setupSaisonRecetteHandler({ LinkSelector, divResultatsId, showBtnId, ListId }) {
@@ -129,10 +141,10 @@
 
 
 setupSaisonRecetteHandler({LinkSelector: '.saison-link',divResultatsId: 'divResultats',showBtnId: 'showSaisonsBtn',ListId: 'saison'});
-
 setupSaisonRecetteHandler({LinkSelector: '.typeDePlat-link',divResultatsId: 'divResultats',showBtnId: 'showPlatsBtn',ListId: 'typeDePlat'});
-
 setupSaisonRecetteHandler({LinkSelector: '.origine-link',divResultatsId: 'divResultats',showBtnId: 'showOriginesBtn',ListId: 'origine'});
+setupSaisonRecetteHandler({LinkSelector: '.preparation-link',divResultatsId: 'divResultats',showBtnId: 'showPreparationsBtn',ListId: 'preparation'});
+
 
     </script>
 {% endblock %}

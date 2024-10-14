@@ -6,6 +6,7 @@ use App\Enum\Saison;
 use App\Enum\Origine;
 use App\Entity\Recette;
 use App\Enum\TypeDePlat;
+use App\Enum\Preparations;
 use App\Entity\Utilisateur;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -39,6 +40,9 @@ class RecetteType extends AbstractType
             ])
             ->add('origine', EntityType::class, [
                 'class' => Origine::class,
+            ])
+            ->add('preparations', EntityType::class, [
+                'class' => Preparations::class,
             ])
             
             ->add('utilisateur', EntityType::class, [

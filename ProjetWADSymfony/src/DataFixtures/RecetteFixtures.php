@@ -6,6 +6,7 @@ use Faker\Factory;
 use App\Enum\Saison;
 use App\Enum\Origine;
 use App\Entity\Recette;
+use App\Enum\Preparations;
 use App\Enum\TypeDePlat;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -38,6 +39,7 @@ class RecetteFixtures extends Fixture implements DependentFixtureInterface
            $recette->setSaison(Saison::cases()[rand(0,4)]);
            $recette->setType(TypeDePlat::cases()[rand(0,7)]);
            $recette->setOrigine(Origine::cases()[rand(0,8)]);
+           $recette->setPreparations(Preparations::cases()[rand(0,16)]);
 
 
            $this->addReference('recette' . $i, $recette);

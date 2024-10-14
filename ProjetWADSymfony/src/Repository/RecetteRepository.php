@@ -36,6 +36,15 @@ class RecetteRepository extends ServiceEntityRepository
         
     }
 
+    // //les recettes les dernières ajoutées////
+    // public function rechercheDernieresRecettes(){
+        
+    //     $em = $this->getEntityManager();
+    //     $query = $em->createQuery('SELECT R FROM App\Entity\Recette R ORDER BY R.id DESC');
+    //     $recettes = $query->getResult();
+    //     return $recettes ;
+    // }
+
  
 
     

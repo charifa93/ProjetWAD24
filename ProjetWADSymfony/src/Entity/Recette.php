@@ -4,8 +4,9 @@ namespace App\Entity;
 
 
 use App\Enum\Saison;
-use App\Enum\TypeDePlat;
 use App\Enum\Origine;
+use App\Enum\TypeDePlat;
+use App\Enum\Preparations;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\RecetteRepository;
@@ -52,6 +53,9 @@ class Recette
 
     #[ORM\Column (type:"string" , enumType: Origine::class)]
     private Origine $origine;
+
+    #[ORM\Column(type: "string" ,enumType: Preparations::class)]
+    private Preparations $preparation;
 
 
     #[ORM\ManyToOne(inversedBy: 'recettes')]
@@ -384,6 +388,18 @@ class Recette
     public function setOrigine($origine) : self
     {
         $this->origine = $origine;
+
+        return $this;
+    }
+
+    public function getPreparations(): Preparations
+    {
+        return $this->preparation;
+    }
+
+    public function setPreparations($preparation): self
+    {
+        $this->preparation = $preparation;
 
         return $this;
     }
