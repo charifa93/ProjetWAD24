@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Recherche de recettes{% endblock %}
+
+{% block body %}
+    <h1>Recherche de recettes</h1>
+
+  <!-- Formulaire de recherche -->
+<form method="get" action="{{ path('rechercheParTitreResultat') }}">
+    <div class="form-group">
+        <label for="filtre">Rechercher par titre ou ingrédient :</label>
+        <input type="text" id="filtre" name="filtre" class="form-control" placeholder="Entrer un nom de recette ou ingrédient">
+    </div>
+    <button type="submit" class="btn btn-primary mt-2">Rechercher</button>
+</form>
+{% endblock %}

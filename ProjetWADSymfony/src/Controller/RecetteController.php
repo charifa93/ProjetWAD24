@@ -3,9 +3,11 @@
 namespace App\Controller;
 
 use App\Enum\Saison;
+use App\Enum\Origine;
 use App\Entity\Recette;
 use App\Enum\TypeDePlat;
 use App\Form\RecetteType;
+use App\Enum\Preparations;
 use App\Form\RechercheRecetteType;
 use App\Repository\RecetteRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -31,7 +33,9 @@ final class RecetteController extends AbstractController
        
         $vars =['recettes' => $recetteRepository->findAll(),
                 'saisons' => Saison::cases(),
-                'typeDePlats' => TypeDePlat::cases()];
+                'typeDePlats' => TypeDePlat::cases(),
+                'origines' => Origine::cases(),
+                'preparations' => Preparations::cases()];
                 
         return $this->render('recette/index.html.twig',$vars);
     }
@@ -59,6 +63,7 @@ final class RecetteController extends AbstractController
     #[Route('/{id}', name: 'app_recette_show', methods: ['GET'])]
     public function show(Recette $recette ): Response
     {
+        
         return $this->render('recette/show.html.twig', [
             'recette' => $recette,
             'saisons' => Saison::cases(),
@@ -95,6 +100,9 @@ final class RecetteController extends AbstractController
         return $this->redirectToRoute('app_recette_index', [], Response::HTTP_SEE_OTHER);
     }
 
+
+    //////////////// recherche avec ajax //////////////
+
 //     #[Route('/recettes/rechercheAjax', name : 'ParTitreAjax')]
 // public function rechercheAjax(Request $req, RecetteRepository $rep, SerializerInterface $serializer) : Response
 // {
@@ -122,41 +130,37 @@ final class RecetteController extends AbstractController
     
 // }
 
-/////////////// afficher les recettes par saison //////////////
 
-#[Route('/recettes/afficher/{saison}', name : 'RecetteParSaison')]
-public function afficherRecetteParSaison(RecetteRepository $recette, $saison , SerializerInterface $serializer) : Response
-{
-    if($saison){
-    $recettes = $recette->rechercheRecetteFiltresSaison(['saison' => $saison]);
 
-    $recettesJson = $serializer->serialize($recettes,'json', [AbstractNormalizer::ATTRIBUTES => ['id','titre', 'image','utilisateur' => ['nom']]]);
+  ////////// rechercher une recette et l'afficher sans ajax //////////
 
-    return new Response($recettesJson, 200, [], true);
+        #[Route('/gestion/recettes/recherche/resultats', name : 'rechercheParTitreResultat')]
+        public function rechercheResultat(Request $req, RecetteRepository $rep){
+            // dd($req->get('filtre'));
+            $filtreArray = json_decode($req->get('filtre'), true);
+            $recettes = $rep->recherche($filtreArray);
+
+            $vars = ['recettes'=>$recettes];
+            return $this->render('accueil/index.html.twig',$vars);
+
+        }
+
+    /////////////// afficher une recette sans ajax //////////////
+    #[Route('/gestion/recettes/afficher/{id}', name : 'afficherUneRecette')]
+    public function afficherUneRecette(RecetteRepository $recette, $id)
+    {
+        $recette = $recette->find($id);
+
+        if (!$recette) {
+            throw $this->createNotFoundException('Recette non trouvée.');
+        }
+
+        $vars = ['recette' => $recette];
+
+        return $this->render('recette/show.html.twig', $vars);
     }
 
-    $vars = ['saisons' => Saison::cases()];
-
-    return $this->render('recette/index.html.twig', $vars);
 }
- 
 
-/////////////// afficher les recettes par typeDePlat //////////////
 
-#[Route('/recettes/afficher/{typeDePlat}', name : 'RecetteParTypeDePlat')]
-public function afficherRecetteParTypeDePlat(RecetteRepository $recette, $typeDePlat , SerializerInterface $serializer) : Response
-{
-   
-  if ($typeDePlat){
-    $recettes = $recette->rechercheRecetteFiltresTypeDePlat(['typeDePlat' => $typeDePlat]);
-    $recettesJson = $serializer->serialize($recettes,'json', [AbstractNormalizer::ATTRIBUTES => ['id','titre', 'image','utilisateur' => ['nom']]]); 
 
-    return new Response($recettesJson, 200, [], true);
-  }
-
-  $vars = ['typeDePlats' => TypeDePlat::cases()];
-
-  return $this->render('recette/index.html.twig', $vars);
-}
-   
-}

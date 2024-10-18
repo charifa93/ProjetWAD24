@@ -104,48 +104,47 @@ class GestionRecettesController extends AbstractController
         }
 
         $vars = ['form' => $form];
-        return $this->render('gestion_recettes/recherche_form.html.twig', $vars);
+        return $this->render('gestion_recettes/rechercheSansAjax.html.twig', $vars);
     }
 
     //     ////////// rechercher une recette et l'afficher sans ajax //////////
 
-    //     #[Route('/gestion/recettes/recherche/resultats', name : 'rechercheParTitreResultat')]
-    //     public function rechercheResultat(Request $req, RecetteRepository $rep){
-    //         // dd($req->get('filtre'));
-    //         $filtreArray = json_decode($req->get('filtre'), true);
-    //         $recettes = $rep->recherche($filtreArray);
+        #[Route('/gestion/recettes/recherche/resultats', name : 'rechercheParTitreResultat')]
+        public function rechercheResultat(Request $req, RecetteRepository $rep){
+            // dd($req->get('filtre'));
+            $filtreArray = json_decode($req->get('filtre'), true);
+            $recettes = $rep->recherche($filtreArray);
 
-    //         $vars = ['recettes'=>$recettes];
-    //         return $this->render('gestion_recettes/afficher_recettes.html.twig',$vars);
+            $vars = ['recettes'=>$recettes];
+            return $this->render('includes/navBootstrap.html.twig',$vars);
 
-    //     }
+        }
 
-    // /////////////// afficher une recette sans ajax //////////////
-    // #[Route('/gestion/recettes/afficher/{id}', name : 'afficherUneRecette')]
-    // public function afficherUneRecette(RecetteRepository $recette, $id)
-    // {
-    //     $recette = $recette->find($id);
+    /////////////// afficher une recette sans ajax //////////////
+    #[Route('/gestion/recettes/afficher/{id}', name : 'afficherUneRecette')]
+    public function afficherUneRecette(RecetteRepository $recette, $id)
+    {
+        $recette = $recette->find($id);
 
-    //     if (!$recette) {
-    //         throw $this->createNotFoundException('Recette non trouvée.');
-    //     }
+        if (!$recette) {
+            throw $this->createNotFoundException('Recette non trouvée.');
+        }
 
-    //     $vars = ['recette' => $recette];
+        $vars = ['recette' => $recette];
 
-    //     return $this->render('gestion_recettes/afficher_une_recette.html.twig', $vars);
-    // }
+        return $this->render('recette/index.html.twig', $vars);
+    }
 
 
     /////////////// recherche avec ajax //////////////
 
-    #[Route('/gestion/recettes/rechercheAjax', name: 'rechercheParTitreAjax')]
+    #[Route('/gestion/recettes/recherche/ajax', name: 'rechercheParTitreAjax')]
     public function rechercheAjax(Request $req, RecetteRepository $rep, SerializerInterface $serializer): Response
     {
         $form = $this->createForm(RechercheRecetteType::class);
         $form->handleRequest($req);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
             $recettes = $rep->rechercheRecetteFiltres($form->getData());  //($form->getData()) c un array 
             // dd($recettes);
 
@@ -156,7 +155,7 @@ class GestionRecettesController extends AbstractController
         }
         $vars = ['form' => $form];
 
-        return $this->render('gestion_recettes/recherche_form.html.twig', $vars);
+        return $this->render('acceuil/index.html.twig', $vars);
     }
 
     #[Route('/gestion/recettes/rechercheAjax/resultats', name: 'rechercheParTitreResultatAjax')]
@@ -195,6 +194,7 @@ class GestionRecettesController extends AbstractController
 
      return new Response($recettesJson);
     }
+    
 
    
 }

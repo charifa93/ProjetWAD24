@@ -1,66 +1,77 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Recette{% endblock %}
+ 
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags ('showRecette') }}
+{% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags ('showRecette') }}		
+{% endblock %}
 
 {% block body %}
     <h1>Recette</h1>
 
 
+ <div class="container recipe-container">
+        <div class="row">
+            <!-- Recipe Details Section -->
+            <div class="col-lg-6">
+                <div class="tags">
+                    <span class="tag">TM5</span>
+                    <span class="tag">TM6</span>
+                </div>
+                <div class="recipe-title">{{ recette.titre }}</div>
+                <div class="rating">
+                    &#9733;&#9733;&#9733;&#9733;&#9733; <span>{{ recette.difficulte }}</span>
+                </div>
+                <button class="btn-signup"> Ajouter au favoris</button>
+            </div>
 
-    <table class="table">
-        <tbody>
-           
-            <tr>
-                <th>Titre</th>
-                <td>{{ recette.titre }}</td>
-            </tr>
-            <tr>
-                <th>Description</th>
-                <td>{{ recette.description }}</td>
-            </tr>
-            <tr>
-                <th>DatePublication</th>
-                <td>{{ recette.datePublication ? recette.datePublication|date('Y-m-d') : '' }}</td>
-            </tr>
-            <tr>
-                <th>TempsDePreparation</th>
-                <td>{{ recette.tempsDePreparation ? recette.tempsDePreparation|date('H:i:s') : '' }}</td>
-            </tr>
-            <tr>
-                <th>TempsDeCuison</th>
-                <td>{{ recette.tempsDeCuison ? recette.tempsDeCuison|date('H:i:s') : '' }}</td>
-            </tr>
-            <tr>
-                <th>Difficulte</th>
-                <td>{{ recette.difficulte }}</td>
-            </tr>
-            <tr>
-                <th>Image</th>
-                <td>{{ recette.image }}</td>
-            </tr>
-            <tr>
-                <th>NombrePortions</th>
-                <td>{{ recette.nombrePortions }}</td>
-            </tr>
-            <tr>
-                <th>Saison</th>
-                <td>{{ recette.saison.value }}</td>
-            </tr>
-            {# <tr>
-                <th>typeDePlat</th>
-                <td>{{ recette.typeDePlat.value }}</td>
-            </tr> #}
+            <!-- Recipe Image Section -->
+            <div class="col-lg-6 recipe-image">
+                <img src="{{ recette.image }}" alt="Sabayon">
+            </div>
+        </div>
+</div>
+        <!-- Meta Information Section -->
+        <div class="row recipe-meta">
+            <div class="col-lg-3 col-sm-6 meta-item">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-trophy-fill" viewBox="0 0 16 16">
+                    <path d="M3 1.5A1.5 1.5 0 0 1 4.5 0h7A1.5 1.5 0 0 1 13 1.5V3h1a2 2 0 0 1 2 2v1a3 3 0 0 1-2.938 2.995 6.001 6.001 0 0 1-4.573 4.405A1.998 1.998 0 0 1 9 15v1h1a.5.5 0 0 1 0 1H6a.5.5 0 0 1 0-1h1v-1a1.998 1.998 0 0 1-1.489-1.6 6.001 6.001 0 0 1-4.573-4.405A3 3 0 0 1 0 6V5a2 2 0 0 1 2-2h1V1.5zm1 1V3h8v-.5a.5.5 0 0 0-.5-.5h-7a.5.5 0 0 0-.5.5z" />
+                </svg>
+                <span>Niveau</span> Facile
+            </div>
 
-            <tr>
-                <th>cree par :</th>
-                <td>{{ recette.utilisateur.nom}}</td>
-            </tr>
-        </tbody>
-    </table>
+            <div class="col-lg-3 col-sm-6 meta-item">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-clock-fill" viewBox="0 0 16 16">
+                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM7.5 3.5a.5.5 0 0 0-1 0v5a.5.5 0 0 0 .757.429l3.5-2a.5.5 0 1 0-.514-.858L7.5 7.694V3.5z" />
+                </svg>
+                <span>Temps de préparation</span> {{ recette.tempsDePreparation ? recette.tempsDePreparation|date('H:i:s') : '' }}
+            </div>
 
+            <div class="col-lg-3 col-sm-6 meta-item">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-stopwatch-fill" viewBox="0 0 16 16">
+                    <path d="M6.5 0a.5.5 0 0 0 0 1H7v1.07A7.004 7.004 0 0 0 1 8a7 7 0 1 0 10.93-6H12a.5.5 0 0 0 0-1h-.5V1h.5a.5.5 0 0 0 0-1h-5zM8 15A6 6 0 1 1 8 3a6 6 0 0 1 0 12z" />
+                </svg>
+                <span>Temps de cuison </span> {{ recette.tempsDeCuison ? recette.tempsDeCuison|date('H:i:s') : '' }}
+            </div>
+
+            <div class="col-lg-3 col-sm-6 meta-item">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-people-fill" viewBox="0 0 16 16">
+                    <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm5.784.85A2.785 2.785 0 0 0 12.5 8h-9a2.785 2.785 0 0 0-1.284.85A2.478 2.478 0 0 0 1 10.5v.577c0 .19.112.36.281.445l4.886 2.478h3.666l4.886-2.478a.502.502 0 0 0 .281-.445V10.5a2.478 2.478 0 0 0-.716-1.65z" />
+                </svg>
+                <span>Portions</span> {{ recette.nombrePortions }}
+            </div>
+        </div>
+    
+        
+{# 
     <a href="{{ path('app_recette_index') }}">back to list</a>
 
-    <a href="{{ path('app_recette_edit', {'id': recette.id}) }}">edit</a>
-
-    {{ include('recette/_delete_form.html.twig') }}
+    <a href="{{ path('app_recette_edit', {'id': recette.id}) }}">edit</a> #}
+{# 
+    {{ include('recette/_delete_form.html.twig') }} #}
 {% endblock %}

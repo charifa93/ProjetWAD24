@@ -46,6 +46,8 @@ class UtilisateurFixtures extends Fixture
             $user->setPrenom("prenom" . $i); 
 
             $user->setPassword($hashedPassword);
+            //  des photo de profil par fiker 
+            $user->setPhoto("https://randomuser.me/api/portraits/men/" . $i . ".jpg");
 
             // accesible
             $this->addReference('utilisateur' . $i, $user);

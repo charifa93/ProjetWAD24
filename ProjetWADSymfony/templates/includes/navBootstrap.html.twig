@@ -1,38 +1,54 @@
-<nav class="navbar navbar-expand-lg bg-body-tertiary">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="#">Navbar</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="{{ path('accueil') }}">Home</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{{ path('app_recette_index')}}">Recettes</a>
-        </li>
-      </ul>
-    </div>
-  </div>
-  {% if is_granted ('ROLE_ADMIN') %}
+   <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <!-- Brand -->
+            <a class="navbar-brand" href="#">
+                <div class="logo">
+                    <span>Logo </span>
+                </div>
+            </a>
+            <!-- Navbar links -->
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="{{ path('accueil') }}">home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_recette_index')}}">recettes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">blog</a>
+                    </li>
+                    
+                </ul>
+                <!-- Search and Profile -->
+                {# <form class="d-flex" action="">
+                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">  
+                    <button type="submit">Rechercher</button>
+                </form> #}
+                <div class="profile-icon">
+                        <img src="https://via.placeholder.com/40" alt="Profile" class="rounded-circle" >
+                    </div>
+            </div>
+        </div>
+  
+  {# {% if is_granted ('ROLE_ADMIN') %} #}
 		{# <a href="">Option 3 admin</a>
 		<a href="">Option 4 admin</a> #}
-	{% endif %}
+	{# {% endif %}
     {% if is_granted ('ROLE_USER') %}
 		<a href="{{ path('app_recette_new')}}">ajouterRecette</a>
 
 		
-	{% endif %}
+	{% endif %} #}
 
-    {% if app.user %}
+    {# {% if app.user %}
 		Connecté:
 		{{ app.user.nom}}
-		{# et toutes les options dispo
+		et toutes les options dispo
 		                uniquement avec connexion #}
-		<a href="{{ path ('app_logout') }}">Logout</a>
+		{# <a href="{{ path ('app_logout') }}">Logout</a>
 	{% else %}
 		<a href="{{ path ('app_login') }}">Login</a>
-	{% endif %}
+	{% endif %}  #}
 
 </nav>

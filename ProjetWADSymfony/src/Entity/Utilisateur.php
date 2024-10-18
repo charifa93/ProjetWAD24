@@ -73,6 +73,9 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\ManyToMany(targetEntity: Recette::class, mappedBy: 'favoris')]
     private Collection $FavorisRecette;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $photo = null;
+
     public function __construct()
     {
         $this->UserNotes = new ArrayCollection();
@@ -324,6 +327,18 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         if ($this->FavorisRecette->removeElement($favorisRecette)) {
             $favorisRecette->removeFavori($this);
         }
+
+        return $this;
+    }
+
+    public function getPhoto(): ?string
+    {
+        return $this->photo;
+    }
+
+    public function setPhoto(?string $photo): static
+    {
+        $this->photo = $photo;
 
         return $this;
     }

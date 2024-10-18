@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Résultats de recherche{% endblock %}
+
+{% block body %}
+    <h1>Résultats de recherche</h1>
+
+    <!-- Affichage des résultats -->
+    {% if recettes is not empty %}
+        <div class="row">
+            {% for recette in recettes %}
+                <div class="col-md-4">
+                    <div class="card mb-4">
+                        <img src="{{ recette.image }}" class="card-img-top" alt="Image de {{ recette.titre }}">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ recette.titre }}</h5>
+                            <p class="card-text">Préparation : {{ recette.tempsDePreparation|date('H:i') }}</p>
+                            <p class="card-text">Difficulté : {{ recette.difficulte }}/5</p>
+                            <a href="{{ path('afficherUneRecette', { id: recette.id }) }}" class="btn btn-primary">Voir la recette</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>Aucune recette trouvée.</p>
+    {% endif %}
+    
+    <a href="{{ path('rechercheParTitreResultat') }}" class="btn btn-secondary mt-4">Retour à la recherche</a>
+{% endblock %}

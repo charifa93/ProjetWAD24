@@ -1,9 +1,79 @@
 {% extends 'base.html.twig' %}
 
+
 {% block title %}Hello AccueilController!{% endblock %}
 
-{% block body %}
-Bienvenue au site
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags ('autre') }}
+{% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+   
+    {{ encore_entry_link_tags ('autre') }}		
+{% endblock %}
+
+{% block body %}
+    <section class="hero-section">
+        <div class="container">
+
+
+        
+            <div class="hero-text">
+             {% if app.user %}
+              <h1> Bienvenue {{ app.user.prenom}} !</h1>
+   
+              {% else %}
+                <h1> Rejoignez CookiLala </h1>
+                <p>Des milliers de recettes. Une inspiration sans fin. Essayez-le dès maintenant gratuitement.</p>
+                <a href="{{ path('app_login') }}" class="btn btn-custom">Essayer gratuitement</a>
+            </div>
+             {% endif %}
+        </div>
+    </section>
+     {# <div class="search-section">
+    <h1>Trouver une recette !</h1>
+    <p>Dénichez la recette idéale en saisissant un nom d'ingrédient ou de recette !</p>
+
+    <form class="search-bar">
+      <div class="input-group">
+        <input type="text" class="form-control" placeholder="Recette ou ingrédients..." aria-label="Recette ou ingrédients">
+        <div class="input-group-append">
+          <button class="btn btn-outline-secondary" type="submit">🔍</button>
+        </div>
+      </div>
+    </form>
+  </div> #}
+<div class="search-section">
+  <h1>Trouver une recette !</h1>
+  <p>Dénichez la recette idéale en saisissant un nom d'ingrédient ou de recette !</p>
+
+  {# <form class="search-bar" id="searchForm">
+    <div class="input-group">
+      <input id="btn-recherche-ajax" type="text" class="form-control" placeholder="Recette ou ingrédients..." aria-label="Recette ou ingrédients" id="searchInput">
+      <div class="input-group-append">
+        <button class="btn btn-outline-secondary">🔍</button>
+      </div>
+    </div>
+  </form> #}
+
+  {{ form_start(form, { attr: {'id':'form_recherche'} })}}
+  {{ form_widget(form)}}
+        <button class="btn btn-outline-secondary">🔍</button>
+  {{ form_start(form)}}
+ </div>
+
+  <div id="divResultats">
+  </div>
+
+
+
+  <div id="results" style="margin-top: 20px;"></div> <!-- Div pour afficher les résultats -->
+</div>
+
+
+
+   
 
 {% endblock %}

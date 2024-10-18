@@ -24,7 +24,7 @@ class RecetteFixtures extends Fixture implements DependentFixtureInterface
             'titre' => $faker->sentence(3),
             'description' => $faker->text(100),
             'difficulte' => $faker->numberBetween(1,5),
-            'image' => $faker->imageUrl(640, 480, 'food', true),
+            'image' => $faker->imageUrl(640, 480, 'animals', true),
             'datePublication' => $faker->dateTimeBetween('-1 year', 'now'),
             'tempsDePreparation' => new \DateTime($faker->time()),
             'tempsDeCuison' => new \DateTime($faker->time()),
