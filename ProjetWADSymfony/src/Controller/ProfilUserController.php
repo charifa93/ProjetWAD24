@@ -25,7 +25,7 @@ class ProfilUserController extends AbstractController
         $user = $this->getUser();
 
         $vars = ['user' => $user];
-        return $this->render('profil_user/afficher_utilisateur.html.twig', $vars);
+        return $this->render('Utilisateur/profilUser.html.twig', $vars);
     }
 
 

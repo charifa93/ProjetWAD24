@@ -91,21 +91,24 @@
                                 <div class="icon-text"> {{ recette.nombrePortions}}</div>
                             </div>
                         </div>
-                            <div class="stars">
-                            {% if recette.difficulte == 1 %}
-                                &#9733;&#9734;&#9734;&#9734;&#9734;
-                            {% elseif recette.difficulte == 2 %}
-                                &#9733;&#9733;&#9734;&#9734;&#9734;
-                            {% elseif recette.difficulte == 3 %}
-                                &#9733;&#9733;&#9733;&#9734;&#9734;
-                            {% elseif recette.difficulte == 4 %}
-                                &#9733;&#9733;&#9733;&#9733;&#9734;
-                            {% elseif recette.difficulte == 5 %}
-                                &#9733;&#9733;&#9733;&#9733;&#9733;
-                            {% else %}
-                                &#9734;&#9734;&#9734;&#9734;&#9734;
-                            {% endif %}
-                            ({{ recette.difficulte }} notes)
+                          <div class="stars">
+                        {% set moyenneNote = moyennesNotes[recette.id] %}
+                        {% set nombreNote = nombreNotes[recette.id] %}
+
+                        {% if moyenneNote >= 4.5 %}
+                            &#9733;&#9733;&#9733;&#9733;&#9733;
+                        {% elseif moyenneNote >= 3.5 %}
+                            &#9733;&#9733;&#9733;&#9733;&#9734;
+                        {% elseif moyenneNote >= 2.5 %}
+                            &#9733;&#9733;&#9733;&#9734;&#9734;
+                        {% elseif moyenneNote >= 1.5 %}
+                            &#9733;&#9733;&#9734;&#9734;&#9734;
+                        {% elseif moyenneNote >= 0.5 %}
+                            &#9733;&#9734;&#9734;&#9734;&#9734;
+                        {% else %}
+                            &#9734;&#9734;&#9734;&#9734;&#9734;
+                        {% endif %}
+                        ( {{ nombreNote }} avis)
                         </div>
                     </div>
                 </div>

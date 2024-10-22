@@ -9,6 +9,7 @@ use App\Enum\TypeDePlat;
 use App\Form\RecetteType;
 use App\Enum\Preparations;
 use App\Form\RechercheRecetteType;
+use App\Repository\NoteRepository;
 use App\Repository\RecetteRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
@@ -28,14 +29,37 @@ final class RecetteController extends AbstractController
         $this->doctrine = $doctrine;
     }
     #[Route(name: 'app_recette_index', methods: ['GET'])]
-    public function index(RecetteRepository $recetteRepository ): Response
+    public function index(RecetteRepository $recetteRepository , NoteRepository $noteRepository): Response
     {
-       
-        $vars =['recettes' => $recetteRepository->findAll(),
-                'saisons' => Saison::cases(),
-                'typeDePlats' => TypeDePlat::cases(),
-                'origines' => Origine::cases(),
-                'preparations' => Preparations::cases()];
+        $recettes = $recetteRepository->findAll();
+        if (empty($recettes)) {
+            throw $this->createNotFoundException('Aucune recette trouvée.');
+        }
+    
+        $moyennesNotes = [];
+        $nombreNotes = [];
+    
+        foreach ($recettes as $recette) {
+            $notes = $noteRepository->findBy(['recette' => $recette]);
+            $nombreNotes[$recette->getId()] = count($notes);
+    
+            if ($nombreNotes[$recette->getId()] > 0) {
+                $sommeNotes = array_sum(array_map(fn($note) => $note->getValeur(), $notes));
+                $moyennesNotes[$recette->getId()] = round($sommeNotes / $nombreNotes[$recette->getId()], 1);
+            } else {
+                $moyennesNotes[$recette->getId()] = 0;
+            }
+        }
+    
+        $vars = [
+            'recettes' => $recettes,
+            'saisons' => Saison::cases(),
+            'typeDePlats' => TypeDePlat::cases(),
+            'origines' => Origine::cases(),
+            'preparations' => Preparations::cases(),
+            'moyennesNotes' => $moyennesNotes,
+            'nombreNotes' => $nombreNotes
+        ];
                 
         return $this->render('recette/index.html.twig',$vars);
     }
@@ -147,18 +171,41 @@ final class RecetteController extends AbstractController
 
     /////////////// afficher une recette sans ajax //////////////
     #[Route('/gestion/recettes/afficher/{id}', name : 'afficherUneRecette')]
-    public function afficherUneRecette(RecetteRepository $recette, $id)
+    public function afficherUneRecette(RecetteRepository $recette, $id, NoteRepository $noteRepository) 
     {
         $recette = $recette->find($id);
 
         if (!$recette) {
             throw $this->createNotFoundException('Recette non trouvée.');
         }
-
-        $vars = ['recette' => $recette];
+    
+        // Calcul de la moyenne des notes pour cette recette
+        $notes = $noteRepository->findBy(['recette' => $recette]);
+        $moyenneNote = 0;
+        $nombreNotes = count($notes);
+    
+        if ($nombreNotes > 0) {
+            $sommeNotes = array_sum(array_map(function($note) {
+                return $note->getValeur();
+            }, $notes));
+            $moyenneNote = round($sommeNotes / $nombreNotes, 1);
+        }
+    
+        $vars = [
+            'recette' => $recette,
+            'moyenneNote' => $moyenneNote,
+            'nombreNotes' => $nombreNotes
+        ];
 
         return $this->render('recette/show.html.twig', $vars);
     }
+
+
+    // ///////////// clculer le moyenne des notes d'une recette //////////  //////////////
+
+    
+    
+
 
 }
 
