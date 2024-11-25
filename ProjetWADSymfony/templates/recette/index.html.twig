@@ -110,14 +110,19 @@
                         {% endif %}
                         ( {{ nombreNote }} avis)
                         </div>
+                        <a href="{{ path('app_recette_show', {'id': recette.id}) }}">show</a>
                     </div>
                 </div>
+                
+               
+                
             </div>
             {% endfor %}
         </div>
     {% endif %}
 </div>
 </div>
+
 
 
     

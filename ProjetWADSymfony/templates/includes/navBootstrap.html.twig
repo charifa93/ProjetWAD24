@@ -27,13 +27,20 @@
                 </form> #}
                 <div class="profile-icon dropdown">
     <img src="https://via.placeholder.com/40" alt="Profile" class="rounded-circle dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-    <ul class="dropdown-menu dropdown-menu-end">
-        <li><a class="dropdown-item" href="">Mon profil</a></li>
-        <li><a class="dropdown-item" href="#">Paramètres</a></li>
+   
+
+     {% if app.user %}
+             <ul class="dropdown-menu dropdown-menu-end">
+                <li><a class="dropdown-item" href="">Mon profil</a></li>
+        <li><a class="dropdown-item" href="">Paramètres</a></li>
         <li><hr class="dropdown-divider"></li>
         
-        <li><a class="dropdown-item" href="">Déconnexion</a></li>
-    </ul>
+        <li><a class="dropdown-item" href="{{ path('app_logout')}}">Déconnexion</a></li>
+    </ul>  
+            
+        {% endif %}
+
+     
 </div>
             </div>
         </div>
