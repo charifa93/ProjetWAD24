@@ -23,8 +23,8 @@ class RecetteFixtures extends Fixture implements DependentFixtureInterface
            $recette = new Recette([
             'titre' => $faker->sentence(3),
             'description' => $faker->text(100),
-            'difficulte' => $faker->numberBetween(1,5),
-            'image' => $faker->imageUrl(640, 480, 'animals', true),
+            'difficulte' => $faker->randomElement(['Facile', 'Moyen', 'Difficile']),
+            'image' => $faker->imageUrl(50 , 50, 'recettes', true),
             'datePublication' => $faker->dateTimeBetween('-1 year', 'now'),
             'tempsDePreparation' => new \DateTime($faker->time()),
             'tempsDeCuison' => new \DateTime($faker->time()),
@@ -37,7 +37,7 @@ class RecetteFixtures extends Fixture implements DependentFixtureInterface
 
         //////////////// enum ////////////////
            $recette->setSaison(Saison::cases()[rand(0,4)]);
-           $recette->setType(TypeDePlat::cases()[rand(0,7)]);
+           $recette->setTypeDePlat(TypeDePlat::cases()[rand(0,7)]);
            $recette->setOrigine(Origine::cases()[rand(0,8)]);
            $recette->setPreparations(Preparations::cases()[rand(0,16)]);
 

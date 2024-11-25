@@ -1,20 +1,14 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Recette{% endblock %}
- 
-{% block javascripts %}
-    {{ parent() }}
-    {{ encore_entry_script_tags ('showRecette') }}
-{% endblock %}
+
 {% block stylesheets %}
     {{ parent() }}
     {{ encore_entry_link_tags ('showRecette') }}		
 {% endblock %}
 
 {% block body %}
-    <h1>Recette</h1>
-
-
+   
  <div class="container recipe-container">
         <div class="row">
             <!-- Recipe Details Section -->
@@ -25,28 +19,37 @@
                 </div>
                 <div class="recipe-title">{{ recette.titre }}</div>
                 <div class="rating">
-                    &#9733;&#9733;&#9733;&#9733;&#9733; <span>{{ recette.difficulte }}</span>
+                    &#9733;&#9733;&#9733;&#9733;&#9733; 
                 </div>
+                
+               
+                    {# {% for recette in recettes %}
+                     <div class="stars">
+                        {% set moyenneNote = moyennesNotes[recette.id] %}
+                        {% set nombreNote = nombreNotes[recette.id] %}
 
-                  <div class="rating">
-                            {% if moyenneNote == 1 %}
-                                &#9733;&#9734;&#9734;&#9734;&#9734;
-                            {% elseif recette.difficulte == 2 %}
-                                &#9733;&#9733;&#9734;&#9734;&#9734;
-                            {% elseif recette.difficulte == 3 %}
-                                &#9733;&#9733;&#9733;&#9734;&#9734;
-                            {% elseif recette.difficulte == 4 %}
-                                &#9733;&#9733;&#9733;&#9733;&#9734;
-                            {% elseif recette.difficulte == 5 %}
-                                &#9733;&#9733;&#9733;&#9733;&#9733;
-                            {% else %}
-                                &#9734;&#9734;&#9734;&#9734;&#9734;
-                            {% endif %}
-                            ({{ nombreNotes }} notes)
+                        {% if moyenneNote >= 4.5 %}
+                            &#9733;&#9733;&#9733;&#9733;&#9733;
+                        {% elseif moyenneNote >= 3.5 %}
+                            &#9733;&#9733;&#9733;&#9733;&#9734;
+                        {% elseif moyenneNote >= 2.5 %}
+                            &#9733;&#9733;&#9733;&#9734;&#9734;
+                        {% elseif moyenneNote >= 1.5 %}
+                            &#9733;&#9733;&#9734;&#9734;&#9734;
+                        {% elseif moyenneNote >= 0.5 %}
+                            &#9733;&#9734;&#9734;&#9734;&#9734;
+                        {% else %}
+                            &#9734;&#9734;&#9734;&#9734;&#9734;
+                        {% endif %}
+                        ( {{ nombreNote }} avis)
                         </div>
+                        {% endfor %} #}
+                        
 
-
-                <button class="btn-signup"> Ajouter au favoris</button>
+                {% if app.user %}
+                 <a href="{{ path ('app_utilisateur_favoris', {'id': recette.id})}}" class="btn btn-primary">Ajouter à mes favoris</a>
+               
+                {% endif %}
             </div>
 
             <!-- Recipe Image Section -->
@@ -61,7 +64,7 @@
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-trophy-fill" viewBox="0 0 16 16">
                     <path d="M3 1.5A1.5 1.5 0 0 1 4.5 0h7A1.5 1.5 0 0 1 13 1.5V3h1a2 2 0 0 1 2 2v1a3 3 0 0 1-2.938 2.995 6.001 6.001 0 0 1-4.573 4.405A1.998 1.998 0 0 1 9 15v1h1a.5.5 0 0 1 0 1H6a.5.5 0 0 1 0-1h1v-1a1.998 1.998 0 0 1-1.489-1.6 6.001 6.001 0 0 1-4.573-4.405A3 3 0 0 1 0 6V5a2 2 0 0 1 2-2h1V1.5zm1 1V3h8v-.5a.5.5 0 0 0-.5-.5h-7a.5.5 0 0 0-.5.5z" />
                 </svg>
-                <span>Niveau</span> Facile
+                <span>Niveau</span> {{ recette.difficulte }}
             </div>
 
             <div class="col-lg-3 col-sm-6 meta-item">
@@ -85,11 +88,45 @@
                 <span>Portions</span> {{ recette.nombrePortions }}
             </div>
         </div>
+        
+         {# <div >
+         <h2> cree par : {{ recette.utilisateur.Nom  }} {{ recette.utilisateur.prenom }}</h2>
+         </div> #}
+                
+        
+
+        <div class="row recipe-ingredients">
+        <div class="col-lg-12 recipe-ingredients-title">
+        <h2>Ingredients</h2>
+        {# <div class="recipe-ingredients-list">
+        {% for detail in recette.detailRecette %}
+        <div class="recipe-ingredients-item">
+        <div class="recipe-ingredients-item-name">{{ detail.ingredient }}</div>
+        
+            
+        {% endfor %} #}
+       
+
+        
+       
+        </div>
+        </div>
+
+        <div class="row recipe-description">
+        <div class="col-lg-12 recipe-description-title">
+        <h2>Description</h2>
+        </div>
+        <p >{{ recette.description }}</p>
+
+       
+
+
+
     
         
-{# 
-    <a href="{{ path('app_recette_index') }}">back to list</a>
-
+ 
+    <a href="{{ path ('app_recette_index') }}">back to list</a>
+{#
     <a href="{{ path('app_recette_edit', {'id': recette.id}) }}">edit</a> #}
 {# 
     {{ include('recette/_delete_form.html.twig') }} #}

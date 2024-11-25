@@ -8,6 +8,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 
 class UtilisateurType extends AbstractType
 {
@@ -15,14 +16,14 @@ class UtilisateurType extends AbstractType
     {
         $builder
             ->add('email')
-            ->add('roles')
+            
             ->add('password')
             ->add('nom')
             ->add('prenom')
-            ->add('FavorisRecette', EntityType::class, [
-                'class' => Recette::class,
-                'choice_label' => 'id',
-                'multiple' => true,
+            ->add('photo', FileType::class, [
+                'label' => 'photo de profil ',
+                'required' => false,
+                
             ])
         ;
     }

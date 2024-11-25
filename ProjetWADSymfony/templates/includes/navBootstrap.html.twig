@@ -15,25 +15,11 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{{ path('app_recette_index')}}">recettes</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">blog</a>
-                    </li>
+                   
                     
                 </ul>
-                <!-- Search and Profile -->
-                {# <form class="d-flex" action="">
-                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">  
-                    <button type="submit">Rechercher</button>
-                </form> #}
-                <div class="profile-icon dropdown">
-    <img src="https://via.placeholder.com/40" alt="Profile" class="rounded-circle dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-    <ul class="dropdown-menu dropdown-menu-end">
-        <li><a class="dropdown-item" href="">Mon profil</a></li>
-        <li><a class="dropdown-item" href="#">Paramètres</a></li>
-        <li><hr class="dropdown-divider"></li>
-        
-        <li><a class="dropdown-item" href="">Déconnexion</a></li>
-    </ul>
+               
+               
 </div>
             </div>
         </div>
@@ -48,14 +34,28 @@
 		
 	{% endif %} #}
 
-    {# {% if app.user %}
-		Connecté:
+     {% if app.user %}
+
+     <a href="{{ path('app_recette_new')}}">ajouterRecette</a>
+
+      <div class="profile-icon dropdown">
+    <img src="https://via.placeholder.com/40" alt="Profile" class="rounded-circle dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+    <ul class="dropdown-menu dropdown-menu-end">
+        <li><a class="dropdown-item" href="{{ path ('app_utilisateur_profil', { id: app.user.id }) }}">Mon profil</a></li>
+        <li><a class="dropdown-item" href="{{ path ('app_utilisateur_recettes', { id: app.user.id }) }}">Mes recettes</a></li>
+        <li><a class="dropdown-item" href="{{ path ('app_utilisateur_favoris', { id: app.user.id }) }}">Mes favoris</a></li>
+        <li><hr class="dropdown-divider"></li>
+        
+        <li><a class="dropdown-item" href="{{ path ('app_logout')}}">Déconnexion</a></li>
+    </ul>
+
+		 {# Connecté:
 		{{ app.user.nom}}
 		et toutes les options dispo
 		                uniquement avec connexion #}
-		{# <a href="{{ path ('app_logout') }}">Logout</a>
+		{# {<a href="{{ path ('app_logout') }}">Logout</a>
 	{% else %}
-		<a href="{{ path ('app_login') }}">Login</a>
-	{% endif %}  #}
+		<a href="{{ path ('app_login') }}">Login</a> #}
+	{% endif %} 
 
 </nav>

@@ -7,40 +7,35 @@
     <div class="row">
         <div class="col-md-4">
             <div class="card">
-                <img src="{{ asset('images/default-profile.jpg') }}" class="card-img-top" alt="Photo de profil">
+                <img src={{ utilisateur.photo }} class="card-img-top" alt="Photo de profil">
                 <div class="card-body">
-                    <h5 class="card-title">{{ user.fullName }}</h5>
-                    <p class="card-text">{{ user.email }}</p>
-                    <a href="#" class="btn btn-primary">Modifier la photo</a>
+                    <h5 class="card-title">{{ utilisateur.nom }}</h5>
+                    <p class="card-text">{{ utilisateur.email }}</p>
+                    <a href="{{ path ('app_utilisateur_edit', { id: utilisateur.id }) }}"  class="btn btn-primary">Modifier la photo</a>
                 </div>
             </div>
         </div>
         <div class="col-md-8">
-            <h2>Informations personnelles</h2>
-            <form>
-                <div class="mb-3">
-                    <label for="fullName" class="form-label">Nom complet</label>
-                    <input type="text" class="form-control" id="fullName" value="{{ user.nom }}">
-                </div>
-                <div class="mb-3">
-                    <label for="email" class="form-label">Adresse e-mail</label>
-                    <input type="email" class="form-control" id="email" value="{{ user.email }}">
-                </div>
-                <div class="mb-3">
-                    <label for="bio" class="form-label">Biographie</label>
-                    <textarea class="form-control" id="bio" rows="3">{{ user.bio }}</textarea>
-                </div>
-                <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
-            </form>
-
+            
             <h2 class="mt-5">Activité récente</h2>
             <ul class="list-group">
-                {% for activity in user.recentActivities %}
-                    <li class="list-group-item">{{ activity.description }} - {{ activity.date|date('d/m/Y') }}</li>
+                {% for recette in utilisateur.recettes %}
+                    <li class="list-group-item">{{ recette.titre }} </li>
                 {% else %}
                     <li class="list-group-item">Aucune activité récente.</li>
                 {% endfor %}
             </ul>
+
+            <h2 class="mt-5">mes favoris</h2>
+            <ul class="list-group">
+            {% for recette in utilisateur.FavorisRecette %}
+            <li class="list-group-item">{{ recette.title }}</li>
+            <li class="list-group-item">{{ recette.description }}</li>
+            {% else %}
+            <li class="list-group-item">Aucun favoris.</li>
+            {% endfor %}
+
+
         </div>
     </div>
 </div>

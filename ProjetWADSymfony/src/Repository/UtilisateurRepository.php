@@ -32,5 +32,14 @@ class UtilisateurRepository extends ServiceEntityRepository implements PasswordU
         $this->getEntityManager()->persist($user);
         $this->getEntityManager()->flush();
     }
-}
+    // les recette de l'utilisateur en fonction de son id ////////////////
+    public function mesRecettes(string $recettes){
+        $em = $this->getEntityManager();
+        $query = $em->createQuery('SELECT R FROM App\Entity\Utilisateur U WHERE U.Recettesr=:recettes' )->setParameter('recettes', $recettes);
+        return $query->getResult();
+        }
+        
+    }
+    
+
 

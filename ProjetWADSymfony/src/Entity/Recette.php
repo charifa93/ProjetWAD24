@@ -12,6 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Repository\RecetteRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: RecetteRepository::class)]
 class Recette
@@ -38,24 +39,24 @@ class Recette
     #[ORM\Column(type: Types::TIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $tempsDeCuison = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?int $difficulte = null;
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $difficulte = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $image = null;
     
     // enum type//////
-    #[ORM\Column (type:"string" , enumType: Saison::class)]
+    #[ORM\Column(type: 'string', length: 255, enumType: Saison::class)]
     private Saison $saison;
 
-    #[ORM\Column (type:'string' , enumType: TypeDePlat::class)]
-    private TypeDePlat $typeDePlat;
+    #[ORM\Column (type:'string' ,length: 255, enumType: TypeDePlat::class)]
+    private ?TypeDePlat $typeDePlat;
 
     #[ORM\Column (type:"string" , enumType: Origine::class)]
-    private Origine $origine;
+    private Origine $origine  ;
 
     #[ORM\Column(type: "string" ,enumType: Preparations::class)]
-    private Preparations $preparation;
+    private Preparations $preparation ;
 
 
     #[ORM\ManyToOne(inversedBy: 'recettes')]
@@ -179,12 +180,12 @@ class Recette
         return $this;
     }
 
-    public function getDifficulte(): ?int
+    public function getDifficulte(): ?string
     {
         return $this->difficulte;
     }
 
-    public function setDifficulte(?int $difficulte): static
+    public function setDifficulte(?string $difficulte): static
     {
         $this->difficulte = $difficulte;
 
@@ -360,12 +361,14 @@ class Recette
     }
 
 
-    public function getType(): TypeDePlat
+    
+
+    public function getTypeDePlat(): ?TypeDePlat
     {
         return $this->typeDePlat;
     }
 
-    public function setType($typeDePlat): self
+    public function setTypeDePlat(?TypeDePlat $typeDePlat): self
     {
         $this->typeDePlat = $typeDePlat;
 

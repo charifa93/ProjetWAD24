@@ -1,13 +1,43 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit Utilisateur{% endblock %}
+{% block title %}Éditer un utilisateur{% endblock %}
 
 {% block body %}
-    <h1>Edit Utilisateur</h1>
+    <div class="container mt-5">
+        <h1 class="mb-4">Éditer un utilisateur</h1>
 
-    {{ include('utilisateur/_form.html.twig', {'button_label': 'Update'}) }}
+        {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
 
-    <a href="{{ path('app_utilisateur_index') }}">back to list</a>
+        <div class="form-group mb-3">
+            {{ form_label(form.nom, 'Nom', {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(form.nom, {'attr': {'class': 'form-control'}}) }}
+        </div>
 
-    {{ include('utilisateur/_delete_form.html.twig') }}
+        <div class="form-group mb-3">
+            {{ form_label(form.prenom, 'Prénom', {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(form.prenom, {'attr': {'class': 'form-control'}}) }}
+        </div>
+
+        <div class="form-group mb-3">
+            {{ form_label(form.email, 'Email', {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(form.email, {'attr': {'class': 'form-control'}}) }}
+        </div>
+
+        <div class="form-group mb-3">
+            {{ form_label(form.roles, 'Rôles', {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(form.roles, {'attr': {'class': 'form-control'}}) }}
+        </div>
+
+        <div class="form-group mb-3">
+            {{ form_label(form.password, 'Mot de passe', {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(form.password, {'attr': {'class': 'form-control'}}) }}
+        </div>
+
+        {{ form_errors(form) }}
+
+        <button type="submit" class="btn btn-primary">Enregistrer</button>
+        <a href="{{ path('app_utilisateur_index') }}" class="btn btn-secondary">Annuler</a>
+
+        {{ form_end(form) }}
+    </div>
 {% endblock %}

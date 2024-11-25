@@ -14,6 +14,7 @@
 {% block body %}
 
 
+
     {# Button pour afficher les saisons #}
 <button id="showSaisonsBtn">SAISON</button>
 <div id="saison" style="display:none;">  {# Ajout d'un style pour masquer par défaut #}
@@ -51,7 +52,7 @@
 
 
 
-<div id="divResultats" class="recettes-container container">
+<div id="divResultats" >
     {% if recettes is empty %}
         <p>Aucune recette disponible pour le moment.</p>
     {% else %}
@@ -60,7 +61,7 @@
                 <div class="col-lg-3 col-md-6">
                 <div class="recipe-card">
                     <div class="recipe-image">
-                        <img src="./images/pic05.jpg" alt="Pain cocotte aux carottes et aux noisettes">
+                        <img src="./images/pic05.jpg" alt="{{ recette.titre }}">
                     </div>
                     <div class="recipe-info">
                         <div class="recipe-title">{{ recette.titre }}</div>
@@ -111,7 +112,16 @@
                         ( {{ nombreNote }} avis)
                         </div>
                     </div>
+                    
+                        <a href="{{ path('app_recette_show', {'id': recette.id}) }}">Voir la recette</a>
+                        {% if app.user %}
+                        
+                 <a href="{{ path ('app_utilisateur_favoris', {'id': recette.utilisateur.id})}}" >❤️</a>
+
+                        {% endif %}
+                    
                 </div>
+
             </div>
             {% endfor %}
         </div>

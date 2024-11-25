@@ -8,7 +8,6 @@ use App\Entity\Recette;
 use App\Enum\TypeDePlat;
 use App\Form\RecetteType;
 use App\Enum\Preparations;
-use App\Form\RechercheRecetteType;
 use App\Repository\NoteRepository;
 use App\Repository\RecetteRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -19,16 +18,20 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
+
 
 #[Route('/recette')]
 final class RecetteController extends AbstractController
 {
     public ManagerRegistry $doctrine;
-    public function __construct(ManagerRegistry $doctrine)
+   
+    public function __construct(ManagerRegistry $doctrine )
     {
         $this->doctrine = $doctrine;
+        
     }
-    #[Route(name: 'app_recette_index', methods: ['GET'])]
+    #[Route(name: 'app_recette_index')]
     public function index(RecetteRepository $recetteRepository , NoteRepository $noteRepository): Response
     {
         $recettes = $recetteRepository->findAll();
@@ -68,15 +71,20 @@ final class RecetteController extends AbstractController
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $recette = new Recette();
-        $form = $this->createForm(RecetteType::class, $recette);
+
+        $form = $this->createForm(RecetteType::class, data: $recette);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $utilisateur = $this->getUser();
+            $recette->setUtilisateur($utilisateur);
             $entityManager->persist($recette);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_recette_index', [], Response::HTTP_SEE_OTHER);
-        }
+            
+    
+            return $this->redirectToRoute('app_utilisateur_recettes', ['id' => $this->getUser()->getId()]);    
+        }   
 
         return $this->render('recette/new.html.twig', [
             'recette' => $recette,
@@ -95,25 +103,25 @@ final class RecetteController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_recette_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Recette $recette, EntityManagerInterface $entityManager): Response
-    {
-        $form = $this->createForm(RecetteType::class, $recette);
-        $form->handleRequest($request);
+    // #[Route('/{id}/edit', name: 'app_recette_edit', methods: ['GET', 'POST'])]
+    // public function edit(Request $request, Recette $recette, EntityManagerInterface $entityManager): Response
+    // {
+    //     $form = $this->createForm(RecetteType::class, $recette);
+    //     $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
+    //     if ($form->isSubmitted() && $form->isValid()) {
+    //         $entityManager->flush();
 
-            return $this->redirectToRoute('app_recette_index', [], Response::HTTP_SEE_OTHER);
-        }
+    //         return $this->redirectToRoute('app_recette_index', [], Response::HTTP_SEE_OTHER);
+    //     }
 
-        return $this->render('recette/edit.html.twig', [
-            'recette' => $recette,
-            'form' => $form,
-        ]);
-    }
+    //     return $this->render('recette/edit.html.twig', [
+    //         'recette' => $recette,
+    //         'form' => $form,
+    //     ]);
+    // }
 
-    #[Route('/{id}', name: 'app_recette_delete', methods: ['POST'])]
+    #[Route('/{id}', name: 'app_recette_delete')]
     public function delete(Request $request, Recette $recette, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$recette->getId(), $request->getPayload()->getString('_token'))) {
@@ -121,7 +129,7 @@ final class RecetteController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('app_recette_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_utilisateur_recettes');
     }
 
 
@@ -156,18 +164,7 @@ final class RecetteController extends AbstractController
 
 
 
-  ////////// rechercher une recette et l'afficher sans ajax //////////
-
-        #[Route('/gestion/recettes/recherche/resultats', name : 'rechercheParTitreResultat')]
-        public function rechercheResultat(Request $req, RecetteRepository $rep){
-            // dd($req->get('filtre'));
-            $filtreArray = json_decode($req->get('filtre'), true);
-            $recettes = $rep->recherche($filtreArray);
-
-            $vars = ['recettes'=>$recettes];
-            return $this->render('accueil/index.html.twig',$vars);
-
-        }
+ 
 
     /////////////// afficher une recette sans ajax //////////////
     #[Route('/gestion/recettes/afficher/{id}', name : 'afficherUneRecette')]
@@ -200,14 +197,31 @@ final class RecetteController extends AbstractController
         return $this->render('recette/show.html.twig', $vars);
     }
 
+    /////////////// afficher les recettes par categorie //////////////
+    #[Route( '/gestion/recettes/afficher/{typeRecherche}/{valeur}', name: 'afficherRecetteRecherche')]
+    public function afficherRecetteParCategorie(RecetteRepository $rep, SerializerInterface $serializer, string $typeRecherche, string $valeur): Response
+    {
+        // Validate the parameters
+        if (empty($typeRecherche) || empty($valeur)) {
+            return new JsonResponse(['error' => 'Invalid parameters'], Response::HTTP_BAD_REQUEST);
+        }
 
-    // ///////////// clculer le moyenne des notes d'une recette //////////  //////////////
+        // Fetch recipes based on the search criteria
+        $recettes = $rep->rechercheRecetteCategorie($typeRecherche, $valeur);
 
-    
-    
+        // Check if recipes were found
+        if (empty($recettes)) {
+            return new JsonResponse(['message' => 'No recipes found'], Response::HTTP_NOT_FOUND);
+        }
 
+        // Serialize the recipes to JSON
+        $recettesJson = $serializer->serialize($recettes, 'json', [
+            AbstractNormalizer::ATTRIBUTES => ['id', 'titre', 'image', 'utilisateur' => ['nom']]
+        ]);
 
+        // Return the JSON response
+        return new JsonResponse($recettesJson, Response::HTTP_OK, [], true); // true for JSON response
+    }
 }
-
-
-
+ 
+   

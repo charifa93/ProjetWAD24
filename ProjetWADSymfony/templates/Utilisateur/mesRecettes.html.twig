@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon Profil{% endblock %}
+
+{% block body %}
+ <div class="container mt-5">
+        <h1 class="text-center mb-4">Mes Recette</h1>
+
+        <div class="row">
+            {% for recette in utilisateur.recettes %}
+                <div class="col-md-4">
+                    <div class="card mb-4 shadow-sm">
+                        <img src="{{ recette.image }}" class="card-img-top" alt="Image de {{ recette.titre }}">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ recette.titre }}</h5>
+                            <p class="card-text text-truncate" style="max-height: 3rem;">{{ recette.description }}</p>
+                            <a href="{{ path ('app_recette_show', { id: recette.id }) }}" class="btn btn-primary">Voir la recette</a>
+                            {# <a href="{{ path ('app_recette_edit', { id: recette.id }) }}" class="btn btn-primary">Modifier</a> #}
+                            <form action="{{ path('app_recette_delete', { id: recette.id }) }}" method="post" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette recette ?');">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ recette.id) }}">
+                                        <button type="submit">Supprimer</button>
+                            </form>  
+                        </div>
+                    </div>
+                    
+                </div>
+            {% else %}
+                <p class="text-center">Aucune recette trouvée.</p>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

@@ -12,50 +12,88 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TimeType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+
 
 class RecetteType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $builder
-            ->add('titre')
-            ->add('description')
-            ->add('datePublication', null, [
+        $builder 
+     
+            ->add('titre', TextType::class, [
+                'label' => 'Nom de la recette',
+                
+            ])  
+            ->add('description', TextareaType::class, [
+                'label' => 'Description de la recette',
+                
+            ])
+            ->add('datePublication', DateTimeType::class, [
+                'label' => 'Date de publication',
+                'widget' => 'single_text',
+                'format' => 'yyyy-MM-dd HH:mm:ss',
+            ])
+            ->add('tempsDePreparation', TimeType::class, [
+                'label' => 'Temps de préparation',
+                
                 'widget' => 'single_text',
             ])
-            ->add('tempsDePreparation', null, [
+            ->add('tempsDeCuison', TimeType::class, [
+                'label' => 'Temps de cuisson',
+                
                 'widget' => 'single_text',
             ])
-            ->add('tempsDeCuison', null, [
-                'widget' => 'single_text',
+            ->add('difficulte', ChoiceType::class, [
+                'label' => 'Difficulté',
+                
+                'choices' => [
+                    'Facile' => 'facile',
+                    'Moyen' => 'moyen',
+                    'Difficile' => 'difficile',
+                ],
+                'placeholder' => 'Sélectionnez une difficulté', // Optionnel, pour une valeur par défaut vide
             ])
-            ->add('difficulte')
-            ->add('image')
-            ->add('nombrePortions')
-            ->add('saison', EntityType::class, [
-                'class' => Saison::class,
+            ->add('image', FileType::class, [
+                'label' => 'Image de la recette',
+                
             ])
-            ->add('typeDePlat', EntityType::class, [ 
-                'class' => TypeDePlat::class,   
+            ->add('nombrePortions', IntegerType::class, [
+                'label' => 'Nombre de portions',
+                
             ])
-            ->add('origine', EntityType::class, [
-                'class' => Origine::class,
+            ->add('saison', ChoiceType::class, [
+                'choices' => Saison::cases(),
+                'choice_label' => fn(Saison $saison) => $saison->value,  // Pour afficher la valeur de l'énum
+                'label' => 'Saison',
             ])
-            ->add('preparations', EntityType::class, [
-                'class' => Preparations::class,
+              
+            ->add('origine', ChoiceType::class, [
+                'choices' => Origine::cases(),
+                'choice_label' => fn(Origine $origine) => $origine->value,  // Pour afficher la valeur de l'énum
+                'label' => 'Origine',
             ])
-            
-            ->add('utilisateur', EntityType::class, [
-                'class' => Utilisateur::class,
-                'choice_label' => 'id',
+            ->add(child: 'typeDePlat', type: ChoiceType::class, options: [
+                'choices' => TypeDePlat::cases(),
+                'choice_label' => fn(TypeDePlat $typeDePlat) => $typeDePlat->value,  // Pour afficher la valeur de l'énum
+                'label' => 'Type de plat',
             ])
-        ;
+            ->add('preparations', ChoiceType::class, options: [
+                'choices'=> Preparations::cases(),
+                'choice_label' => fn(Preparations $preparation) => $preparation->value,  // Pour afficher la valeur de l'énum
+                'label'=> 'Preparations',
+                ])
+                ;       
     }
-
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Recette::class,
+            'data_class' => recette::class,
         ]);
     }
 }
