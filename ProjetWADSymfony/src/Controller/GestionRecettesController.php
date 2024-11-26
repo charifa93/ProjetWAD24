@@ -46,157 +46,28 @@ class GestionRecettesController extends AbstractController
         return $this->render('gestion_recettes/afficher_recettes.html.twig', $vars);
     }
 
-    ////////// ajouter une nouvelle recette //////////
-    #[Route('/gestion/recettes/ajouter', name: 'ajouter')]
-    public function ajouter(Request $req)
+
+    ///////////// afficher les recettes par categorie //////////////
+    #[Route('/gestion/recettes/afficher/{typeRecherche}/{valeur}', name: 'afficherRecetteRecherche')]
+    public function RechercherParCategorie(RecetteRepository $rep, SerializerInterface $serializer, Request $req): Response
     {
-        $recette = new Recette();
-        $form = $this->createForm(
-            AjouterRecetteFormType::class,
-            $recette,
-            array('action' => $this->generateUrl('ajouter'), 'method' => 'POST')
-        );
-        $form->handleRequest($req);
 
-        $recette->setUtilisateur($this->getUser());
+        $typeRecherche = $req->get('typeRecherche');
+        $valeur = $req->get('valeur');
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->doctrine->getManager();
-            $em->persist($recette);
-            $em->flush();
+        // dump($valeur);
+        // dd($typeRecherche);
+        
+        if (isset($typeRecherche) && isset($valeur)) {
 
-            return $this->redirectToRoute('afficher');
-        }
-        return $this->render('gestion_recettes/ajouterRecette.html.twig', [
-            'form' => $form->createView()
-        ]);
-    }
+            $recettes = $rep->rechercheRecetteCategorie ($typeRecherche, $valeur);
 
-    ////////// modifier unerecette //////////
-    #[Route('/gestion/recettes/modifier/{id}', name: 'modifierRecette')]
-    public function modifier(Recette $recette, Request $req)
-    {
-        $form = $this->createForm(AjouterRecetteFormType::class, $recette);
-        $form->handleRequest($req);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->doctrine->getManager();
-            $em->persist($recette);
-            $em->flush();
-
-            return $this->redirectToRoute('afficher');
-        }
-
-        return $this->render('gestion_recettes/modifierRecette.html.twig', [
-            'form' => $form->createView()
-        ]);
-    }
-
-    ////////// affichage du form pour rechercher une recette //////////
-    #[Route('/gestion/recettes/recherche/form', name: 'rechercherParTitre')]
-    public function rechercheForm(Request $req)
-    {
-        $form = $this->createForm(RechercheRecetteType::class);
-        $form->handleRequest($req);
-        if ($form->isSubmitted() && $form->isValid()) {
-
-            return $this->redirectToRoute('rechercheParTitreResultat', ['filtre' => json_encode($form->getData())]);
-        }
-
-        $vars = ['form' => $form];
-        return $this->render('gestion_recettes/rechercheSansAjax.html.twig', $vars);
-    }
-
-    //     ////////// rechercher une recette et l'afficher sans ajax //////////
-
-        #[Route('/gestion/recettes/recherche/resultats', name : 'rechercheParTitreResultat')]
-        public function rechercheResultat(Request $req, RecetteRepository $rep){
-            // dd($req->get('filtre'));
-            $filtreArray = json_decode($req->get('filtre'), true);
-            $recettes = $rep->recherche($filtreArray);
-
-            $vars = ['recettes'=>$recettes];
-            return $this->render('includes/navBootstrap.html.twig',$vars);
-
-        }
-
-    /////////////// afficher une recette sans ajax //////////////
-    #[Route('/gestion/recettes/afficher/{id}', name : 'afficherUneRecette')]
-    public function afficherUneRecette(RecetteRepository $recette, $id)
-    {
-        $recette = $recette->find($id);
-
-        if (!$recette) {
-            throw $this->createNotFoundException('Recette non trouvée.');
-        }
-
-        $vars = ['recette' => $recette];
-
-        return $this->render('recette/index.html.twig', $vars);
-    }
-
-
-    /////////////// recherche avec ajax //////////////
-
-    #[Route('/gestion/recettes/recherche/ajax', name: 'rechercheParTitreAjax')]
-    public function rechercheAjax(Request $req, RecetteRepository $rep, SerializerInterface $serializer): Response
-    {
-        $form = $this->createForm(RechercheRecetteType::class);
-        $form->handleRequest($req);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $recettes = $rep->rechercheRecetteFiltres($form->getData());  //($form->getData()) c un array 
-            // dd($recettes);
-
-
-            $recettesJson = $serializer->serialize($recettes, 'json', [AbstractNormalizer::ATTRIBUTES => ['id', 'titre', 'description', 'image', 'utilisateur' => ['nom']]]);
+            $recettesJson = $serializer->serialize($recettes, 'json', [AbstractNormalizer::ATTRIBUTES => ['id', 'titre', 'image', 'utilisateur' => ['nom']]]);
 
             return new Response($recettesJson);
-        }
-        $vars = ['form' => $form];
-
-        return $this->render('acceuil/index.html.twig', $vars);
+        }  
     }
-
-    #[Route('/gestion/recettes/rechercheAjax/resultats', name: 'rechercheParTitreResultatAjax')]
-    public function rechercheResultatAjax()
-    {
-        return $this->render('gestion_recettes/afficher_recettes.html.twig');
-    }
-
-    /////////////// afficher les recettes par categorie //////////////
-    // #[Route('/gestion/recettes/afficher/{typeRecherche}/{valeur}', name: 'afficherRecetteRecherche')]
-    // public function afficherRecetteRecherche(RecetteRepository $rep, SerializerInterface $serializer, Request $req): Response
-    // {
-
-    //     $typeRecherche = $req->get('typeRecherche');
-    //     $valeur = $req->get('valeur');
-
-    //     // dump($valeur);
-    //     // dd($typeRecherche);
-        
-    //     if (isset($typeRecherche) && isset($valeur)) {
-
-    //         $recettes = $rep->rechercheRecetteCategorie ($typeRecherche, $valeur);
-
-    //         $recettesJson = $serializer->serialize($recettes, 'json', [AbstractNormalizer::ATTRIBUTES => ['id', 'titre', 'image', 'utilisateur' => ['nom']]]);
-
-    //         return new Response($recettesJson);
-    //     }  
-    // }
-
-    /////////////// afficher les recettes les 4 dernières ajoutées //////////////
-    #[Route('/gestion/recettes/afficher4Recettes', name: 'afficher4Recettes')]
-    public function afficher4Recettes(RecetteRepository $rep, SerializerInterface $serializer): Response
-    {
-     $recettes = $rep->findBy([], ['id' => 'DESC'], 4, 0);
-     $recettesJson = $serializer->serialize($recettes, 'json', [AbstractNormalizer::ATTRIBUTES => ['id', 'titre', 'image', 'utilisateur' => ['nom']]]);
-
-     return new Response($recettesJson);
-    }
-    
-
-   
+  
 }
 
   

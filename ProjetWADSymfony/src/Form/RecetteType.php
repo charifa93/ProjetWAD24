@@ -14,6 +14,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TimeType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
@@ -34,10 +35,10 @@ class RecetteType extends AbstractType
                 'label' => 'Description de la recette',
                 
             ])
-            ->add('datePublication', DateTimeType::class, [
+            ->add('datePublication', DateType::class, [
                 'label' => 'Date de publication',
+                
                 'widget' => 'single_text',
-                'format' => 'yyyy-MM-dd HH:mm:ss',
             ])
             ->add('tempsDePreparation', TimeType::class, [
                 'label' => 'Temps de préparation',
@@ -60,7 +61,7 @@ class RecetteType extends AbstractType
                 'placeholder' => 'Sélectionnez une difficulté', // Optionnel, pour une valeur par défaut vide
             ])
             ->add('image', FileType::class, [
-                'label' => 'Image de la recette',
+                'data_class' => null,
                 
             ])
             ->add('nombrePortions', IntegerType::class, [

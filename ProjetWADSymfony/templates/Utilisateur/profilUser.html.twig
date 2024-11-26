@@ -29,8 +29,8 @@
             <h2 class="mt-5">mes favoris</h2>
             <ul class="list-group">
             {% for recette in utilisateur.FavorisRecette %}
-            <li class="list-group-item">{{ recette.title }}</li>
-            <li class="list-group-item">{{ recette.description }}</li>
+            <li class="list-group-item">{{ recette.titre }}</li>
+            {# <li class="list-group-item">{{ recette.description }}</li> #}
             {% else %}
             <li class="list-group-item">Aucun favoris.</li>
             {% endfor %}

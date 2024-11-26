@@ -14,7 +14,7 @@
                         <div class="card-body">
                             <h5 class="card-title">{{ recette.titre }}</h5>
                             <p class="card-text text-truncate" style="max-height: 3rem;">{{ recette.description }}</p>
-                            <a href="{{ path('app_recette_detail', { id: recette.id }) }}" class="btn btn-primary">Voir la recette</a>
+                            <a href="{{ path('app_recette_show', { id: recette.id }) }}" class="btn btn-primary">Voir la recette</a>
                         </div>
                     </div>
                 </div>

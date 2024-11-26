@@ -29,13 +29,13 @@ final class UtilisateurController extends AbstractController
         
     }
 
-    #[Route(name: 'app_utilisateur_index', methods: ['GET'])]
-    public function index(UtilisateurRepository $utilisateurRepository): Response
-    {
-        return $this->render('utilisateur/index.html.twig', [
-            'utilisateurs' => $utilisateurRepository->findAll(),
-        ]);
-    }
+    // #[Route(name: 'app_utilisateur_index')]
+    // public function index(UtilisateurRepository $utilisateurRepository): Response
+    // {
+    //     return $this->render('utilisateur/index.html.twig', [
+    //         'utilisateurs' => $utilisateurRepository->findAll(),
+    //     ]);
+    // }
 
    
     
@@ -47,7 +47,7 @@ final class UtilisateurController extends AbstractController
             'utilisateur' => $utilisateur,
         ]);
     }
-
+/////////////////////////:edit utilisateur ://////////////////////////////
     #[Route('/{id}/edit', name: 'app_utilisateur_edit')]
     public function edit(Request $request, Utilisateur $utilisateur, EntityManagerInterface $entityManager): Response
     {
@@ -57,7 +57,7 @@ final class UtilisateurController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_utilisateur_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_utilisateur_profil', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('utilisateur/edit.html.twig', [
@@ -66,18 +66,20 @@ final class UtilisateurController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_utilisateur_delete')]
-    public function delete(Request $request, Utilisateur $utilisateur, EntityManagerInterface $entityManager): Response
-    {
-        if ($this->isCsrfTokenValid('delete'.$utilisateur->getId(), $request->getPayload()->getString('_token'))) {
-            $entityManager->remove($utilisateur);
-            $entityManager->flush();
-        }
+    // #[Route('/{id}', name: 'app_utilisateur_delete')]
+    // public function delete(Request $request, Utilisateur $utilisateur, EntityManagerInterface $entityManager): Response
+    // {
+    //     if ($this->isCsrfTokenValid('delete'.$utilisateur->getId(), $request->getPayload()->getString('_token'))) {
+    //         $entityManager->remove($utilisateur);
+    //         $entityManager->flush();
+    //     }
 
-        return $this->redirectToRoute('app_utilisateur_index', [], Response::HTTP_SEE_OTHER);
-    }
+    //     return $this->redirectToRoute('accueil', );
+    // }
 
-    #[Route('/{id}/profil', name: 'app_utilisateur_profil', methods: ['GET'])]
+
+    // afficher le profil de l'utilisateur ////
+    #[Route('/{id}/profil', name: 'app_utilisateur_profil')]
     public function profil(Utilisateur $utilisateur ): Response
     {
         
@@ -101,19 +103,19 @@ final class UtilisateurController extends AbstractController
 
     // /////////::ajouter une recette a  list  Favoris d'utilisateur connecter /////////////////
     #[Route('/{id}/favoris', name:'app_utilisateur_favoris')]
-    #[ParamConverter("utilisateur", class: "App\Entity\Utilisateur")]
     public function favoris(Utilisateur $utilisateur, Recette $recette, EntityManagerInterface $entityManager): Response
     {
         $utilisateur->addFavorisRecette($recette);
         $entityManager = $this->doctrine->getManager();
         $entityManager->persist($utilisateur);
-        $entityManager->persist($recette);
         $entityManager->flush();
        
-        return $this->render('utilisateur/favoris.html.twig', [
+        return $this->render('utilisateur/mesFavoris.html.twig', [
             'utilisateur' => $utilisateur,
         ]);
     }
+
+    // ///////// supprimer une recette d'utilisateur connecter /////////////////
 
     #[Route('/{id}/delete', name: 'app_recette_delete')]
     public function deleteRecette(Request $request, Recette $recette, EntityManagerInterface $entityManager): Response
@@ -133,6 +135,24 @@ final class UtilisateurController extends AbstractController
         return $this->redirectToRoute('app_utilisateur_recettes', ['id' => $this->getUser()->getId()]);
     }
 
-    ///////// modofier recette ////////////
-  
+    ///////// modofier recette  dans mesRecettes //////////////#
+#[Route('/{id}/recettes/edit', name: 'app_recette_edit')]  
+public function editRecette(Request $request, Recette $recette, EntityManagerInterface $entityManager): Response
+{
+    $form = $this->createForm(RecetteType::class, $recette);
+    $form->handleRequest($request);
+
+    if ($form->isSubmitted() && $form->isValid()) {
+        $entityManager->flush();
+
+        return $this->redirectToRoute('app_utilisateur_recettes', ['id' => $this->getUser()->getId()]);
+    }
+
+    return $this->render('recette/edit.html.twig', [
+        'recette' => $recette,
+        'form' => $form,
+    ]);
+}
+
+
 }

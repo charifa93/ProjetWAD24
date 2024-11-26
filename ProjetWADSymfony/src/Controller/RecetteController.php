@@ -5,8 +5,10 @@ namespace App\Controller;
 use App\Enum\Saison;
 use App\Enum\Origine;
 use App\Entity\Recette;
+use App\Entity\Commentaire;
 use App\Enum\TypeDePlat;
 use App\Form\RecetteType;
+use App\Form\CommentaireType;
 use App\Enum\Preparations;
 use App\Repository\NoteRepository;
 use App\Repository\RecetteRepository;
@@ -92,16 +94,51 @@ final class RecetteController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_recette_show', methods: ['GET'])]
-    public function show(Recette $recette ): Response
-    {
+    #[Route('/{id}', name: 'app_recette_show')]
+    // public function show(Recette $recette ): Response
+    // {
         
+    //     return $this->render('recette/show.html.twig', [
+    //         'recette' => $recette,
+    //         'saisons' => Saison::cases(),
+    //         'typeDePlats' => TypeDePlat::cases(),
+    //     ]);
+    // }
+
+
+
+  
+    public function show(
+        Recette $recette,Request $request,EntityManagerInterface $entityManager ): Response {
+        $commentaire = new Commentaire();
+        $form = $this->createForm(CommentaireType::class, $commentaire);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $commentaire->setRecette($recette);
+            $commentaire->setDateCommentaire(new \DateTime());
+            $entityManager->persist($commentaire);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app_recette_show', ['id' => $recette->getId()]);
+        }
+        $ingredients = [];
+        foreach ($recette->getDetailRecette() as $detail) {
+            $ingredients[] = [
+                'ingredient' => $detail->getIngredient(),
+                'quantite' => $detail->getQuantite(),
+                'uniteMesure' => $detail->getUniteMesure(),
+            ];
+        }
+
         return $this->render('recette/show.html.twig', [
             'recette' => $recette,
-            'saisons' => Saison::cases(),
-            'typeDePlats' => TypeDePlat::cases(),
+            'ingredients' => $ingredients,
+    
+            'commentaireForm' => $form->createView(),
         ]);
     }
+
 
     // #[Route('/{id}/edit', name: 'app_recette_edit', methods: ['GET', 'POST'])]
     // public function edit(Request $request, Recette $recette, EntityManagerInterface $entityManager): Response
@@ -197,31 +234,33 @@ final class RecetteController extends AbstractController
         return $this->render('recette/show.html.twig', $vars);
     }
 
-    /////////////// afficher les recettes par categorie //////////////
-    #[Route( '/gestion/recettes/afficher/{typeRecherche}/{valeur}', name: 'afficherRecetteRecherche')]
-    public function afficherRecetteParCategorie(RecetteRepository $rep, SerializerInterface $serializer, string $typeRecherche, string $valeur): Response
-    {
-        // Validate the parameters
-        if (empty($typeRecherche) || empty($valeur)) {
-            return new JsonResponse(['error' => 'Invalid parameters'], Response::HTTP_BAD_REQUEST);
-        }
+    //   ///////////// afficher les recettes par categorie //////////////
+    //   #[Route('/gestion/recettes/afficher/{typeRecherche}/{valeur}', name: 'afficherRecetteRecherche')]
+    //   public function RechercherParCategorie(RecetteRepository $rep, SerializerInterface $serializer, Request $req): Response
+    //   {
+  
+    //       $typeRecherche = $req->get('typeRecherche');
+    //       $valeur = $req->get('valeur');
+  
+    //       // dump($valeur);
+    //       // dd($typeRecherche);
+          
+    //       if (isset($typeRecherche) && isset($valeur)) {
+  
+    //           $recettes = $rep->rechercheRecetteCategorie ($typeRecherche, $valeur);
+  
+    //           $recettesJson = $serializer->serialize($recettes, 'json', [AbstractNormalizer::ATTRIBUTES => ['id', 'titre', 'image', 'utilisateur' => ['nom']]]);
+  
+    //           return new Response($recettesJson);
+    //       }  
+    //   }
+   
 
-        // Fetch recipes based on the search criteria
-        $recettes = $rep->rechercheRecetteCategorie($typeRecherche, $valeur);
 
-        // Check if recipes were found
-        if (empty($recettes)) {
-            return new JsonResponse(['message' => 'No recipes found'], Response::HTTP_NOT_FOUND);
-        }
 
-        // Serialize the recipes to JSON
-        $recettesJson = $serializer->serialize($recettes, 'json', [
-            AbstractNormalizer::ATTRIBUTES => ['id', 'titre', 'image', 'utilisateur' => ['nom']]
-        ]);
 
-        // Return the JSON response
-        return new JsonResponse($recettesJson, Response::HTTP_OK, [], true); // true for JSON response
-    }
+
+    
 }
  
    

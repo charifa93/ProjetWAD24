@@ -15,11 +15,11 @@
                             <h5 class="card-title">{{ recette.titre }}</h5>
                             <p class="card-text text-truncate" style="max-height: 3rem;">{{ recette.description }}</p>
                             <a href="{{ path ('app_recette_show', { id: recette.id }) }}" class="btn btn-primary">Voir la recette</a>
-                            {# <a href="{{ path ('app_recette_edit', { id: recette.id }) }}" class="btn btn-primary">Modifier</a> #}
                             <form action="{{ path('app_recette_delete', { id: recette.id }) }}" method="post" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette recette ?');">
                                         <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ recette.id) }}">
                                         <button type="submit">Supprimer</button>
-                            </form>  
+                            </form> 
+                            <button type="button" onclick="window.location.href='{{ path('app_recette_edit', { id: recette.id }) }}'">Éditer la recette</button> 
                         </div>
                     </div>
                     

@@ -92,7 +92,7 @@
                                 <div class="icon-text"> {{ recette.nombrePortions}}</div>
                             </div>
                         </div>
-                          <div class="stars">
+                          {# <div class="stars">
                         {% set moyenneNote = moyennesNotes[recette.id] %}
                         {% set nombreNote = nombreNotes[recette.id] %}
 
@@ -110,24 +110,25 @@
                             &#9734;&#9734;&#9734;&#9734;&#9734;
                         {% endif %}
                         ( {{ nombreNote }} avis)
-                        </div>
+                        </div> #}
+                       
                     </div>
                     
                         <a href="{{ path('app_recette_show', {'id': recette.id}) }}">Voir la recette</a>
                         {% if app.user %}
                         
-                 <a href="{{ path ('app_utilisateur_favoris', {'id': recette.utilisateur.id})}}" >❤️</a>
+                 <a href="{{ path ('app_utilisateur_favoris', {'id': recette.id})}}" >❤️</a>
 
                         {% endif %}
                     
                 </div>
-
             </div>
             {% endfor %}
         </div>
     {% endif %}
 </div>
 </div>
+
 
 
     
