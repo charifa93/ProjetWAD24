@@ -48,25 +48,25 @@ class GestionRecettesController extends AbstractController
 
 
     ///////////// afficher les recettes par categorie //////////////
-    #[Route('/gestion/recettes/afficher/{typeRecherche}/{valeur}', name: 'afficherRecetteRecherche')]
-    public function RechercherParCategorie(RecetteRepository $rep, SerializerInterface $serializer, Request $req): Response
-    {
+    // #[Route('/gestion/recettes/afficher/{typeRecherche}/{valeur}', name: 'afficherRecetteRecherche')]
+    // public function RechercherParCategorie(RecetteRepository $rep, SerializerInterface $serializer, Request $req): Response
+    // {
 
-        $typeRecherche = $req->get('typeRecherche');
-        $valeur = $req->get('valeur');
+    //     $typeRecherche = $req->get('typeRecherche');
+    //     $valeur = $req->get('valeur');
 
-        // dump($valeur);
-        // dd($typeRecherche);
+    //     // dump($valeur);
+    //     // dd($typeRecherche);
         
-        if (isset($typeRecherche) && isset($valeur)) {
+    //     if (isset($typeRecherche) && isset($valeur)) {
 
-            $recettes = $rep->rechercheRecetteCategorie ($typeRecherche, $valeur);
+    //         $recettes = $rep->rechercheRecetteCategorie ($typeRecherche, $valeur);
 
-            $recettesJson = $serializer->serialize($recettes, 'json', [AbstractNormalizer::ATTRIBUTES => ['id', 'titre', 'image', 'utilisateur' => ['nom']]]);
+    //         $recettesJson = $serializer->serialize($recettes, 'json', [AbstractNormalizer::ATTRIBUTES => ['id', 'titre', 'image', 'utilisateur' => ['nom']]]);
 
-            return new Response($recettesJson);
-        }  
-    }
+    //         return new Response($recettesJson);
+    //     }  
+    // }
   
 }
 

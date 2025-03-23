@@ -95,19 +95,6 @@ final class RecetteController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_recette_show')]
-    // public function show(Recette $recette ): Response
-    // {
-        
-    //     return $this->render('recette/show.html.twig', [
-    //         'recette' => $recette,
-    //         'saisons' => Saison::cases(),
-    //         'typeDePlats' => TypeDePlat::cases(),
-    //     ]);
-    // }
-
-
-
-  
     public function show(
         Recette $recette,Request $request,EntityManagerInterface $entityManager ): Response {
         $commentaire = new Commentaire();
@@ -140,23 +127,23 @@ final class RecetteController extends AbstractController
     }
 
 
-    // #[Route('/{id}/edit', name: 'app_recette_edit', methods: ['GET', 'POST'])]
-    // public function edit(Request $request, Recette $recette, EntityManagerInterface $entityManager): Response
-    // {
-    //     $form = $this->createForm(RecetteType::class, $recette);
-    //     $form->handleRequest($request);
+    #[Route('/{id}/edit', name: 'app_recette_edit', methods: ['GET', 'POST'])]
+    public function edit(Request $request, Recette $recette, EntityManagerInterface $entityManager): Response
+    {
+        $form = $this->createForm(RecetteType::class, $recette);
+        $form->handleRequest($request);
 
-    //     if ($form->isSubmitted() && $form->isValid()) {
-    //         $entityManager->flush();
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->flush();
 
-    //         return $this->redirectToRoute('app_recette_index', [], Response::HTTP_SEE_OTHER);
-    //     }
+            return $this->redirectToRoute('app_recette_index', []);
+        }
 
-    //     return $this->render('recette/edit.html.twig', [
-    //         'recette' => $recette,
-    //         'form' => $form,
-    //     ]);
-    // }
+        return $this->render('recette/edit.html.twig', [
+            'recette' => $recette,
+            'form' => $form,
+        ]);
+    }
 
     #[Route('/{id}', name: 'app_recette_delete')]
     public function delete(Request $request, Recette $recette, EntityManagerInterface $entityManager): Response
@@ -254,6 +241,8 @@ final class RecetteController extends AbstractController
     //           return new Response($recettesJson);
     //       }  
     //   }
+
+   
    
 
 

@@ -1,11 +1,122 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New Recette{% endblock %}
+{% block title %}Nouvelle Recette{% endblock %}
 
 {% block body %}
-    <h1>Create new Recette</h1>
+<main class="pt-24 pb-12">
+<div class="max-w-4xl mx-auto px-4">
+<div class="bg-white rounded-lg shadow-sm p-8">
+<h2 class="text-2xl font-bold text-gray-900 mb-8">Nouvelle Recette</h2>
 
-    {{ include('recette/_form.html.twig') }}
+{{ form_start(form, {'attr': {'id': 'recipeForm', 'class': 'space-y-8'}}) }}
 
-    <a href="{{ path('app_recette_index') }}">back to list</a>
+<div>
+    {{ form_label(form.titre, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-2'}}) }}
+    {{ form_widget(form.titre, {'attr': {'class': 'w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent', 'placeholder': 'Donnez un nom à votre création'}}) }}
+</div>
+<div>
+    {{ form_label(form.description, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-2'}}) }}
+    {{ form_widget(form.description, {'attr': {'class': 'w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent', 'placeholder': 'Donnez un nom à votre création'}}) }}
+</div>
+
+<div>
+    {{ form_label(form.image, 'Photos de la recette', {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-2'}}) }}
+    <div class="border-2 border-dashed border-gray-200 rounded-lg p-8 text-center" id="dropZone">
+        <div class="space-y-4">
+            <i class="ri-image-add-line text-4xl text-gray-400"></i>
+            <p class="text-gray-500">Glissez vos photos ici ou</p>
+            <button type="button" class="bg-gray-100 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-200 transition-colors !rounded-button" onclick="document.getElementById('photoInput').click()">Parcourir</button>
+            {{ form_widget(form.image, {'attr': {'class': 'hidden', 'id': 'photoInput', 'multiple': true, 'accept': 'image/*'}}) }}
+        </div>
+    </div>
+    <div id="previewContainer" class="grid grid-cols-4 gap-4 mt-4"></div>
+</div>
+
+{# <div>
+    {{ form_label(form.detailRecette, 'Ingrédients', {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-4'}}) }}
+    {{ form_widget(form.detailRecette, {'attr': {'id': 'ingredientsContainer', 'class': 'space-y-4'}}) }}
+    <button type="button" class="mt-4 text-primary hover:text-primary/80 flex items-center space-x-2" onclick="addIngredient()">
+        <i class="ri-add-line"></i>
+        <span>Ajouter un ingrédient</span>
+    </button>
+</div> #}
+
+{# <div>
+    {{ form_label(form.etapes, 'Étapes de préparation', {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-4'}}) }}
+    {{ form_widget(form.etapes, {'attr': {'id': 'stepsContainer', 'class': 'space-y-6'}}) }}
+    <button type="button" class="mt-4 text-primary hover:text-primary/80 flex items-center space-x-2" onclick="addStep()">
+        <i class="ri-add-line"></i>
+        <span>Ajouter une étape</span>
+    </button>
+</div> #}
+<div class="grid grid-cols-3 gap-6">
+<div>
+    {{ form_label(form.saison, 'Saison', {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-4'}}) }}
+    {{ form_widget(form.saison, {'attr': {'class': ' px-4 py-2 border border-gray-200 rounded-lg', 'placeholder': '30'}}) }}
+    
+</div>
+<div>
+    {{ form_label(form.typeDePlat, 'Type de plate', {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-4'}}) }}
+    {{ form_widget(form.typeDePlat, {'attr': {'class': ' px-4 py-2 border border-gray-200 rounded-lg', 'placeholder': '30'}}) }}
+</div>
+<div>
+    {{ form_label(form.origine, 'origine', {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-4'}}) }}
+    {{ form_widget(form.origine, {'attr': {'class': ' px-4 py-2 border border-gray-200 rounded-lg', 'placeholder': '30'}}) }}
+</div>
+<div>
+    {{ form_label(form.preparations, 'Preparation', {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-4'}}) }}
+    {{ form_widget(form.preparations, {'attr': {'class': ' px-4 py-2 border border-gray-200 rounded-lg', 'placeholder': '30'}}) }}
+    
+</div>
+<div>
+    {{ form_label(form.datePublication, 'date de publication', {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-4'}}) }}
+    {{ form_widget(form.datePublication, {'attr': {'class': ' px-4 py-2 border border-gray-200 rounded-lg', 'placeholder': '30'}}) }}
+</div> 
+<div>
+    {{ form_label(form.difficulte, 'difficulte', {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-4'}}) }}
+    {{ form_widget(form.difficulte, {'attr': {'class': ' px-4 py-2 border border-gray-200 rounded-lg', 'placeholder': '30'}}) }}
+</div>
+</div> 
+
+
+<div class="grid grid-cols-3 gap-6">
+    <div>
+        {{ form_label(form.tempsDePreparation, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-2'}}) }}
+        <div class="flex items-center space-x-2">
+            {{ form_widget(form.tempsDePreparation, {'attr': {'class': 'w-full px-4 py-2 border border-gray-200 rounded-lg', 'placeholder': '30'}}) }}
+            <span class="text-gray-500">min</span>
+        </div>
+    </div>
+    <div>
+        {{ form_label(form.tempsDeCuison, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-2'}}) }}
+        <div class="flex items-center space-x-2">
+            {{ form_widget(form.tempsDeCuison, {'attr': {'class': 'w-full px-4 py-2 border border-gray-200 rounded-lg', 'placeholder': '45'}}) }}
+            <span class="text-gray-500">min</span>
+        </div>
+    </div>
+    <div>
+        {{ form_label(form.nombrePortions, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-2'}}) }}
+        {{ form_widget(form.nombrePortions, {'attr': {'class': 'w-full px-4 py-2 border border-gray-200 rounded-lg', 'placeholder': '4'}}) }}
+    </div>
+</div>
+
+<div class="flex items-center justify-between pt-6">
+    {# <button type="button" class="text-gray-500 hover:text-gray-700" onclick="saveDraft()">Enregistrer comme brouillon</button> #}
+    <div class="space-x-4">
+        <button type="submit" class="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors !rounded-button">Publier</button>
+
+    </div>
+</div>
+
+{{ form_end(form) }}
+
+<a href="{{ path('app_recette_index') }}" class="text-sm text-primary hover:underline mt-4 block">Retour à la liste</a>
+
+</div>
+</div>
+</main>
+
+<script>
+JS de gestion des photos, ingrédients, étapes, aperçu, etc. (identique à celui dans ta maquette) 
+</script>
 {% endblock %}

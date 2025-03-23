@@ -1,154 +1,209 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Recette{% endblock %}
+{% block title %}{{ recette.titre }} - Cuisine Connect{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {# {{ encore_entry_script_tags ('showRecette') }} #}
+{% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
-    {{ encore_entry_link_tags ('showRecette') }}		
+    {# {{ encore_entry_link_tags ('showRecette') }}		 #}
 {% endblock %}
 
-{% block body %}
-   
- <div class="container recipe-container">
-        <div class="row">
-            <!-- Recipe Details Section -->
-            <div class="col-lg-6">
-                <div class="tags">
-                    <span class="tag">TM5</span>
-                    <span class="tag">TM6</span>
-                </div>
-                <div class="recipe-title">{{ recette.titre }}</div>
-                <div class="rating">
-                    &#9733;&#9733;&#9733;&#9733;&#9733; 
-                </div>
-                
-               
-                    {# {% for recette in recettes %}
-                     <div class="stars">
-                        {% set moyenneNote = moyennesNotes[recette.id] %}
-                        {% set nombreNote = nombreNotes[recette.id] %}
+{% block body %}   
 
-                        {% if moyenneNote >= 4.5 %}
-                            &#9733;&#9733;&#9733;&#9733;&#9733;
-                        {% elseif moyenneNote >= 3.5 %}
-                            &#9733;&#9733;&#9733;&#9733;&#9734;
-                        {% elseif moyenneNote >= 2.5 %}
-                            &#9733;&#9733;&#9733;&#9734;&#9734;
-                        {% elseif moyenneNote >= 1.5 %}
-                            &#9733;&#9733;&#9734;&#9734;&#9734;
-                        {% elseif moyenneNote >= 0.5 %}
-                            &#9733;&#9734;&#9734;&#9734;&#9734;
-                        {% else %}
-                            &#9734;&#9734;&#9734;&#9734;&#9734;
-                        {% endif %}
-                        ( {{ nombreNote }} avis)
-                        </div>
-                        {% endfor %} #}
-                        
-
-                {% if app.user %}
-                 <a href="{{ path ('app_utilisateur_favoris', {'id': recette.id})}}" class="btn btn-primary">Ajouter à mes favoris</a>
-               
-                {% endif %}
+<main class="container mx-auto px-4 py-8 bg-gray-50 min-h-screen">
+  <div class="flex flex-col lg:flex-row gap-8">
+    <div class="lg:w-2/3">
+      <nav class="flex mb-4" aria-label="Breadcrumb">
+        <ol class="inline-flex items-center space-x-1 md:space-x-3">
+          <li class="inline-flex items-center">
+            <a href="{{ path('app_recette_index') }}" class="text-gray-600 hover:text-primary">Recettes</a>
+          </li>
+          <li>
+            <div class="flex items-center">
+              <i class="ri-arrow-right-s-line text-gray-400"></i>
+              <span class="ml-1 text-gray-500">{{ recette.titre }}</span>
             </div>
+          </li>
+        </ol>
+      </nav>
 
-            <!-- Recipe Image Section -->
-            <div class="col-lg-6 recipe-image">
-                <img src="{{ recette.image }}" alt="Sabayon">
+      <div class="bg-white rounded-lg shadow-sm overflow-hidden mb-8">
+        <div class="relative">
+          <img src="{{ recette.image }}" alt="{{ recette.titre }}" class="w-full h-[500px] object-cover">
+          <div class="absolute bottom-0 left-0 right-0 recipe-info p-6">
+            <h1 class="text-3xl font-bold text-gray-900 mb-4">{{ recette.titre }}</h1>
+            <div class="flex flex-wrap items-center gap-6 text-sm">
+              <div class="flex items-center">
+                <i class="ri-time-line mr-2 text-primary"></i>
+                <span>{{ recette.tempsDePreparation|date('H:i') }} minutes</span>
+              </div>
+              <div class="flex items-center">
+                <i class="ri-user-3-line mr-2 text-primary"></i>
+                <span>{{ recette.nombrePortions }} personnes</span>
+              </div>
+              <div class="flex items-center">
+                <i class="ri-award-line mr-2 text-primary"></i>
+                <span>Difficulté : {{ recette.difficulte }}</span>
+              </div>
+              <div class="flex items-center">
+                <div class="flex text-yellow-400">
+                  <i class="ri-star-fill"></i>
+                  <i class="ri-star-fill"></i>
+                  <i class="ri-star-fill"></i>
+                  <i class="ri-star-fill"></i>
+                  <i class="ri-star-half-fill"></i>
+                </div>
+                <span class="ml-2">({{ recette.recettesNote|length }} avis)</span>
+              </div>
             </div>
+          </div>
         </div>
+      </div>
+
+      <div class="bg-white rounded-lg shadow-sm p-6 mb-8">
+        <h2 class="text-xl font-semibold mb-6">Description</h2>
+        <p class="text-gray-600 leading-relaxed">{{ recette.description }}</p>
+      </div>
+
+      {# <div class="bg-white rounded-lg shadow-sm p-6 mb-8">
+        <h2 class="text-xl font-semibold mb-6">Instructions de préparation</h2>
+        <div class="space-y-6">
+          {% for step in recette.instructions %}
+            <div class="flex items-start">
+              <div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-semibold mr-4 flex-shrink-0">{{ loop.index }}</div>
+              <div>
+                <h3 class="font-medium mb-2">{{ step.titre }}</h3>
+                <p class="text-gray-600">{{ step.contenu }}</p>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div> #}
+
+      <div class="bg-white rounded-lg shadow-sm p-6 mb-8">
+        <h2 class="text-xl font-semibold mb-6">Commentaires ({{ recette.recetteCom|length }})</h2>
+        {% if app.user %} 
+        {{ form_start(commentaireForm, {'attr': {'id': 'commentForm'}}) }}
+          <div class="mb-4">
+            <div class="flex text-yellow-400 mb-2">
+              <i class="ri-star-line cursor-pointer hover:text-yellow-500" data-rating="1"></i>
+              <i class="ri-star-line cursor-pointer hover:text-yellow-500" data-rating="2"></i>
+              <i class="ri-star-line cursor-pointer hover:text-yellow-500" data-rating="3"></i>
+              <i class="ri-star-line cursor-pointer hover:text-yellow-500" data-rating="4"></i>
+              <i class="ri-star-line cursor-pointer hover:text-yellow-500" data-rating="5"></i>
+            </div>
+            {# {{ form_widget(commentaireForm.commentaires, {'value': app.user.id}) }} #}
+            {{ form_row(commentaireForm.contenu, {'attr': {'class': 'w-full p-3 border border-gray-200 rounded-lg focus:border-primary focus:ring-1 focus:ring-primary'}}) }}
+          </div>
+          <button type="submit" class="bg-primary text-white px-6 py-2 rounded-button hover:bg-primary/90 transition-colors">
+            Publier
+          </button>
+        {{ form_end(commentaireForm) }}
+         {% endif %}
+        <div class="space-y-6 mt-6">
+          {% for comment in recette.recetteCom %}
+            <div class="flex items-start gap-4">
+              {# <img src="{{ comment.utilisateur.photo }}" alt="{{ comment.utilisateur.prenom }} {{ comment.utilisateur.nom }}" class="w-10 h-10 rounded-full"> #}
+              <div class="flex-1">
+                <div class="flex items-center mb-2">
+                  {# <h3 class="font-medium mr-2">{{ comment.utilisateur.prenom }} {{ comment.utilisateur.nom }}</h3> #}
+                  <div class="flex text-yellow-400">
+                    <i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i>
+                  </div>
+                </div>
+                <p class="text-gray-600 mb-2">{{ comment.contenu }}</p>
+                <div class="flex items-center text-sm text-gray-500">
+                  <span>{{ comment.dateCommentaire|date('d-m-Y') }}</span>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Ingrédients -->
+     <div class="lg:w-1/3">
+      <div class="bg-white rounded-lg shadow-sm p-6 mb-8 sticky top-4">
+        {# <h2 class="text-xl font-semibold mb-6">Ingrédients</h2> #}
+        <div class="flex items-center justify-between mb-6">
+        <h2 class="text-xl font-semibold">Ingrédients</h2>
+        <div class="relative">
+        <button id="servingsButton" class="flex items-center space-x-2 text-gray-600 hover:text-primary">
+        <span>6 personnes</span>
+        <i class="ri-arrow-down-s-line"></i>
+        </button>
+        <div id="servingsDropdown" class="hidden absolute right-0 mt-2 w-40 bg-white rounded-md shadow-lg py-1 z-50">
+        <button class="block w-full px-4 py-2 text-sm text-left text-gray-700 hover:bg-gray-100">2 personnes</button>
+        <button class="block w-full px-4 py-2 text-sm text-left text-gray-700 hover:bg-gray-100">4 personnes</button>
+        <button class="block w-full px-4 py-2 text-sm text-left text-gray-700 hover:bg-gray-100">6 personnes</button>
+        <button class="block w-full px-4 py-2 text-sm text-left text-gray-700 hover:bg-gray-100">8 personnes</button>
+        </div>
+        </div>
+        </div>
+        <div class="space-y-3">
+          {% for item in ingredients %}
+            <label class="flex items-center">
+              <input type="checkbox" class="ingredient-checkbox hidden" name="ingredient">
+              <span class="w-5 h-5 border border-gray-300 rounded mr-3 flex items-center justify-center">
+                <i class="ri-check-line text-primary hidden"></i>
+              </span>
+              <span class="text-gray-700">{{ item.quantite }} {{ item.uniteMesure }} : {{ item.ingredient.nom }}</span>
+            </label>
+          {% endfor %}
+        </div>
+      </div>
+    </div> 
+  </div>
+  </div>
+  <div class="bg-white rounded-lg shadow-sm p-6 mt-8">
+<h2 class="text-xl font-semibold mb-6">Recettes similaires</h2>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="group cursor-pointer">
+<img src="https://public.readdy.ai/ai/img_res/fa33bf828d0b6ec4ca324c2e44b90e40.jpg" alt="Ratatouille Niçoise" class="w-full h-40 object-cover rounded-lg mb-3">
+<h3 class="font-medium group-hover:text-primary transition-colors">Ratatouille Niçoise</h3>
+<div class="text-sm text-gray-600">35 min · Facile</div>
 </div>
-        <!-- Meta Information Section -->
-        <div class="row recipe-meta">
-            <div class="col-lg-3 col-sm-6 meta-item">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-trophy-fill" viewBox="0 0 16 16">
-                    <path d="M3 1.5A1.5 1.5 0 0 1 4.5 0h7A1.5 1.5 0 0 1 13 1.5V3h1a2 2 0 0 1 2 2v1a3 3 0 0 1-2.938 2.995 6.001 6.001 0 0 1-4.573 4.405A1.998 1.998 0 0 1 9 15v1h1a.5.5 0 0 1 0 1H6a.5.5 0 0 1 0-1h1v-1a1.998 1.998 0 0 1-1.489-1.6 6.001 6.001 0 0 1-4.573-4.405A3 3 0 0 1 0 6V5a2 2 0 0 1 2-2h1V1.5zm1 1V3h8v-.5a.5.5 0 0 0-.5-.5h-7a.5.5 0 0 0-.5.5z" />
-                </svg>
-                <span>Niveau</span> {{ recette.difficulte }}
-            </div>
-
-            <div class="col-lg-3 col-sm-6 meta-item">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-clock-fill" viewBox="0 0 16 16">
-                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM7.5 3.5a.5.5 0 0 0-1 0v5a.5.5 0 0 0 .757.429l3.5-2a.5.5 0 1 0-.514-.858L7.5 7.694V3.5z" />
-                </svg>
-                <span>Temps de préparation</span> {{ recette.tempsDePreparation ? recette.tempsDePreparation|date('H:i:s') : '' }}
-            </div>
-
-            <div class="col-lg-3 col-sm-6 meta-item">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-stopwatch-fill" viewBox="0 0 16 16">
-                    <path d="M6.5 0a.5.5 0 0 0 0 1H7v1.07A7.004 7.004 0 0 0 1 8a7 7 0 1 0 10.93-6H12a.5.5 0 0 0 0-1h-.5V1h.5a.5.5 0 0 0 0-1h-5zM8 15A6 6 0 1 1 8 3a6 6 0 0 1 0 12z" />
-                </svg>
-                <span>Temps de cuison </span> {{ recette.tempsDeCuison ? recette.tempsDeCuison|date('H:i:s') : '' }}
-            </div>
-
-            <div class="col-lg-3 col-sm-6 meta-item">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-people-fill" viewBox="0 0 16 16">
-                    <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm5.784.85A2.785 2.785 0 0 0 12.5 8h-9a2.785 2.785 0 0 0-1.284.85A2.478 2.478 0 0 0 1 10.5v.577c0 .19.112.36.281.445l4.886 2.478h3.666l4.886-2.478a.502.502 0 0 0 .281-.445V10.5a2.478 2.478 0 0 0-.716-1.65z" />
-                </svg>
-                <span>Portions</span> {{ recette.nombrePortions }}
-            </div>
-        </div>
-        
-         <div >
-         <h2> cree par : {{ recette.utilisateur.Nom  }} {{ recette.utilisateur.prenom }}</h2>
-         </div>
+<div class="group cursor-pointer">
+<img src="https://public.readdy.ai/ai/img_res/f929c751bcc67aff721f0303c80b29eb.jpg" alt="Tian Provençal" class="w-full h-40 object-cover rounded-lg mb-3">
+<h3 class="font-medium group-hover:text-primary transition-colors">Tian Provençal</h3>
+<div class="text-sm text-gray-600">50 min · Moyen</div>
+</div>
+<div class="group cursor-pointer">
+<img src="https://public.readdy.ai/ai/img_res/ffd5654631fbd3855fa9d9fd978fe62e.jpg" alt="Caponata Sicilienne" class="w-full h-40 object-cover rounded-lg mb-3">
+<h3 class="font-medium group-hover:text-primary transition-colors">Caponata Sicilienne</h3>
+<div class="text-sm text-gray-600">40 min · Moyen</div>
+</div>
+</div>
+</div>
+</main>
 
 
-        <div class = "row recipe-igredient" >
-        <div class="col-lg-12 recipe-ingredient-title ">
-        <h2>Ingredients</h2>
-        </div>
-        <div class="col-lg-12 recipe-ingredient-list">
-        {% for item in ingredients %}
-        <div class="col-lg-12 ingredient">
-        <div class="col-lg-6 ingredient-name ">
-        <span >{{ item.quantite }}</span> 
-       
-        <span >{{ item.uniteMesure }}</span> : 
-         <span>{{ item.ingredient.nom }}</span>
- {% endfor %}
-
-
-
-
-        <div class="row recipe-description">
-        <div class="col-lg-12 recipe-description-title">
-        <h2>Description</h2>
-        </div>
-        <p >{{ recette.description }}</p>
-
-        <div class="row recipe-commantaire">
-        <div class="col-lg-12 recipe-commantaire-title ">
-        <h2>Commentaires</h2>
-        </div>
-        {% for comment in recette.recetteCom %}
-        <div class="recipe-commantaire-item">
-        <div class="recipe-commantaire-item-datePublication" > {{ comment.dateCommentaire|date('d-m-Y') }}</div>
-        {# <div class="recipe-commantaire-item-name"> {{ comment.utilisateur.Nom }} {{ comment.utilisateur.prenom }}</div> #}
-        <div class="recipe-commantaire-item-text">{{ comment.contenu }}</div>
-        {% endfor %}
-
-
-        {# cree un commentaire par utilisateur  #}
-        <h3>Ajouter un commentaire</h3>
-    {{ form_start(commentaireForm) }}
-        {{ form_row(commentaireForm.contenu) }}
-        <button class="btn btn-primary" type="submit">Poster</button>
-    {{ form_end(commentaireForm) }}
-
-
-
-
-       
-
-
-
-    
-        
- 
-    <a href="{{ path ('app_recette_index') }}">back to list</a>
-{#
-    <a href="{{ path('app_recette_edit', {'id': recette.id}) }}">edit</a> #}
-{# 
-    {{ include('recette/_delete_form.html.twig') }} #}
+<!-- Script pour étoiles et interactions -->
+<script>
+const ratingStars = document.querySelectorAll('[data-rating]');
+let currentRating = 0;
+ratingStars.forEach(star => {
+  star.addEventListener('mouseover', function() {
+    const rating = parseInt(this.dataset.rating);
+    updateStars(rating);
+  });
+  star.addEventListener('mouseout', () => updateStars(currentRating));
+  star.addEventListener('click', function() {
+    currentRating = parseInt(this.dataset.rating);
+    updateStars(currentRating);
+  });
+});
+function updateStars(rating) {
+  ratingStars.forEach(star => {
+    const starRating = parseInt(star.dataset.rating);
+    star.classList.toggle('ri-star-fill', starRating <= rating);
+    star.classList.toggle('ri-star-line', starRating > rating);
+  });
+}
+</script>
 {% endblock %}

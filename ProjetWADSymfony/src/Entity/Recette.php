@@ -110,6 +110,7 @@ class Recette
       public function __construct(array $init = [])
       {
           $this->hydrate($init);
+          $this->datePublication = new \DateTime(); // Date actuelle
           $this->recetteCom = new ArrayCollection();
           $this->recettesNote = new ArrayCollection();
           $this->detailRecette = new ArrayCollection();

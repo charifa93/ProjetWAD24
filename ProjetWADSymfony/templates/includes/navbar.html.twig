@@ -1,0 +1,64 @@
+
+<nav class="container mx-auto px-4 py-4 flex items-center justify-between">
+<div class="flex items-center space-x-8">
+<a href="{{ path('accueil') }}" class="text-3xl font-['Pacifico'] text-primary">logo</a>
+<div class="hidden md:flex space-x-6">
+<a href="{{ path('accueil') }}" class="text-gray-600 hover:text-primary" id="homeLink">Accueil</a>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const homeLink = document.getElementById('homeLink');
+  const isHomePage = window.location.pathname === '{{ path('accueil') }}';
+  
+  if(isHomePage) {
+    homeLink.classList.remove('text-gray-600', 'hover:text-primary');
+    homeLink.classList.add('text-primary', 'font-semibold', 'cursor-default');
+    homeLink.addEventListener('click', (e) => {
+      e.preventDefault();
+    });
+  }
+});
+</script>
+<a href="{{ path('app_recette_index')}}" class="text-gray-600 hover:text-primary">Recettes</a>
+<a href="#" class="text-gray-600 hover:text-primary">Catégories</a>
+<a href="#" class="text-gray-600 hover:text-primary">Communauté</a>
+</div>
+</div>
+<div class="flex items-center space-x-4">
+<button id="searchToggle" class="w-10 h-10 flex items-center justify-center text-gray-600 hover:text-primary">
+<i class="ri-search-line text-xl"></i>
+</button>
+<button
+{% if app.user %}
+<div class="relative" id="userMenu">
+<button class="w-10 h-10 flex items-center justify-center text-gray-600 hover:text-primary">
+<i class="ri-user-line text-xl"></i>
+</button>
+	
+<div class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1" id="userDropdown">
+<a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Mon Profil</a>
+<a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Mes Recettes</a>
+<a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Favoris</a>
+<a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Liste de courses</a>
+<hr class="my-1">
+<a href="{{ path ('app_logout') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Déconnexion</a>
+</div>
+{% else %}
+<button  onclick="window.location.href='{{ path('app_login') }}'" class="px-6 py-2 bg-primary text-white font-medium !rounded-button hover:bg-opacity-90 transition-colors whitespace-nowrap">Se connecter
+</button>
+{% endif %}
+</div>
+</div>
+</nav>
+<script>
+document.getElementById('userMenu').addEventListener('click', function() {
+document.getElementById('userDropdown').classList.toggle('hidden');
+});
+
+document.addEventListener('click', function(event) {
+const userMenu = document.getElementById('userMenu');
+const userDropdown = document.getElementById('userDropdown');
+if (!userMenu.contains(event.target) && !userDropdown.classList.contains('hidden')) {
+userDropdown.classList.add('hidden');
+}
+});
+</script>

@@ -69,6 +69,24 @@ setupSaisonRecetteHandler({LinkSelector: '.typeDePlat-link',divResultatsId: 'div
 setupSaisonRecetteHandler({LinkSelector: '.origine-link',divResultatsId: 'divResultats',showBtnId: 'showOriginesBtn',ListId: 'origine'});
 setupSaisonRecetteHandler({LinkSelector: '.preparation-link',divResultatsId: 'divResultats',showBtnId: 'showPreparationsBtn',ListId: 'preparation'});
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-
+// document.getElementById('userMenu').addEventListener('click', function() {
+//     document.getElementById('userDropdown').classList.toggle('hidden');
+//     });
+    
+//     document.addEventListener('click', function(event) {
+//     const userMenu = document.getElementById('userMenu');
+//     const userDropdown = document.getElementById('userDropdown');
+//     if (!userMenu.contains(event.target) && !userDropdown.classList.contains('hidden')) {
+//     userDropdown.classList.add('hidden');
+//     }
+//     });
+    const favoriteButtons = document.querySelectorAll('.ri-heart-line');
+    favoriteButtons.forEach(button => {
+    button.addEventListener('click', function() {
+    this.classList.toggle('ri-heart-line');
+    this.classList.toggle('ri-heart-fill');
+    this.classList.toggle('text-primary');
+    });
+    });
