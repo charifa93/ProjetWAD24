@@ -176,7 +176,7 @@ Réinitialiser les filtres
             {% for recette in recettes %}
             
 <div  onclick="window.location.href='{{ path('app_recette_show', {'id': recette.id}) }}'"  class="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow transition-shadow cursor-pointer ">
-<img src="https://public.readdy.ai/ai/img_res/d0380cc491d6c72a37191649869f0af6.jpg" alt="{{recette.titre}}" class="w-full h-48 object-cover">
+<img src="{{ recette.image }}" alt="{{recette.titre}}" class="w-full h-48 object-cover">
 <div class="p-4">
 <h3 class="text-lg font-semibold mb-2">{{recette.titre}}</h3>
 <div class="flex items-center mb-2">
@@ -199,9 +199,10 @@ Réinitialiser les filtres
 <img src="{{recette.utilisateur.photo}}" alt="Chef" class="w-8 h-8 rounded-full mr-2">
 <span class="text-sm text-gray-600"> {{recette.utilisateur.prenom}}  {{recette.utilisateur.nom}}</span>
 </div>
-{% if app.user %}                       
-<a href="{{ path ('app_utilisateur_favoris', {'id': recette.id})}}"  class="text-gray-400 hover:text-primary ><i class="ri-heart-line text-xl"></i></a>
-                       
+ {% if app.user %}                       
+<a href="{{ path('app_utilisateur_favoris', {'id': recette.id}) }}" class="text-gray-400 hover:text-primary">
+  <i class="ri-heart-line text-xl"></i>
+</a>                     
  {% endif %}
 </div>
 </div>
@@ -226,19 +227,4 @@ Réinitialiser les filtres
  {% endif %}
 </div>
 </main>
-                    
-                        {# <a href="{{ path('app_recette_show', {'id': recette.id}) }}">Voir la recette</a> #}
-                        {# {% if app.user %}
-                        
-                 <a href="{{ path ('app_utilisateur_favoris', {'id': recette.id})}}" >❤️</a>
-
-                        {% endif %} #}
-                    
-                {# </div>
-            </div>
-           
-        </div>
-    {% endif %}
-</div>
-</div> #}
 {% endblock %}

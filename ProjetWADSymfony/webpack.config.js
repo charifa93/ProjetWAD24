@@ -23,6 +23,9 @@ Encore
     .addEntry('app', './assets/app.js')
     .addEntry('autre', './assets/autre.js')
     .addEntry('showRecette', './assets/showRecette.js')
+    .addEntry('connexion', './assets/connexion.js')
+    .addEntry('detailsRecette', './assets/detailsRecette.js')
+    .addEntry('profil', './assets/profil.js')
 
 
 

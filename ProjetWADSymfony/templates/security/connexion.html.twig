@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Register{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    {# {{ encore_entry_script_tags ('autre') }} #}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+   
+    {# {{ encore_entry_link_tags ('autre') }}		 #}
+{% endblock %}
+
+{% block body %}
+<body class="min-h-screen bg-gray-50">
+<div class="auth-container min-h-screen flex items-center justify-center bg-gray-50/90 backdrop-blur-sm">
+    <div class="w-full max-w-4xl mx-4 flex overflow-hidden">
+        <div class="w-full bg-white rounded-lg shadow-xl overflow-hidden">
+            <div class="p-8 text-center">
+                <h1 class="font-['Pacifico'] text-4xl text-primary mb-8">logo</h1>
+
+                <div class="flex justify-center gap-4 mb-8">
+                    <button id="loginTab"
+                            class="text-lg font-medium px-6 py-2 rounded-full bg-primary text-white !rounded-button"
+                            onclick="switchForm('login')">
+                        Connexion
+                    </button>
+                    <button id="registerTab"
+                            class="text-lg font-medium px-6 py-2 rounded-full text-gray-600"
+                            onclick="switchForm('register')">
+                        Inscription
+                    </button>
+                </div>
+
+                <div class="relative">
+                    <div id="forms" class="flex form-switch">
+                        <div id="loginForm" class="w-full min-w-full px-8">
+                            {% include '/security/connexion.html.twig' %}
+                        </div>
+
+                        <div id="registerForm" class="w-full min-w-full px-8 hidden">
+                            {% include '/registration/register.html.twig' %}
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+{% endblock %}
+

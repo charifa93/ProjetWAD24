@@ -12,18 +12,29 @@ class CoursesListFixtures extends Fixture implements DependentFixtureInterface
 {
     public function load(ObjectManager $manager): void
     {
-        $faker = Factory::create('fr_FR');
+       
+        $nomListes = [
+            'Courses semaine',
+            'Courses pour dîner',
+            'Liste barbecue',
+            'Courses rapide',
+            'Courses végétariennes',
+            'Courses pâtisserie',
+            'Courses déjeuner famille',
+            'Courses week-end',
+            'Courses pique-nique',
+            'Courses pour apéro',
+        ];
         
         for ($i = 0; $i < 10; $i++) {
             $coursesList = new CoursesList([
-                'nom' => $faker->sentence(3)     
+                'nom' => $nomListes[$i]
             ]);
-
-            $coursesList->setUtilisateur($this->getReference('utilisateur'.rand(0,4)));
+        
+            $coursesList->setUtilisateur($this->getReference('utilisateur' . rand(0, 4)));
             $this->addReference('coursesList' . $i, $coursesList);
             $manager->persist($coursesList);
         }
-
         
 
         $manager->flush();

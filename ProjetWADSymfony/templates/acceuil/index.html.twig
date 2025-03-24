@@ -22,9 +22,10 @@
 </div>
 <div class="container mx-auto px-4 h-full">
 {% if app.user %}
+<div class=" relative flex flex-col items-start justify-center h-full max-w-2xl">
 <h1 class="text-4xl font-bold text-gray-900 mb-8">Bienvenue {{ app.user.prenom }}</h1>
 <h1 class="text-4xl font-bold text-gray-900 mb-8">Découvrez nos meilleures recettes</h1>
-  {% else %}
+ {% else %}
 <div class="relative flex flex-col items-start justify-center h-full max-w-2xl">
 <h1 class="text-5xl font-bold text-gray-900 mb-6 leading-tight">Découvrez nos meilleures recettes</h1>
 <p class="text-xl text-gray-700 mb-8">Rejoignez notre communauté de passionnés de cuisine et partagez vos créations culinaires avec des milliers de gourmets</p>
@@ -36,9 +37,10 @@ Essayer gratuitement
 </div>
 </section>
 <main class="container mx-auto px-4 py-8">
-{% if recettesRecentes is defined %}
+<section class="mb-12">
+<h1 class="text-4xl font-bold text-gray-900 mb-8">Découvrez nos plus facile recettes</h1>
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-{% for recette in recettesRecentes %}
+{% for recette in recetteDifficile %}
 <div class="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
 <img src="{{recette.image}}" alt="Pâtes" class="w-full h-48 object-cover rounded-lg mb-4">
 <h3 class="text-lg font-semibold mb-2">{{ recette.titre }}</h3>
@@ -50,7 +52,7 @@ Essayer gratuitement
 <i class="ri-star-fill"></i>
 <i class="ri-star-half-fill"></i>
 </div>
-<span class="ml-2 text-sm text-gray-600">(128 avis)</span>
+<span class="ml-2 text-sm text-gray-600">({{ recette.recettesNote|length }} avis)</span>
 </div>
 <p class="text-sm text-gray-600 mb-4">Par Chef {{recette.utilisateur.prenom}} {{recette.utilisateur.nom}}</p>
 <div class="flex items-center justify-between text-sm text-gray-600">
@@ -60,38 +62,61 @@ Essayer gratuitement
 </div>
 </div>
 {% endfor %}
-{% else %}
-    <p>Aucune recette récente trouvée.</p>
-{% endif %}
+</div>
+</section>
+<section class="mb-12">
+<h1 class="text-4xl font-bold text-gray-900 mb-8">Découvrez nos plus rapide recettes</h1>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+{% for recette in recetteRapide %}
+<div class="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
+<img src="{{recette.image}}" alt="Pâtes" class="w-full h-48 object-cover rounded-lg mb-4">
+<h3 class="text-lg font-semibold mb-2">{{ recette.titre }}</h3>
+<div class="flex items-center mb-2">
+<div class="flex text-yellow-400">
+<i class="ri-star-fill"></i>
+<i class="ri-star-fill"></i>
+<i class="ri-star-fill"></i>
+<i class="ri-star-fill"></i>
+<i class="ri-star-half-fill"></i>
+</div>
+<span class="ml-2 text-sm text-gray-600">({{ recette.recettesNote|length }} avis)</span>
+</div>
+<p class="text-sm text-gray-600 mb-4">Par Chef {{recette.utilisateur.prenom}} {{recette.utilisateur.nom}}</p>
+<div class="flex items-center justify-between text-sm text-gray-600">
+<span><i class="ri-time-line mr-1"></i> {{ recette.tempsDePreparation|date('H:i') }} minutes</span>
+<span><i class="ri-user-line mr-1"></i> {{recette.nombrePortions}}</span>
+<span><i class="ri-award-line mr-1"></i> {{recette.difficulte}}</span>
+</div>
+</div>
+{% endfor %}
 </div>
 </section>
   {# section de categories #}
 <section class="mb-12">
-<h2 class="text-2xl font-bold text-gray-900 mb-6">Catégories populaires</h2>
 <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-<a href="" class="bg-white rounded-lg p-4 text-center hover:shadow-md transition-shadow">
+<a href="#" class="bg-white rounded-lg p-4 text-center hover:shadow-md transition-shadow">
 <div class="w-12 h-12 mx-auto mb-2 flex items-center justify-center text-primary">
 <i class="ri-restaurant-line text-2xl"></i>
 </div>
-<span class="text-gray-700">Session </span>
+<span class="text-gray-700">Entrées</span>
 </a>
 <a href="#" class="bg-white rounded-lg p-4 text-center hover:shadow-md transition-shadow">
 <div class="w-12 h-12 mx-auto mb-2 flex items-center justify-center text-primary">
 <i class="ri-bowl-line text-2xl"></i>
 </div>
-<span class="text-gray-700">type De Plat</span>
+<span class="text-gray-700">Plats</span>
 </a>
 <a href="#" class="bg-white rounded-lg p-4 text-center hover:shadow-md transition-shadow">
 <div class="w-12 h-12 mx-auto mb-2 flex items-center justify-center text-primary">
 <i class="ri-cake-line text-2xl"></i>
 </div>
-<span class="text-gray-700">Preparation</span>
+<span class="text-gray-700">Desserts</span>
 </a>
 <a href="#" class="bg-white rounded-lg p-4 text-center hover:shadow-md transition-shadow">
 <div class="w-12 h-12 mx-auto mb-2 flex items-center justify-center text-primary">
 <i class="ri-plant-line text-2xl"></i>
 </div>
-<span class="text-gray-700">Origine</span>
+<span class="text-gray-700">Végétarien</span>
 </a>
 <a href="#" class="bg-white rounded-lg p-4 text-center hover:shadow-md transition-shadow">
 <div class="w-12 h-12 mx-auto mb-2 flex items-center justify-center text-primary">
@@ -117,13 +142,13 @@ Essayer gratuitement
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
  {% for recette in recettes %}
 <div class="bg-white rounded-lg shadow-sm overflow-hidden">
-<img src="https://public.readdy.ai/ai/img_res/2ce4be3438202a8083118cc39c83d876.jpg" alt="Pizza" class="w-full h-48 object-cover">
+<img src="{{recette.image}}" alt="Pizza" class="w-full h-48 object-cover">
 <div class="p-4">
 <h3 class="text-lg font-semibold mb-2">{{recette.titre}}</h3>
 <p class="text-sm text-gray-600 mb-4">{{recette.description}}</p>
 <div class="flex items-center justify-between">
 <div class="flex items-center">
-<img src="https://public.readdy.ai/ai/img_res/5f6cdf785623eaa3feed81cc457595d8.jpg" alt="Chef" class="w-8 h-8 rounded-full mr-2">
+<img src="{{recette.utilisateur.photo}}" alt="Chef" class="w-8 h-8 rounded-full mr-2">
 <span class="text-sm text-gray-600">{{recette.utilisateur.prenom}} {{recette.utilisateur.nom}}</span>
 </div>
 <span class="text-sm text-gray-500">Il y a 2 heures</span>

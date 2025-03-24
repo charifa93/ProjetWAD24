@@ -1,88 +1,58 @@
-{% extends 'base.html.twig' %}
 
-{% block title %}Log in!{% endblock %}
-
-{% block body %}
-<section class="">
-  <!-- Jumbotron -->
-  <div class="px-4 py-5 px-md-5 text-center text-lg-start" style="background-color: hsl(0, 0%, 96%)">
-    <div class="container">
-      <div class="row gx-lg-5 align-items-center">
-        <div class="col-lg-6 mb-5 mb-lg-0">
-          <h1 class="my-5 display-3 fw-bold ls-tight">
-            The best offer <br />
-            <span class="text-primary">for your business</span>
-          </h1>
-          <p style="color: hsl(217, 10%, 50.8%)">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit.
-            Eveniet, itaque accusantium odio, soluta, corrupti aliquam
-            quibusdam tempora at cupiditate quis eum maiores libero
-            veritatis? Dicta facilis sint aliquid ipsum atque?
-          </p>
+<form id="loginForm" action="{{ path('app_login') }}" method="post" class="w-full min-w-full px-8">
+    {# Affiche une erreur si l'identification échoue #}
+    {% if error %}
+        <div class="mb-4 text-red-500 text-sm">
+            {{ error.messageKey|trans(error.messageData, 'security') }}
         </div>
+    {% endif %}
 
-        <div class="col-lg-6 mb-5 mb-lg-0">
-          <div class="card">
-            <div class="card-body py-5 px-md-5">
-              <!-- Form Start -->
-              <form method="post" action="{{ path('app_login') }}">
-                {% if error %}
-                  <div class="alert alert-danger">
-                    {{ error.messageKey|trans(error.messageData, 'security') }}
-                  </div>
-                {% endif %}
-
-                {% if app.user %}
-                  <div class="mb-3">
-                    You are logged in as {{ app.user.userIdentifier }}, 
-                    <a href="{{ path('app_logout') }}">Logout</a>
-                  </div>
-                {% endif %}
-
-                <!-- CSRF Token -->
-                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}" />
-
-                <!-- Email Input -->
-                <div class="form-outline mb-4">
-                  <input type="email" id="username" name="_username" class="form-control" 
-                         value="{{ last_username }}" required autofocus autocomplete="email" />
-                  <label class="form-label" for="username">Email address</label>
-                </div>
-
-                <!-- Password Input -->
-                <div class="form-outline mb-4">
-                  <input type="password" id="password" name="_password" class="form-control" 
-                         required autocomplete="current-password" />
-                  <label class="form-label" for="password">Password</label>
-                </div>
-
-                <!-- Submit Button -->
-                <button type="submit" class="btn btn-primary btn-block mb-4">
-                  Connecter
-                </button>
-              </form>
-              <!-- Form End -->
-
-              <!-- Registration Button -->
-              <button class="btn btn-secondary btn-block mb-4">
-                <a href="{{ path('app_register') }}" class="text-white text-decoration-none">S'inscrire</a>
-              </button>
-
-              <!-- Social Login -->
-              <div class="text-center">
-                <p>or sign up with:</p>
-                <button type="button" class="btn btn-link btn-floating mx-1">
-                  <i class="fab fa-facebook-f"></i>
-                </button>
-                <button type="button" class="btn btn-link btn-floating mx-1">
-                  <i class="fab fa-google"></i>
-                </button>
-              </div>
-            </div>
-          </div>
+    <div class="mb-6">
+        <div class="relative">
+            <i class="ri-mail-line absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+            <input 
+                type="email" 
+                name="_username" 
+                value="{{ last_username }}" 
+                placeholder="Email" 
+                class="w-full px-12 py-3 border border-gray-200 rounded-lg focus:outline-none focus:border-primary" 
+                required
+            >
         </div>
-      </div>
     </div>
-  </div>
-</section>
-{% endblock %}
+
+    <div class="mb-6">
+        <div class="relative">
+            <i class="ri-lock-line absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+            <input 
+                type="password" 
+                name="_password" 
+                placeholder="Mot de passe" 
+                class="w-full px-12 py-3 border border-gray-200 rounded-lg focus:outline-none focus:border-primary" 
+                required
+            >
+            <button type="button" class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400" onclick="togglePassword(this)">
+                <i class="ri-eye-line"></i>
+            </button>
+        </div>
+    </div>
+
+    {# <div class="flex items-center justify-between mb-6">
+        <label class="flex items-center cursor-pointer">
+            <input 
+                type="checkbox" 
+                name="_remember_me" 
+                class="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary"
+            >
+            <span class="ml-2 text-sm text-gray-600">Se souvenir de moi</span>
+        </label>
+        <a href="{{ path('app_forgot_password') }}" class="text-sm text-primary hover:underline">Mot de passe oublié?</a>
+    </div> #}
+
+    {# CSRF Token #}
+    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+    <button type="submit" class="w-full py-3 bg-primary text-white font-medium rounded-lg hover:bg-primary/90 transition-colors !rounded-button">
+        Se connecter
+    </button>
+</form>

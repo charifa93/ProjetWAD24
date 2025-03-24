@@ -18,15 +18,21 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
     
     class AcceuilController extends AbstractController
     {
+        /////////////////////////les recettes plus recentes et les recettes bien  //////////////
         #[Route('/', name: 'accueil')]
         public function index(Request $req, RecetteRepository $rep): Response
         {
             $form = $this->createForm(RechercheRecetteType::class);
-            $recettes = $rep->findAll(); // Charger toutes les recettes au début
+            $recetteDifficile = $rep->findBy(['difficulte' => 'Facile'], ['datePublication' => 'DESC'], 4 );
+            $recettes = $rep->findBy([], ['datePublication' => 'DESC'], 6);
+            $recetteRapide = $rep->findBy([], ['tempsDePreparation' => 'DESC'], 4 );
+            
     
             return $this->render('acceuil/index.html.twig', [
                 'form' => $form->createView(),
-                'recettes' => $recettes, // On passe les recettes à Twig
+                'recettes' => $recettes, 
+                'recetteDifficile' => $recetteDifficile,
+                'recetteRapide' => $recetteRapide
             ]);
         }
     
@@ -52,6 +58,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
                 'recettesRecentes' => $recettesRecentes // Assurez-vous que cette variable est bien passée ici
             ]);
         }
+
         
 
 

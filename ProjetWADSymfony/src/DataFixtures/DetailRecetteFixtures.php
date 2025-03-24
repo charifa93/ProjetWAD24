@@ -13,20 +13,21 @@ class DetailRecetteFixtures extends Fixture implements DependentFixtureInterface
 
     public function load(ObjectManager $manager): void
     {
-        $faker = Factory::create('fr_FR');
+       
 
-        for($i = 0; $i < 10; $i++) {
+        $unitesMesure = ['g', 'kg', 'ml', 'cl', 'l', 'pincée', 'cuillère à café', 'cuillère à soupe', 'tranche', 'pièce'];
+
+        for ($i = 0; $i < 50; $i++) {
             $detailRecette = new DetailRecette([
-                'quantite' => $faker->numberBetween(1, 10),
-                'uniteMesure' => $faker->word(),
+                'quantite' => rand(1, 500),
+                'uniteMesure' => $unitesMesure[array_rand($unitesMesure)],
                 'recette' => $this->getReference('recette' . rand(0, 9)),
-                'ingredient' => $this->getReference('ingredient' . rand(0, 9)),
+                'ingredient' => $this->getReference('ingredient' . rand(0, 49)),
             ]);
-
+        
             $manager->persist($detailRecette);
         }
-
-        
+         
         
         $manager->flush();
     }

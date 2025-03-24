@@ -1,19 +1,19 @@
-/* :where([class^="ri-"])::before { content: "\f3c2"; }
+:where([class^="ri-"])::before { content: "\f3c2"; } */
 body {
     opacity: 0;
     transition: opacity 0.5s ease-in-out;
-    }
-    .welcome-banner {
+}
+.welcome-banner {
     background-image: url('https://public.readdy.ai/ai/img_res/c0ccd77f5c72e9891b59b5b96954be4a.jpg');
     background-size: cover;
     background-position: center;
-    }
-    .recipe-grid {
+}
+.recipe-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 2rem;
-    }
-    .search-results {
+}
+.search-results {
     display: none;
     position: absolute;
     top: 100%;
@@ -23,12 +23,18 @@ body {
     border-radius: 0 0 8px 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     z-index: 50;
-    }
-    /* .recipe-info {
+}
+.recipe-info {
     background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%);
-    }
-    .ingredient-checkbox:checked + span {
+}
+.ingredient-checkbox:checked + span {
     text-decoration: line-through;
     color: #9CA3AF;
-    } */
- */
+}
+.profile-banner {
+        background-image: url('https://public.readdy.ai/ai/img_res/5785af120021169b571ea64de8c540f8.jpg');
+        background-size: cover;
+        background-position: center;
+}
+
+

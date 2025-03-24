@@ -15,39 +15,138 @@ use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 class RecetteFixtures extends Fixture implements DependentFixtureInterface
 {
     public function load(ObjectManager $manager): void
-    {
-        $faker = Factory::create('fr_FR');
+{
+    $recettesData = [
+        [
+            'titre' => 'Quiche Lorraine',
+            'description' => 'Une délicieuse quiche aux lardons et fromage, parfaite pour le dîner.',
+            'difficulte' => 'Facile',
+            'image' => 'https://images.pexels.com/photos/671956/pexels-photo-671956.jpeg?auto=compress&cs=tinysrgb&w=800',
+            'datePublication' => new \DateTime('2024-03-01'),
+            'tempsDePreparation' => new \DateTime('00:20:00'),
+            'tempsDeCuison' => new \DateTime('00:35:00'),
+            'nombrePortions' => 6,
+        ],
+        [
+            'titre' => 'Boeuf Bourguignon',
+            'description' => 'Un plat traditionnel mijoté de bœuf au vin rouge avec légumes.',
+            'difficulte' => 'Difficile',
+            'image' => 'https://images.pexels.com/photos/2313686/pexels-photo-2313686.jpeg?auto=compress&cs=tinysrgb&w=800',
+            'datePublication' => new \DateTime('2024-02-15'),
+            'tempsDePreparation' => new \DateTime('00:30:00'),
+            'tempsDeCuison' => new \DateTime('03:00:00'),
+            'nombrePortions' => 4,
+        ],
+        [
+            'titre' => 'Ratatouille',
+            'description' => 'Un mélange savoureux de légumes provençaux cuits au four.',
+            'difficulte' => 'Moyen',
+            'image' => 'https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=800',
+            'datePublication' => new \DateTime('2024-01-10'),
+            'tempsDePreparation' => new \DateTime('00:25:00'),
+            'tempsDeCuison' => new \DateTime('00:40:00'),
+            'nombrePortions' => 4,
+        ],
+        [
+            'titre' => 'Tarte Tatin',
+            'description' => 'Une tarte renversée aux pommes caramélisées, un dessert classique.',
+            'difficulte' => 'Moyen',
+            'image' => 'https://images.pexels.com/photos/6062025/pexels-photo-6062025.jpeg?auto=compress&cs=tinysrgb&w=800',
+            'datePublication' => new \DateTime('2023-12-05'),
+            'tempsDePreparation' => new \DateTime('00:20:00'),
+            'tempsDeCuison' => new \DateTime('00:35:00'),
+            'nombrePortions' => 6,
+        ],
+        [
+            'titre' => 'Poulet Basquaise',
+            'description' => 'Poulet mijoté avec poivrons, tomates et oignons façon basque.',
+            'difficulte' => 'Moyen',
+            'image' => 'https://images.pexels.com/photos/616404/pexels-photo-616404.jpeg?auto=compress&cs=tinysrgb&w=800',
+            'datePublication' => new \DateTime('2023-11-18'),
+            'tempsDePreparation' => new \DateTime('00:15:00'),
+            'tempsDeCuison' => new \DateTime('01:00:00'),
+            'nombrePortions' => 4,
+        ],
+        [
+            'titre' => 'Soupe à l’oignon',
+            'description' => 'Une soupe traditionnelle gratinée à base d’oignons caramélisés.',
+            'difficulte' => 'Facile',
+            'image' => 'https://images.pexels.com/photos/376464/pexels-photo-376464.jpeg?auto=compress&cs=tinysrgb&w=800',
+            'datePublication' => new \DateTime('2024-01-25'),
+            'tempsDePreparation' => new \DateTime('00:15:00'),
+            'tempsDeCuison' => new \DateTime('00:40:00'),
+            'nombrePortions' => 4,
+        ],
+        [
+            'titre' => 'Salade Niçoise',
+            'description' => 'Salade fraîche avec thon, œufs, olives et légumes.',
+            'difficulte' => 'Facile',
+            'image' => 'https://images.pexels.com/photos/1640773/pexels-photo-1640773.jpeg?auto=compress&cs=tinysrgb&w=800',
+            'datePublication' => new \DateTime('2024-02-10'),
+            'tempsDePreparation' => new \DateTime('00:15:00'),
+            'tempsDeCuison' => new \DateTime('00:00:00'),
+            'nombrePortions' => 2,
+        ],
+        [
+            'titre' => 'Crêpes Suzette',
+            'description' => 'Crêpes flambées à la liqueur d’orange, servies en dessert.',
+            'difficulte' => 'Moyen',
+            'image' => 'https://images.pexels.com/photos/376464/pexels-photo-376464.jpeg?auto=compress&cs=tinysrgb&w=800',
+            'datePublication' => new \DateTime('2024-03-05'),
+            'tempsDePreparation' => new \DateTime('00:20:00'),
+            'tempsDeCuison' => new \DateTime('00:10:00'),
+            'nombrePortions' => 4,
+        ],
+        [
+            'titre' => 'Cassoulet',
+            'description' => 'Un plat mijoté à base de haricots blancs, saucisses et confit de canard.',
+            'difficulte' => 'Difficile',
+            'image' => 'https://images.pexels.com/photos/1087896/pexels-photo-1087896.jpeg?auto=compress&cs=tinysrgb&w=800',
+            'datePublication' => new \DateTime('2023-10-30'),
+            'tempsDePreparation' => new \DateTime('00:45:00'),
+            'tempsDeCuison' => new \DateTime('03:30:00'),
+            'nombrePortions' => 6,
+        ],
+        [
+            'titre' => 'Gratin Dauphinois',
+            'description' => 'Pommes de terre au four avec crème et fromage gratiné.',
+            'difficulte' => 'Facile',
+            'image' => 'https://images.pexels.com/photos/4495760/pexels-photo-4495760.jpeg?auto=compress&cs=tinysrgb&w=800',
+            'datePublication' => new \DateTime('2024-02-20'),
+            'tempsDePreparation' => new \DateTime('00:20:00'),
+            'tempsDeCuison' => new \DateTime('01:00:00'),
+            'nombrePortions' => 4,
+        ],
+         
+    ];
 
+    foreach ($recettesData as $i => $data) {
+        $recette = new Recette();
+        $recette->setTitre($data['titre']);
+        $recette->setDescription($data['description']);
+        $recette->setDifficulte($data['difficulte']);
+        $recette->setImage($data['image']);
+        $recette->setDatePublication($data['datePublication']);
+        $recette->setTempsDePreparation($data['tempsDePreparation']);
+        $recette->setTempsDeCuison($data['tempsDeCuison']);
+        $recette->setNombrePortions($data['nombrePortions']);
 
-        for ($i = 0; $i < 10; $i++) {
-           $recette = new Recette([
-            'titre' => $faker->sentence(3),
-            'description' => $faker->text(100),
-            'difficulte' => $faker->randomElement(['Facile', 'Moyen', 'Difficile']),
-            'image' => $faker->imageUrl(50 , 50, 'recettes', true),
-            'datePublication' => $faker->dateTimeBetween('-1 year', 'now'),
-            'tempsDePreparation' => new \DateTime($faker->time()),
-            'tempsDeCuison' => new \DateTime($faker->time()),
-            'nombrePortions' => $faker->numberBetween(1, 10),
-            'utilisateur' => $this->getReference('utilisateur'.rand(0,4)), // attention!! nombre users
-            'ingredient' => $this->getReference('ingredient'.rand(0,9)),
+        $recette->setUtilisateur($this->getReference('utilisateur' . rand(0, 4)));
 
-            
-           ]);
+        $recette->setSaison(Saison::cases()[rand(0, 4)]);
+        $recette->setTypeDePlat(TypeDePlat::cases()[rand(0, 7)]);
+        $recette->setOrigine(Origine::cases()[rand(0, 8)]);
+        $recette->setPreparations(Preparations::cases()[rand(0, 16)]);
 
-        //////////////// enum ////////////////
-           $recette->setSaison(Saison::cases()[rand(0,4)]);
-           $recette->setTypeDePlat(TypeDePlat::cases()[rand(0,7)]);
-           $recette->setOrigine(Origine::cases()[rand(0,8)]);
-           $recette->setPreparations(Preparations::cases()[rand(0,16)]);
+        $this->addReference('recette' . $i, $recette);
 
-
-           $this->addReference('recette' . $i, $recette);
-
-           $manager->persist($recette);
-       }
-       $manager->flush();
+        $manager->persist($recette);
     }
+
+    $manager->flush();
+}
+
+
 
     public function getDependencies(){
         return ([UtilisateurFixtures::class,

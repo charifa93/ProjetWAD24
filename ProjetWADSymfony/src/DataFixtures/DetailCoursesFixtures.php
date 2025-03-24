@@ -12,20 +12,16 @@ class DetailCoursesFixtures extends Fixture implements DependentFixtureInterface
 {
     public function load(ObjectManager $manager): void
     {
-       $faker = Factory::create('fr_FR');
-
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < 50; $i++) {
             $detailCourses = new DetailCourses([
-                'quantite' => $faker->numberBetween(1, 10),
+                'quantite' => rand(1, 10),
                 'coursesList' => $this->getReference('coursesList' . rand(0, 9)),
-                'ingredient' => $this->getReference('ingredient' . rand(0, 9)),
+                'ingredient' => $this->getReference('ingredient' . rand(0, 49)), // 50 ingrédients
             ]);
-
-
-
-
+        
             $manager->persist($detailCourses);
         }
+        
 
         $manager->flush();
     }

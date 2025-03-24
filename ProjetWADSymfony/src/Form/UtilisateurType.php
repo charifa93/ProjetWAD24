@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Recette;
 use App\Entity\Utilisateur;
+use Symfony\Component\Validator\Constraints\File;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -23,9 +24,16 @@ class UtilisateurType extends AbstractType
         ->add('nom')
         ->add('prenom')
         ->add('photo', FileType::class, [
-            'data_class' => null,
-        ])
-        ;
+            'label' => 'Photo de profil',
+            'required' => false,
+            'constraints' => [
+                new File([
+                    'maxSize' => '2M',
+                    'mimeTypes' => ['image/jpeg', 'image/png', 'image/webp'],
+                    'mimeTypesMessage' => 'Formats autorisés : JPEG, PNG, WEBP',
+                ])
+            ],
+        ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

@@ -1,0 +1,12 @@
+:where([class^="ri-"])::before { content: "\f3c2"; }
+        .auth-container {
+            background-image: url('https://public.readdy.ai/ai/img_res/d753b94c1a4854792ade36ce0357447f.jpg');
+            background-size: cover;
+            background-position: center;
+        }
+        .form-switch {
+            transition: transform 0.3s ease-in-out;
+        }
+        .form-switch.register {
+            transform: translateX(-100%);
+        }

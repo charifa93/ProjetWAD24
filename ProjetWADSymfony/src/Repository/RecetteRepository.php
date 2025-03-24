@@ -39,24 +39,13 @@ class RecetteRepository extends ServiceEntityRepository
     // //////// afficher les recettes plus recentes //////////////
     public function afficherRecettesRecentes(){
         $em = $this->getEntityManager();
-        $query = $em->createQuery('SELECT R FROM App\Entity\Recette R ORDER BY R.dateCreation DESC');
+        $query = $em->createQuery('SELECT R FROM App\Entity\Recette R ORDER BY R.datePublication DESC');
         $recettes = $query->getResult();
         return $recettes ;
         }
 
-    ////// afficher 6 recettes bien noter la note dans une table note  ////////////////
-    public function afficherRecettesBienNoter(){
-        $em = $this->getEntityManager();
-        $query = $em->createQuery('SELECT r.*, AVG(n.valeur) AS moyenne_note
-                                        FROM recette r
-                                        JOIN note n ON r.id = n.recetteId
-                                        GROUP BY r.id
-                                        ORDER BY moyenne_note DESC
-                                        LIMIT 6;
-                                        ');
-        $recettes = $query->getResult();
-        return $recettes ;
-        }
+
+    /////// afficher les recettes plus bien notees //////////////
 
 
 

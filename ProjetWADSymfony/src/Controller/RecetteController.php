@@ -95,8 +95,7 @@ final class RecetteController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_recette_show')]
-    public function show(
-        Recette $recette,Request $request,EntityManagerInterface $entityManager ): Response {
+    public function show(Recette $recette,Request $request,EntityManagerInterface $entityManager ): Response {
         $commentaire = new Commentaire();
         $form = $this->createForm(CommentaireType::class, $commentaire);
         $form->handleRequest($request);

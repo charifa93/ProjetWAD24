@@ -4,7 +4,7 @@
 <a href="{{ path('accueil') }}" class="text-3xl font-['Pacifico'] text-primary">logo</a>
 <div class="hidden md:flex space-x-6">
 <a href="{{ path('accueil') }}" class="text-gray-600 hover:text-primary" id="homeLink">Accueil</a>
-<script>
+{# <script>
 document.addEventListener('DOMContentLoaded', function() {
   const homeLink = document.getElementById('homeLink');
   const isHomePage = window.location.pathname === '{{ path('accueil') }}';
@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
       e.preventDefault();
     });
   }
-});
+}); #}
 </script>
 <a href="{{ path('app_recette_index')}}" class="text-gray-600 hover:text-primary">Recettes</a>
 <a href="#" class="text-gray-600 hover:text-primary">Catégories</a>

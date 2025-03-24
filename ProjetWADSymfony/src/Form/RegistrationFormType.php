@@ -11,6 +11,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\IsTrue;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 
 class RegistrationFormType extends AbstractType
 {
@@ -20,6 +21,12 @@ class RegistrationFormType extends AbstractType
             ->add('nom')
             ->add('prenom')
             ->add('email')
+            ->add('photo', FileType::class, [
+                'label' => 'Photo de profil',
+
+
+                'required' => false,
+            ])
             // ->add('agreeTerms', CheckboxType::class, [
             //     'mapped' => false,
             //     'constraints' => [
@@ -44,8 +51,9 @@ class RegistrationFormType extends AbstractType
                         'max' => 4096,
                     ]),
                 ],
-            ])
-        ;
+            ]);
+           
+
     }
 
     public function configureOptions(OptionsResolver $resolver): void
@@ -55,3 +63,5 @@ class RegistrationFormType extends AbstractType
         ]);
     }
 }
+
+

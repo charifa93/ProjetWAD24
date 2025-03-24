@@ -40,7 +40,6 @@ window.$ = $;
             }
         }
     };
-
 	document.getElementById('searchToggle').addEventListener('click', function() {
 	document.getElementById('searchBar').classList.toggle('hidden');
 	});

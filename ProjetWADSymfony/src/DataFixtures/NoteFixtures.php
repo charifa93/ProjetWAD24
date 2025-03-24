@@ -14,7 +14,7 @@ class NoteFixtures extends Fixture implements DependentFixtureInterface
     {
         $faker = Factory::create('fr_FR');
 
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < 100; $i++) {
             $note = new Note();
             $note->setValeur($faker->numberBetween(1, 5));
 

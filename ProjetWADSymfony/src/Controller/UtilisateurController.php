@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Doctrine\Persistence\ManagerRegistry;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 
 
@@ -37,9 +38,6 @@ final class UtilisateurController extends AbstractController
     //     ]);
     // }
 
-   
-    
-
     #[Route('/{id}', name: 'app_utilisateur_show', methods: ['GET'])]
     public function show(Utilisateur $utilisateur): Response
     {
@@ -51,6 +49,7 @@ final class UtilisateurController extends AbstractController
     #[Route('/{id}/edit', name: 'app_utilisateur_edit')]
     public function edit(Request $request, Utilisateur $utilisateur, EntityManagerInterface $entityManager): Response
     {
+        $utilisateur = $this->getUser();
         $form = $this->createForm(UtilisateurType::class, $utilisateur);
         $form->handleRequest($request);
 
@@ -77,18 +76,6 @@ final class UtilisateurController extends AbstractController
     //     return $this->redirectToRoute('accueil', );
     // }
 
-
-    // afficher le profil de l'utilisateur ////
-    #[Route('/{id}/profil', name: 'app_utilisateur_profil')]
-    public function profil(Utilisateur $utilisateur ): Response
-    {
-        
-
-
-        return $this->render('utilisateur/profilUser.html.twig', [
-            'utilisateur' => $utilisateur
-        ]);
-    }
 
 
     // afficher les recettes de l'utilisateur ////
@@ -152,6 +139,46 @@ public function editRecette(Request $request, Recette $recette, EntityManagerInt
         'recette' => $recette,
         'form' => $form,
     ]);
+}
+
+//////////////////////////// modifier la photo de profil ////////////////
+
+#[Route('/upload/photo', name: 'upload_photo', methods: ['POST'])]
+public function uploadPhoto(Request $request, EntityManagerInterface $entityManager, Security $security): JsonResponse
+{
+    $photo = $request->files->get('photo');
+    $utilisateur = $security->getUser(); // utilisateur connecté
+
+    if (!$utilisateur) {
+        return new JsonResponse(['error' => 'Utilisateur non connecté'], 403);
+    }
+
+    if ($photo) {
+        $newFilename = uniqid().'.'.$photo->guessExtension();
+
+        $photo->move(
+            $this->getParameter('photos_directory'),
+            $newFilename
+        );
+
+        // Supprimer l'ancienne photo si besoin
+        $anciennePhoto = $utilisateur->getPhoto();
+        if ($anciennePhoto) {
+            $ancienFichier = $this->getParameter('photos_directory') . '/' . $anciennePhoto;
+            if (file_exists($ancienFichier)) {
+                unlink($ancienFichier);
+            }
+        }
+
+        // Enregistrement BDD
+        $utilisateur->setPhoto($newFilename);
+        $entityManager->persist($utilisateur);
+        $entityManager->flush();
+
+        return new JsonResponse(['success' => true, 'filename' => $newFilename]);
+    }
+
+    return new JsonResponse(['error' => 'Aucun fichier reçu'], 400);
 }
 
 

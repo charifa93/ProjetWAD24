@@ -26,6 +26,10 @@ class RecetteType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder 
+            ->add('image', FileType::class, [
+                'label' => 'Image de la recette',
+                'required' => false,
+            ])
      
             ->add('titre', TextType::class, [
                 'label' => 'Nom de la recette',
