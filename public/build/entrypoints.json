@@ -1,0 +1,71 @@
+{
+  "entrypoints": {
+    "app": {
+      "js": [
+        "/build/runtime.js",
+        "/build/vendors-node_modules_core-js_internals_array-species-create_js-node_modules_core-js_internals-fc1c90.js",
+        "/build/vendors-node_modules_jquery_dist_jquery_js-node_modules_core-js_modules_es_array_for-each_js--241070.js",
+        "/build/app.js"
+      ],
+      "css": [
+        "/build/app.css"
+      ]
+    },
+    "autre": {
+      "js": [
+        "/build/runtime.js",
+        "/build/vendors-node_modules_core-js_internals_array-species-create_js-node_modules_core-js_internals-fc1c90.js",
+        "/build/vendors-node_modules_core-js_modules_es_array_concat_js-node_modules_core-js_modules_es_array-0d715a.js",
+        "/build/autre.js"
+      ],
+      "css": [
+        "/build/autre.css"
+      ]
+    },
+    "showRecette": {
+      "js": [
+        "/build/runtime.js",
+        "/build/vendors-node_modules_core-js_internals_array-species-create_js-node_modules_core-js_internals-fc1c90.js",
+        "/build/vendors-node_modules_core-js_modules_es_array_concat_js-node_modules_core-js_modules_es_array-ffb95b.js",
+        "/build/showRecette.js"
+      ],
+      "css": [
+        "/build/showRecette.css"
+      ]
+    },
+    "connexion": {
+      "js": [
+        "/build/runtime.js",
+        "/build/vendors-node_modules_core-js_internals_array-species-create_js-node_modules_core-js_internals-fc1c90.js",
+        "/build/vendors-node_modules_core-js_internals_add-to-unscopables_js-node_modules_core-js_internals_c-c6a7e6.js",
+        "/build/vendors-node_modules_core-js_modules_es_array_iterator_js-node_modules_core-js_modules_es_obj-4728b2.js",
+        "/build/connexion.js"
+      ],
+      "css": [
+        "/build/connexion.css"
+      ]
+    },
+    "detailsRecette": {
+      "js": [
+        "/build/runtime.js",
+        "/build/vendors-node_modules_core-js_internals_array-species-create_js-node_modules_core-js_internals-fc1c90.js",
+        "/build/vendors-node_modules_core-js_internals_add-to-unscopables_js-node_modules_core-js_internals_c-c6a7e6.js",
+        "/build/vendors-node_modules_core-js_modules_es_array_concat_js-node_modules_core-js_modules_es_array-f168ce.js",
+        "/build/detailsRecette.js"
+      ],
+      "css": [
+        "/build/detailsRecette.css"
+      ]
+    },
+    "profil": {
+      "js": [
+        "/build/runtime.js",
+        "/build/vendors-node_modules_core-js_internals_array-species-create_js-node_modules_core-js_internals-fc1c90.js",
+        "/build/profil.js"
+      ],
+      "css": [
+        "/build/profil.css"
+      ]
+    }
+  }
+}

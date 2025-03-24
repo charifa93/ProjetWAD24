@@ -1,0 +1,19 @@
+/*!**********************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[1].oneOf[1].use[1]!./assets/styles/showRecette.css ***!
+  \**********************************************************************************************************************/
+:where([class^="ri-"])::before { content: "\f3c2"; }
+.filter-section::-webkit-scrollbar {
+width: 4px;
+}
+.filter-section::-webkit-scrollbar-track {
+background: #f1f1f1;
+}
+.filter-section::-webkit-scrollbar-thumb {
+background: #ddd;
+border-radius: 4px;
+}
+.filter-section::-webkit-scrollbar-thumb:hover {
+background: #ccc;
+}
+
+/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoic2hvd1JlY2V0dGUuY3NzIiwibWFwcGluZ3MiOiI7OztBQUFBLGlDQUFpQyxnQkFBZ0IsRUFBRTtBQUNuRDtBQUNBLFVBQVU7QUFDVjtBQUNBO0FBQ0EsbUJBQW1CO0FBQ25CO0FBQ0E7QUFDQSxnQkFBZ0I7QUFDaEIsa0JBQWtCO0FBQ2xCO0FBQ0E7QUFDQSxnQkFBZ0I7QUFDaEIsQyIsInNvdXJjZXMiOlsid2VicGFjazovLy8uL2Fzc2V0cy9zdHlsZXMvc2hvd1JlY2V0dGUuY3NzIl0sInNvdXJjZXNDb250ZW50IjpbIjp3aGVyZShbY2xhc3NePVwicmktXCJdKTo6YmVmb3JlIHsgY29udGVudDogXCJcXGYzYzJcIjsgfVxyXG4uZmlsdGVyLXNlY3Rpb246Oi13ZWJraXQtc2Nyb2xsYmFyIHtcclxud2lkdGg6IDRweDtcclxufVxyXG4uZmlsdGVyLXNlY3Rpb246Oi13ZWJraXQtc2Nyb2xsYmFyLXRyYWNrIHtcclxuYmFja2dyb3VuZDogI2YxZjFmMTtcclxufVxyXG4uZmlsdGVyLXNlY3Rpb246Oi13ZWJraXQtc2Nyb2xsYmFyLXRodW1iIHtcclxuYmFja2dyb3VuZDogI2RkZDtcclxuYm9yZGVyLXJhZGl1czogNHB4O1xyXG59XHJcbi5maWx0ZXItc2VjdGlvbjo6LXdlYmtpdC1zY3JvbGxiYXItdGh1bWI6aG92ZXIge1xyXG5iYWNrZ3JvdW5kOiAjY2NjO1xyXG59Il0sIm5hbWVzIjpbXSwic291cmNlUm9vdCI6IiJ9*/
