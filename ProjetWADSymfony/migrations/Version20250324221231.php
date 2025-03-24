@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20250323221751 extends AbstractMigration
+final class Version20250324221231 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -24,6 +24,7 @@ final class Version20250323221751 extends AbstractMigration
         $this->addSql('CREATE TABLE courses_list (id INT AUTO_INCREMENT NOT NULL, utilisateur_id INT DEFAULT NULL, nom VARCHAR(255) NOT NULL, INDEX IDX_80284AA6FB88E14F (utilisateur_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE detail_courses (id INT AUTO_INCREMENT NOT NULL, courses_list_id INT DEFAULT NULL, ingredient_id INT DEFAULT NULL, quantite INT DEFAULT NULL, INDEX IDX_CE6ADA998497EB17 (courses_list_id), INDEX IDX_CE6ADA99933FE08C (ingredient_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE detail_recette (id INT AUTO_INCREMENT NOT NULL, recette_id INT NOT NULL, ingredient_id INT NOT NULL, quantite INT NOT NULL, unite_mesure VARCHAR(100) NOT NULL, INDEX IDX_2E74E34589312FE9 (recette_id), INDEX IDX_2E74E345933FE08C (ingredient_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE etape (id INT AUTO_INCREMENT NOT NULL, recette_id INT DEFAULT NULL, ordre INT NOT NULL, titre VARCHAR(255) NOT NULL, description LONGTEXT NOT NULL, INDEX IDX_285F75DD89312FE9 (recette_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE ingredient (id INT AUTO_INCREMENT NOT NULL, nom VARCHAR(255) NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE note (id INT AUTO_INCREMENT NOT NULL, utilisateur_id INT DEFAULT NULL, recette_id INT DEFAULT NULL, valeur INT DEFAULT NULL, INDEX IDX_CFBDFA14FB88E14F (utilisateur_id), INDEX IDX_CFBDFA1489312FE9 (recette_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE recette (id INT AUTO_INCREMENT NOT NULL, utilisateur_id INT DEFAULT NULL, titre VARCHAR(255) NOT NULL, description LONGTEXT DEFAULT NULL, date_publication DATE DEFAULT NULL, temps_de_preparation TIME DEFAULT NULL, temps_de_cuison TIME DEFAULT NULL, difficulte VARCHAR(255) DEFAULT NULL, image VARCHAR(255) DEFAULT NULL, saison VARCHAR(255) NOT NULL, type_de_plat VARCHAR(255) NOT NULL, origine VARCHAR(255) NOT NULL, preparation VARCHAR(255) NOT NULL, nombre_portions INT DEFAULT NULL, INDEX IDX_49BB6390FB88E14F (utilisateur_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
@@ -37,6 +38,7 @@ final class Version20250323221751 extends AbstractMigration
         $this->addSql('ALTER TABLE detail_courses ADD CONSTRAINT FK_CE6ADA99933FE08C FOREIGN KEY (ingredient_id) REFERENCES ingredient (id)');
         $this->addSql('ALTER TABLE detail_recette ADD CONSTRAINT FK_2E74E34589312FE9 FOREIGN KEY (recette_id) REFERENCES recette (id)');
         $this->addSql('ALTER TABLE detail_recette ADD CONSTRAINT FK_2E74E345933FE08C FOREIGN KEY (ingredient_id) REFERENCES ingredient (id)');
+        $this->addSql('ALTER TABLE etape ADD CONSTRAINT FK_285F75DD89312FE9 FOREIGN KEY (recette_id) REFERENCES recette (id)');
         $this->addSql('ALTER TABLE note ADD CONSTRAINT FK_CFBDFA14FB88E14F FOREIGN KEY (utilisateur_id) REFERENCES utilisateur (id)');
         $this->addSql('ALTER TABLE note ADD CONSTRAINT FK_CFBDFA1489312FE9 FOREIGN KEY (recette_id) REFERENCES recette (id)');
         $this->addSql('ALTER TABLE recette ADD CONSTRAINT FK_49BB6390FB88E14F FOREIGN KEY (utilisateur_id) REFERENCES utilisateur (id)');
@@ -54,6 +56,7 @@ final class Version20250323221751 extends AbstractMigration
         $this->addSql('ALTER TABLE detail_courses DROP FOREIGN KEY FK_CE6ADA99933FE08C');
         $this->addSql('ALTER TABLE detail_recette DROP FOREIGN KEY FK_2E74E34589312FE9');
         $this->addSql('ALTER TABLE detail_recette DROP FOREIGN KEY FK_2E74E345933FE08C');
+        $this->addSql('ALTER TABLE etape DROP FOREIGN KEY FK_285F75DD89312FE9');
         $this->addSql('ALTER TABLE note DROP FOREIGN KEY FK_CFBDFA14FB88E14F');
         $this->addSql('ALTER TABLE note DROP FOREIGN KEY FK_CFBDFA1489312FE9');
         $this->addSql('ALTER TABLE recette DROP FOREIGN KEY FK_49BB6390FB88E14F');
@@ -63,6 +66,7 @@ final class Version20250323221751 extends AbstractMigration
         $this->addSql('DROP TABLE courses_list');
         $this->addSql('DROP TABLE detail_courses');
         $this->addSql('DROP TABLE detail_recette');
+        $this->addSql('DROP TABLE etape');
         $this->addSql('DROP TABLE ingredient');
         $this->addSql('DROP TABLE note');
         $this->addSql('DROP TABLE recette');

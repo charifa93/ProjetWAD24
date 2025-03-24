@@ -95,7 +95,7 @@ final class RecetteController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_recette_show')]
-    public function show(Recette $recette,Request $request,EntityManagerInterface $entityManager ): Response {
+    public function show(Recette $recette,Request $request,EntityManagerInterface $entityManager , RecetteRepository $rep ): Response {
         $commentaire = new Commentaire();
         $form = $this->createForm(CommentaireType::class, $commentaire);
         $form->handleRequest($request);
@@ -116,33 +116,44 @@ final class RecetteController extends AbstractController
                 'uniteMesure' => $detail->getUniteMesure(),
             ];
         }
+        $etapes = [];
+        foreach ($recette->getEtapes() as $etape) {
+            $etapes[] = [
+                    'ordre' => $etape->getOrdre(),
+                    'titre' => $etape->getTitre(),
+                    'description' => $etape->getDescription(),
+            ];
+        }
+        $recettesSimilaires = $rep->findBy(['origine' => $recette->getOrigine()]);
+
 
         return $this->render('recette/show.html.twig', [
             'recette' => $recette,
             'ingredients' => $ingredients,
-    
+            'etapes' => $etapes,
+            'recettesSimilaires' => $recettesSimilaires,
             'commentaireForm' => $form->createView(),
         ]);
     }
 
 
-    #[Route('/{id}/edit', name: 'app_recette_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Recette $recette, EntityManagerInterface $entityManager): Response
-    {
-        $form = $this->createForm(RecetteType::class, $recette);
-        $form->handleRequest($request);
+    // #[Route('/{id}/edit', name: 'app_recette_edit', methods: ['GET', 'POST'])]
+    // public function edit(Request $request, Recette $recette, EntityManagerInterface $entityManager): Response
+    // {
+    //     $form = $this->createForm(RecetteType::class, $recette);
+    //     $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
+    //     if ($form->isSubmitted() && $form->isValid()) {
+    //         $entityManager->flush();
 
-            return $this->redirectToRoute('app_recette_index', []);
-        }
+    //         return $this->redirectToRoute('app_recette_index', []);
+    //     }
 
-        return $this->render('recette/edit.html.twig', [
-            'recette' => $recette,
-            'form' => $form,
-        ]);
-    }
+    //     return $this->render('recette/edit.html.twig', [
+    //         'recette' => $recette,
+    //         'form' => $form,
+    //     ]);
+    // }
 
     #[Route('/{id}', name: 'app_recette_delete')]
     public function delete(Request $request, Recette $recette, EntityManagerInterface $entityManager): Response

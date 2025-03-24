@@ -143,43 +143,43 @@ public function editRecette(Request $request, Recette $recette, EntityManagerInt
 
 //////////////////////////// modifier la photo de profil ////////////////
 
-#[Route('/upload/photo', name: 'upload_photo', methods: ['POST'])]
-public function uploadPhoto(Request $request, EntityManagerInterface $entityManager, Security $security): JsonResponse
-{
-    $photo = $request->files->get('photo');
-    $utilisateur = $security->getUser(); // utilisateur connecté
+// #[Route('/upload/photo', name: 'upload_photo', methods: ['POST'])]
+// public function uploadPhoto(Request $request, EntityManagerInterface $entityManager): JsonResponse
+// {
+//     $photo = $request->files->get('photo');
+//     $utilisateur = $security->getUser(); // utilisateur connecté
 
-    if (!$utilisateur) {
-        return new JsonResponse(['error' => 'Utilisateur non connecté'], 403);
-    }
+//     if (!$utilisateur) {
+//         return new JsonResponse(['error' => 'Utilisateur non connecté'], 403);
+//     }
 
-    if ($photo) {
-        $newFilename = uniqid().'.'.$photo->guessExtension();
+//     if ($photo) {
+//         $newFilename = uniqid().'.'.$photo->guessExtension();
 
-        $photo->move(
-            $this->getParameter('photos_directory'),
-            $newFilename
-        );
+//         $photo->move(
+//             $this->getParameter('photos_directory'),
+//             $newFilename
+//         );
 
-        // Supprimer l'ancienne photo si besoin
-        $anciennePhoto = $utilisateur->getPhoto();
-        if ($anciennePhoto) {
-            $ancienFichier = $this->getParameter('photos_directory') . '/' . $anciennePhoto;
-            if (file_exists($ancienFichier)) {
-                unlink($ancienFichier);
-            }
-        }
+//         // Supprimer l'ancienne photo si besoin
+//         $anciennePhoto = $utilisateur->getPhoto();
+//         if ($anciennePhoto) {
+//             $ancienFichier = $this->getParameter('photos_directory') . '/' . $anciennePhoto;
+//             if (file_exists($ancienFichier)) {
+//                 unlink($ancienFichier);
+//             }
+//         }
 
-        // Enregistrement BDD
-        $utilisateur->setPhoto($newFilename);
-        $entityManager->persist($utilisateur);
-        $entityManager->flush();
+//         // Enregistrement BDD
+//         $utilisateur->setPhoto($newFilename);
+//         $entityManager->persist($utilisateur);
+//         $entityManager->flush();
 
-        return new JsonResponse(['success' => true, 'filename' => $newFilename]);
-    }
+//         return new JsonResponse(['success' => true, 'filename' => $newFilename]);
+//     }
 
-    return new JsonResponse(['error' => 'Aucun fichier reçu'], 400);
-}
+//     return new JsonResponse(['error' => 'Aucun fichier reçu'], 400);
+// }
 
 
 }

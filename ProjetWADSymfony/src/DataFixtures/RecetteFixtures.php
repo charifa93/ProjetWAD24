@@ -11,6 +11,7 @@ use App\Enum\TypeDePlat;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
+use App\Entity\Etape;
 
 class RecetteFixtures extends Fixture implements DependentFixtureInterface
 {
@@ -144,13 +145,42 @@ class RecetteFixtures extends Fixture implements DependentFixtureInterface
     }
 
     $manager->flush();
+    $etapesData = [
+        [
+            'titre' => 'Préparation des ingrédients',
+            'description' => 'Préparez tous les ingrédients nécessaires, épluchez et découpez si besoin.'
+        ],
+        [
+            'titre' => 'Cuisson ou Préparation principale',
+            'description' => 'Faites cuire ou mélangez les ingrédients selon les instructions de la recette.'
+        ],
+        [
+            'titre' => 'Assemblage',
+            'description' => 'Assemblez les différents composants pour former le plat final.'
+        ],
+        [
+            'titre' => 'Finition et Service',
+            'description' => 'Ajoutez la touche finale et servez le plat chaud ou froid selon la recette.'
+        ],
+    ];
+
+    foreach ($etapesData as $index => $etapeInfo) {
+        $etape = new Etape();
+        $etape->setOrdre($index + 1);
+        $etape->setTitre($etapeInfo['titre']);
+        $etape->setDescription($etapeInfo['description']);
+        $etape->setRecette($recette);
+        $manager->persist($etape);
+    }
+
+
+$manager->flush();
 }
-
-
 
     public function getDependencies(){
         return ([UtilisateurFixtures::class,
                 IngredientFixtures::class,
+                
             ]);
               
     }

@@ -90,6 +90,12 @@ class Recette
      */
     #[ORM\ManyToMany(targetEntity: Utilisateur::class, inversedBy: 'FavorisRecette')]
     private Collection $favoris;
+
+    /**
+     * @var Collection<int, Etape>
+     */
+    #[ORM\OneToMany(targetEntity: Etape::class, mappedBy: 'recette' , orphanRemoval: true)]
+    private Collection $etapes;
  
 
      // hydrate ////
@@ -110,11 +116,11 @@ class Recette
       public function __construct(array $init = [])
       {
           $this->hydrate($init);
-          $this->datePublication = new \DateTime(); // Date actuelle
           $this->recetteCom = new ArrayCollection();
           $this->recettesNote = new ArrayCollection();
           $this->detailRecette = new ArrayCollection();
           $this->favoris = new ArrayCollection();
+          $this->etapes = new ArrayCollection();
       }
     public function getId(): ?int
     {
@@ -404,6 +410,36 @@ class Recette
     public function setPreparations($preparation): self
     {
         $this->preparation = $preparation;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Etape>
+     */
+    public function getEtapes(): Collection
+    {
+        return $this->etapes;
+    }
+
+    public function addEtape(Etape $etape): static
+    {
+        if (!$this->etapes->contains($etape)) {
+            $this->etapes->add($etape);
+            $etape->setRecette($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEtape(Etape $etape): static
+    {
+        if ($this->etapes->removeElement($etape)) {
+            // set the owning side to null (unless already changed)
+            if ($etape->getRecette() === $this) {
+                $etape->setRecette(null);
+            }
+        }
 
         return $this;
     }

@@ -68,21 +68,22 @@
         <h2 class="text-xl font-semibold mb-6">Description</h2>
         <p class="text-gray-600 leading-relaxed">{{ recette.description }}</p>
       </div>
-
-      {# <div class="bg-white rounded-lg shadow-sm p-6 mb-8">
+      {# les etapes  #}
+      <div class="bg-white rounded-lg shadow-sm p-6 mb-8">
         <h2 class="text-xl font-semibold mb-6">Instructions de préparation</h2>
         <div class="space-y-6">
-          {% for step in recette.instructions %}
+          {% for etape in recette.etapes %}
             <div class="flex items-start">
               <div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-semibold mr-4 flex-shrink-0">{{ loop.index }}</div>
               <div>
-                <h3 class="font-medium mb-2">{{ step.titre }}</h3>
-                <p class="text-gray-600">{{ step.contenu }}</p>
+                <h3 class="font-medium mb-2">{{ etape.titre }}</h3>
+                <p class="text-gray-600">{{ etape.description }}</p>
               </div>
             </div>
           {% endfor %}
         </div>
-      </div> #}
+      </div>
+
 
       <div class="bg-white rounded-lg shadow-sm p-6 mb-8">
         <h2 class="text-xl font-semibold mb-6">Commentaires ({{ recette.recetteCom|length }})</h2>
@@ -160,24 +161,16 @@
     </div> 
   </div>
   </div>
-  <div class="bg-white rounded-lg shadow-sm p-6 mt-8">
+<div class="bg-white rounded-lg shadow-sm p-6 mt-8">
 <h2 class="text-xl font-semibold mb-6">Recettes similaires</h2>
 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-<div class="group cursor-pointer">
-<img src="https://public.readdy.ai/ai/img_res/fa33bf828d0b6ec4ca324c2e44b90e40.jpg" alt="Ratatouille Niçoise" class="w-full h-40 object-cover rounded-lg mb-3">
-<h3 class="font-medium group-hover:text-primary transition-colors">Ratatouille Niçoise</h3>
-<div class="text-sm text-gray-600">35 min · Facile</div>
+{% for recette in recettesSimilaires %}
+<div  onclick="window.location.href='{{ path('app_recette_show', {'id': recette.id}) }}'"  class="group cursor-pointer">
+<img src="{{recette.image}}" alt="{{recette.titre}}" class="w-full h-40 object-cover rounded-lg mb-3">
+<h3 class="font-medium group-hover:text-primary transition-colors">{{recette.titre}}</h3>
+<div class="text-sm text-gray-600">{{ recette.tempsDePreparation|date('H:i') }} min · {{recette.difficulte}}</div>
 </div>
-<div class="group cursor-pointer">
-<img src="https://public.readdy.ai/ai/img_res/f929c751bcc67aff721f0303c80b29eb.jpg" alt="Tian Provençal" class="w-full h-40 object-cover rounded-lg mb-3">
-<h3 class="font-medium group-hover:text-primary transition-colors">Tian Provençal</h3>
-<div class="text-sm text-gray-600">50 min · Moyen</div>
-</div>
-<div class="group cursor-pointer">
-<img src="https://public.readdy.ai/ai/img_res/ffd5654631fbd3855fa9d9fd978fe62e.jpg" alt="Caponata Sicilienne" class="w-full h-40 object-cover rounded-lg mb-3">
-<h3 class="font-medium group-hover:text-primary transition-colors">Caponata Sicilienne</h3>
-<div class="text-sm text-gray-600">40 min · Moyen</div>
-</div>
+{% endfor %}
 </div>
 </div>
 </main>
