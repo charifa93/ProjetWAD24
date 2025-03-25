@@ -11,6 +11,8 @@ use App\Entity\Utilisateur;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Bridge\Doctrine\Form\Type\IngredientType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -39,6 +41,22 @@ class RecetteType extends AbstractType
                 'label' => 'Description de la recette',
                 
             ])
+            ->add('etapes', CollectionType::class, [
+                'entry_type' => EtapeType::class,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false,
+                'label' => 'Étapes de la recette',
+                'prototype' => true,
+            ])
+            ->add('detailRecette', CollectionType::class, [
+                'entry_type' => detailRecetteType::class,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false,
+                'label' => 'Ingredients de la recette',
+                'prototype' => true,
+            ])
             ->add('datePublication', DateType::class, [
                 'label' => 'Date de publication',
                 
@@ -62,10 +80,10 @@ class RecetteType extends AbstractType
                     'Moyen' => 'moyen',
                     'Difficile' => 'difficile',
                 ],
-                'placeholder' => 'Sélectionnez une difficulté', // Optionnel, pour une valeur par défaut vide
             ])
             ->add('image', FileType::class, [
                 'data_class' => null,
+                'required' => false,
                 
             ])
             ->add('nombrePortions', IntegerType::class, [
@@ -92,8 +110,8 @@ class RecetteType extends AbstractType
                 'choices'=> Preparations::cases(),
                 'choice_label' => fn(Preparations $preparation) => $preparation->value,  // Pour afficher la valeur de l'énum
                 'label'=> 'Preparations',
-                ])
-                ;       
+            ]);
+                  
     }
     public function configureOptions(OptionsResolver $resolver): void
     {
