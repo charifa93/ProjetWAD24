@@ -42,8 +42,11 @@ Essayer gratuitement
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
 {% for recette in recetteDifficile %}
 <div  onclick="window.location.href='{{ path('app_recette_show', {'id': recette.id}) }}'"  class="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
-<img src="{{recette.image}}" alt="Pâtes" class="w-full h-48 object-cover rounded-lg mb-4">
-<h3 class="text-lg font-semibold mb-2">{{ recette.titre }}</h3>
+{% if recette.image starts with 'http' %}
+        <img src="{{ recette.image }}" alt="{{ recette.titre }}" class="w-full h-40 object-cover rounded-lg mb-3">
+    {% else %}
+        <img src="{{ asset('uploads/images/' ~ recette.image) }}" alt="{{ recette.titre }}" class="w-full h-40 object-cover rounded-lg mb-3">
+    {% endif %}<h3 class="text-lg font-semibold mb-2">{{ recette.titre }}</h3>
 <div class="flex items-center mb-2">
 <div class="flex text-yellow-400">
 <i class="ri-star-fill"></i>
@@ -69,7 +72,11 @@ Essayer gratuitement
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
 {% for recette in recetteRapide %}
 <div  onclick="window.location.href='{{ path('app_recette_show', {'id': recette.id}) }}'"  class="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
-<img src="{{recette.image}}" alt="Pâtes" class="w-full h-48 object-cover rounded-lg mb-4">
+{% if recette.image starts with 'http' %}
+        <img src="{{ recette.image }}" alt="{{ recette.titre }}" class="w-full h-40 object-cover rounded-lg mb-3">
+    {% else %}
+        <img src="{{ asset('uploads/images/' ~ recette.image) }}" alt="{{ recette.titre }}" class="w-full h-40 object-cover rounded-lg mb-3">
+    {% endif %}
 <h3 class="text-lg font-semibold mb-2">{{ recette.titre }}</h3>
 <div class="flex items-center mb-2">
 <div class="flex text-yellow-400">
@@ -124,17 +131,20 @@ Essayer gratuitement
 </div>
 <span class="text-gray-700">Rapide</span>
 </a>
-<a href="#" class="bg-white rounded-lg p-4 text-center hover:shadow-md transition-shadow">
-<div class="w-12 h-12 mx-auto mb-2 flex items-center justify-center text-primary">
-<i class="ri-global-line text-2xl"></i>
-</div>
-<span class="text-gray-700">Du Monde</span>
+<a href="#" class="categorie-link bg-white rounded-lg p-4 text-center hover:shadow-md transition-shadow"
+   data-type="categorie" data-value="entrees">
+    <div class="w-12 h-12 mx-auto mb-2 flex items-center justify-center text-primary">
+        <i class="ri-restaurant-line text-2xl"></i>
+    </div>
+    <span class="text-gray-700">Charifa</span>
 </a>
 </div>
 </section>
 
 {#  #}
-<section class="mb-12">
+{# <section class="mb-12"> #}
+<section id="result-recettes" class="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></section>
+
 <div class="flex justify-between items-center mb-6">
 <h2 class="text-2xl font-bold text-gray-900">Dernières recettes</h2>
 <a href="#" class="text-primary hover:text-primary-dark">Voir tout</a>
@@ -142,13 +152,22 @@ Essayer gratuitement
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
  {% for recette in recettes %}
 <div  onclick="window.location.href='{{ path('app_recette_show', {'id': recette.id}) }}'"  class="bg-white rounded-lg shadow-sm overflow-hidden">
-<img src="{{recette.image}}" alt="Pizza" class="w-full h-48 object-cover">
+{% if recette.image starts with 'http' %}
+        <img src="{{ recette.image }}" alt="{{ recette.titre }}" class="w-full h-40 object-cover rounded-lg mb-3">
+    {% else %}
+        <img src="{{ asset('uploads/images/' ~ recette.image) }}" alt="{{ recette.titre }}" class="w-full h-40 object-cover rounded-lg mb-3">
+    {% endif %}
 <div class="p-4">
 <h3 class="text-lg font-semibold mb-2">{{recette.titre}}</h3>
 <p class="text-sm text-gray-600 mb-4">{{recette.description}}</p>
 <div class="flex items-center justify-between">
 <div class="flex items-center">
-<img src="{{recette.utilisateur.photo}}" alt="Chef" class="w-8 h-8 rounded-full mr-2">
+{% if recette.utilisateur.photo starts with 'http' %}
+        <img src="{{ recette.utilisateur.photo }}" alt="{{ recette.utilisateur.nom }}" class="w-8 h-8 rounded-full mr-2">
+    {% else %}
+    <img src="{{ asset('uploads/images/' ~ recette.utilisateur.photo) }}" alt="Chef" class="w-8 h-8 rounded-full mr-2">
+    {% endif %}
+
 <span class="text-sm text-gray-600">{{recette.utilisateur.prenom}} {{recette.utilisateur.nom}}</span>
 </div>
 <span class="text-sm text-gray-500">Il y a 2 heures</span>
@@ -159,7 +178,7 @@ Essayer gratuitement
 </div>
 </section>
 </main>
-{% endblock %}
+
 
   
 {# <div class="search-section">
@@ -186,3 +205,5 @@ Essayer gratuitement
 
   {# <div id="results" style="margin-top: 20px;"></div> <!-- Div pour afficher les résultats --> #}
 {# </div> #}
+
+{% endblock %}

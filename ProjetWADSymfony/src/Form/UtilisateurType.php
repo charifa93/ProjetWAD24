@@ -5,7 +5,6 @@ namespace App\Form;
 use App\Entity\Recette;
 use App\Entity\Utilisateur;
 use Symfony\Component\Validator\Constraints\File;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -25,6 +24,7 @@ class UtilisateurType extends AbstractType
         ->add('prenom')
         ->add('photo', FileType::class, [
             'label' => 'Photo de profil',
+            'mapped' => false,
             'required' => false,
             'constraints' => [
                 new File([

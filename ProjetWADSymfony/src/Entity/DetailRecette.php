@@ -17,7 +17,7 @@ class DetailRecette
     private ?int $quantite = null;
 
     #[ORM\Column(length: 100)]
-    private ?string $uniteMesure = null;
+    private ?string $unite = null;
 
     #[ORM\ManyToOne(inversedBy: 'detailRecette')]
     #[ORM\JoinColumn(nullable: false)]
@@ -64,14 +64,14 @@ class DetailRecette
         return $this;
     }
 
-    public function getUniteMesure(): ?string
+    public function getUnite(): ?string
     {
-        return $this->uniteMesure;
+        return $this->unite;
     }
 
-    public function setUniteMesure(string $uniteMesure): static
+    public function setUnite(string $unite): static
     {
-        $this->uniteMesure = $uniteMesure;
+        $this->unite = $unite;
 
         return $this;
     }

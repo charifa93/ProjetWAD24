@@ -12,6 +12,7 @@ use App\Form\CommentaireType;
 use App\Enum\Preparations;
 use App\Repository\NoteRepository;
 use App\Repository\RecetteRepository;
+use Doctrine\DBAL\Query\Limit;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
@@ -78,8 +79,26 @@ final class RecetteController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            //  dd($recette);
             $utilisateur = $this->getUser();
             $recette->setUtilisateur($utilisateur);
+            $imageFile = $form->get('image')->getData();
+        if ($imageFile) {
+            $newFilename = uniqid().'.'.$imageFile->guessExtension();
+
+            $imageFile->move(
+                $this->getParameter('images_directory'),
+                $newFilename
+            );
+
+    $recette->setImage($newFilename);
+    $recette->setDatePublication(new \DateTimeImmutable());
+}
+            $index = 0;
+            foreach ($recette->getEtapes() as $etape) {
+                $etape->setOrdre($index);
+                $index++;
+            }
             $entityManager->persist($recette);
             $entityManager->flush();
 
@@ -113,7 +132,7 @@ final class RecetteController extends AbstractController
             $ingredients[] = [
                 'ingredient' => $detail->getIngredient(),
                 'quantite' => $detail->getQuantite(),
-                'uniteMesure' => $detail->getUniteMesure(),
+                'unite' => $detail->getUnite(),
             ];
         }
         $etapes = [];
@@ -231,26 +250,26 @@ final class RecetteController extends AbstractController
         return $this->render('recette/show.html.twig', $vars);
     }
 
-    //   ///////////// afficher les recettes par categorie //////////////
-    //   #[Route('/gestion/recettes/afficher/{typeRecherche}/{valeur}', name: 'afficherRecetteRecherche')]
-    //   public function RechercherParCategorie(RecetteRepository $rep, SerializerInterface $serializer, Request $req): Response
-    //   {
+      ///////////// afficher les recettes par categorie //////////////
+      #[Route('/gestion/recettes/afficher/{typeRecherche}/{valeur}', name: 'afficherRecetteRecherche')]
+      public function RechercherParCategorie(RecetteRepository $rep, SerializerInterface $serializer, Request $req): Response
+      {
   
-    //       $typeRecherche = $req->get('typeRecherche');
-    //       $valeur = $req->get('valeur');
+          $typeRecherche = $req->get('typeRecherche');
+          $valeur = $req->get('valeur');
   
-    //       // dump($valeur);
-    //       // dd($typeRecherche);
+          // dump($valeur);
+          // dd($typeRecherche);
           
-    //       if (isset($typeRecherche) && isset($valeur)) {
+          if (isset($typeRecherche) && isset($valeur)) {
   
-    //           $recettes = $rep->rechercheRecetteCategorie ($typeRecherche, $valeur);
+              $recettes = $rep->rechercheRecetteCategorie ($typeRecherche, $valeur);
   
-    //           $recettesJson = $serializer->serialize($recettes, 'json', [AbstractNormalizer::ATTRIBUTES => ['id', 'titre', 'image', 'utilisateur' => ['nom']]]);
+              $recettesJson = $serializer->serialize($recettes, 'json', [AbstractNormalizer::ATTRIBUTES => ['id', 'titre', 'image', 'utilisateur' => ['nom']]]);
   
-    //           return new Response($recettesJson);
-    //       }  
-    //   }
+              return new Response($recettesJson);
+          }  
+      }
 
    
    

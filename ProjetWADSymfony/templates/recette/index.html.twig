@@ -172,9 +172,14 @@ Réinitialiser les filtres
     {% else %}
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {% for recette in recettes %}
+             {# {{ dump(recette.image) }} #}
             
 <div  onclick="window.location.href='{{ path('app_recette_show', {'id': recette.id}) }}'"  class="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow transition-shadow cursor-pointer ">
-<img src="{{ recette.image }}" alt="{{recette.titre}}" class="w-full h-48 object-cover">
+{% if recette.image starts with 'http' %}
+        <img src="{{ recette.image }}" alt="{{ recette.titre }}" class="w-full h-40 object-cover rounded-lg mb-3">
+    {% else %}
+        <img src="{{ asset('uploads/images/' ~ recette.image) }}" alt="{{ recette.titre }}" class="w-full h-40 object-cover rounded-lg mb-3">
+    {% endif %}
 <div class="p-4">
 <h3 class="text-lg font-semibold mb-2">{{recette.titre}}</h3>
 <div class="flex items-center mb-2">
@@ -194,14 +199,23 @@ Réinitialiser les filtres
 </div>
 <div class="flex items-center justify-between">
 <div class="flex items-center">
-<img src="{{recette.utilisateur.photo}}" alt="Chef" class="w-8 h-8 rounded-full mr-2">
+{% if recette.utilisateur.photo starts with 'http' %}
+        <img src="{{ recette.utilisateur.photo }}" alt="{{ recette.utilisateur.nom }}" class="w-8 h-8 rounded-full mr-2">
+    {% else %}
+    <img src="{{ asset('uploads/images/' ~ recette.utilisateur.photo) }}" alt="Chef" class="w-8 h-8 rounded-full mr-2">
+    {% endif %}
 <span class="text-sm text-gray-600"> {{recette.utilisateur.prenom}}  {{recette.utilisateur.nom}}</span>
 </div>
- {% if app.user %}                       
-<a href="{{ path('app_utilisateur_favoris', {'id': recette.id}) }}" class="text-gray-400 hover:text-primary">
-  <i class="ri-heart-line text-xl"></i>
-</a>                     
- {% endif %}
+{% if app.user %}
+    <button class="btn-fav" data-recette-id="{{ recette.id }}" title="Ajouter aux favoris">
+        <i class="ri-heart-line text-xl"></i>
+    </button>
+{% else %}
+    <a href="{{ path('app_login') }}" class="text-gray-400 hover:text-primary" title="Connectez-vous pour ajouter aux favoris">
+        <i class="ri-heart-line text-xl"></i>
+    </a>
+{% endif %}
+
 </div>
 </div>
 </div>
@@ -225,4 +239,29 @@ Réinitialiser les filtres
  {% endif %}
 </div>
 </main>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.btn-fav').forEach(button => {
+        button.addEventListener('click', function () {
+            const recetteId = this.getAttribute('data-recette-id');
+
+            fetch(`/recette/${recetteId}/favoris`, {
+                method: 'POST',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Content-Type': 'application/json',
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data.message);
+                this.querySelector('i').classList.replace('ri-heart-line', 'ri-heart-fill');
+                this.classList.add('text-red-500');
+            })
+            .catch(error => console.error('Erreur:', error));
+        });
+    });
+});
+</script>
+
 {% endblock %}

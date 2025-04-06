@@ -21,6 +21,8 @@ use Symfony\Component\Form\Extension\Core\Type\TimeType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Validator\Constraints\File;
+
 
 
 class RecetteType extends AbstractType
@@ -28,10 +30,22 @@ class RecetteType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder 
-            ->add('image', FileType::class, [
-                'label' => 'Image de la recette',
-                'required' => false,
-            ])
+        ->add('image', FileType::class, [
+            'label' => 'Photo de la recette',
+            'mapped' => false,
+            'required' => false,
+            'constraints' => [
+                new File([
+                    'maxSize' => '2M',
+                    'mimeTypes' => [
+                        'image/jpeg',
+                        'image/png',
+                        'image/webp',
+                    ],
+                    'mimeTypesMessage' => 'Téléverse une image valide (jpeg, png, webp)',
+                ])
+            ],
+        ])
      
             ->add('titre', TextType::class, [
                 'label' => 'Nom de la recette',
@@ -49,6 +63,9 @@ class RecetteType extends AbstractType
                 'label' => 'Étapes de la recette',
                 'prototype' => true,
             ])
+            // ->add('datePublication', DateType::class, [
+            //     'label' => 'Date de création',
+            // ])
             ->add('detailRecette', CollectionType::class, [
                 'entry_type' => detailRecetteType::class,
                 'allow_add' => true,
@@ -56,11 +73,6 @@ class RecetteType extends AbstractType
                 'by_reference' => false,
                 'label' => 'Ingredients de la recette',
                 'prototype' => true,
-            ])
-            ->add('datePublication', DateType::class, [
-                'label' => 'Date de publication',
-                
-                'widget' => 'single_text',
             ])
             ->add('tempsDePreparation', TimeType::class, [
                 'label' => 'Temps de préparation',

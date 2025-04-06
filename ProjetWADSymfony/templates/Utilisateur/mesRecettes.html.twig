@@ -33,8 +33,11 @@
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 {% for recette in utilisateur.recettes %}
 <div  onclick="window.location.href='{{ path('app_recette_show', {'id': recette.id}) }}'"  class="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow">
-<img src="{{ recette.image }}" alt="{{ recette.titre }}" class="w-full h-48 object-cover">
-<div class="p-4">
+{% if recette.image starts with 'http' %}
+        <img src="{{ recette.image }}" alt="{{ recette.titre }}" class="w-full h-40 object-cover rounded-lg mb-3">
+    {% else %}
+        <img src="{{ asset('uploads/images/' ~ recette.image) }}" alt="{{ recette.titre }}" class="w-full h-40 object-cover rounded-lg mb-3">
+    {% endif %}<div class="p-4">
 <h3 class="text-lg font-semibold mb-2">{{ recette.titre }}</h3>
 <div class="flex items-center mb-2">
 <div class="flex text-yellow-400">
@@ -53,7 +56,11 @@
 </div>
 <div class="flex items-center justify-between">
 <div class="flex items-center">
-<img src="{{ app.user.photo }}" alt="Chef" class="w-8 h-8 rounded-full mr-2">
+{% if recette.utilisateur.photo starts with 'http' %}
+        <img src="{{ app.user.photo }}" alt="{{ app.user.nom }}" class="w-8 h-8 rounded-full mr-2">
+    {% else %}
+    <img src="{{ asset('uploads/images/' ~ app.user.photo) }}" alt="Chef" class="w-8 h-8 rounded-full mr-2">
+    {% endif %}
 <span class="text-sm text-gray-600">{{ app.user.nom }} {{ app.user.prenom }}</span>
 </div>
 <button class="text-gray-400 hover:text-primary">

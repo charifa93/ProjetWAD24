@@ -33,7 +33,11 @@
 
       <div class="bg-white rounded-lg shadow-sm overflow-hidden mb-8">
         <div class="relative">
-          <img src="{{ recette.image }}" alt="{{ recette.titre }}" class="w-full h-[500px] object-cover">
+          {% if recette.image starts with 'http' %}
+        <img src="{{ recette.image }}" alt="{{ recette.titre }}" class="w-full h-[500px] object-cover">
+        {% else %}
+            <img src="{{ asset('uploads/images/' ~ recette.image) }}" alt="{{ recette.titre }}" class="w-full h-[500px] object-cover">
+        {% endif %}
           <div class="absolute bottom-0 left-0 right-0 recipe-info p-6">
             <h1 class="text-3xl font-bold text-gray-900 mb-4">{{ recette.titre }}</h1>
             <div class="flex flex-wrap items-center gap-6 text-sm">
@@ -153,7 +157,7 @@
               <span class="w-5 h-5 border border-gray-300 rounded mr-3 flex items-center justify-center">
                 <i class="ri-check-line text-primary hidden"></i>
               </span>
-              <span class="text-gray-700">{{ item.quantite }} {{ item.uniteMesure }} : {{ item.ingredient.nom }}</span>
+              <span class="text-gray-700">{{ item.quantite }} {{ item.unite }} : {{ item.ingredient.nom }}</span>
             </label>
           {% endfor %}
         </div>
@@ -164,9 +168,13 @@
 <div class="bg-white rounded-lg shadow-sm p-6 mt-8">
 <h2 class="text-xl font-semibold mb-6">Recettes similaires</h2>
 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-{% for recette in recettesSimilaires %}
+{% for recette in recettesSimilaires|slice(0, 3) %}
 <div  onclick="window.location.href='{{ path('app_recette_show', {'id': recette.id}) }}'"  class="group cursor-pointer">
-<img src="{{recette.image}}" alt="{{recette.titre}}" class="w-full h-40 object-cover rounded-lg mb-3">
+{% if recette.image starts with 'http' %}
+        <img src="{{ recette.image }}" alt="{{ recette.titre }}" class="w-full h-40 object-cover rounded-lg mb-3">
+    {% else %}
+        <img src="{{ asset('uploads/images/' ~ recette.image) }}" alt="{{ recette.titre }}" class="w-full h-40 object-cover rounded-lg mb-3">
+    {% endif %}
 <h3 class="font-medium group-hover:text-primary transition-colors">{{recette.titre}}</h3>
 <div class="text-sm text-gray-600">{{ recette.tempsDePreparation|date('H:i') }} min · {{recette.difficulte}}</div>
 </div>

@@ -20,7 +20,7 @@ class DetailRecetteFixtures extends Fixture implements DependentFixtureInterface
         for ($i = 0; $i < 50; $i++) {
             $detailRecette = new DetailRecette([
                 'quantite' => rand(1, 500),
-                'uniteMesure' => $unitesMesure[array_rand($unitesMesure)],
+                'unite' => $unitesMesure[array_rand($unitesMesure)],
                 'recette' => $this->getReference('recette' . rand(0, 9)),
                 'ingredient' => $this->getReference('ingredient' . rand(0, 49)),
             ]);

@@ -81,7 +81,7 @@ class Recette
     /**
      * @var Collection<int, DetailRecette>
      */
-    #[ORM\OneToMany(targetEntity: DetailRecette::class, mappedBy: 'recette', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: DetailRecette::class, mappedBy: 'recette', orphanRemoval: true, cascade: ['persist'] )]
     private Collection $detailRecette;
 
 
@@ -94,7 +94,7 @@ class Recette
     /**
      * @var Collection<int, Etape>
      */
-    #[ORM\OneToMany(targetEntity: Etape::class, mappedBy: 'recette' , orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Etape::class, mappedBy: 'recette' , orphanRemoval: true, cascade: ['persist'])]
     private Collection $etapes;
  
 
@@ -121,6 +121,7 @@ class Recette
           $this->detailRecette = new ArrayCollection();
           $this->favoris = new ArrayCollection();
           $this->etapes = new ArrayCollection();
+          $this->datePublication = new \DateTimeImmutable();
       }
     public function getId(): ?int
     {
@@ -151,12 +152,12 @@ class Recette
         return $this;
     }
 
-    public function getDatePublication(): ?\DateTimeInterface
+    public function getDatePublication(): \DateTimeInterface
     {
         return $this->datePublication;
     }
 
-    public function setDatePublication(?\DateTimeInterface $datePublication): static
+    public function setDatePublication(\DateTimeInterface $datePublication): static
     {
         $this->datePublication = $datePublication;
 
@@ -302,13 +303,12 @@ class Recette
         return $this->detailRecette;
     }
 
-    public function addDetailRecette(DetailRecette $detailRecette): static
+    public function addDetailRecette(DetailRecette $detailRecette): self
     {
         if (!$this->detailRecette->contains($detailRecette)) {
-            $this->detailRecette->add($detailRecette);
-            $detailRecette->setRecette($this);
+            $this->detailRecette[] = $detailRecette;
+            $detailRecette->setRecette($this); // <-- INDISPENSABLE
         }
-
         return $this;
     }
 

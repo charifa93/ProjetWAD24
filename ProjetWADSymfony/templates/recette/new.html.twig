@@ -55,17 +55,21 @@
         <span>Ajouter un ingrédient</span>
     </button>
 </div>
+
 <div>
-    {{ form_label(form.etapes, 'Étapes de préparation', {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-4'}}) }}
-    {{ form_widget(form.etapes, {'attr': {'id': 'stepsContainer', 'class': 'space-y-6'}}) }}
+    {{ form_label(form.etapes, 'Étapes de préparation', {
+        'label_attr': {
+            'class': 'block text-sm font-medium text-gray-700 mb-4'}}) }}
+    <div id="stepsContainer"class="space-y-4" data-prototype="{{ form_widget(form.etapes.vars.prototype)|e('html_attr') }}">
+        {{ form_widget(form.etapes) }}
+    </div>
+
     <button type="button" class="mt-4 text-primary hover:text-primary/80 flex items-center space-x-2" onclick="addStep()">
         <i class="ri-add-line"></i>
-        <span>Ajouter une étape</span>
+       <span> Ajouter une étape </span>
     </button>
 </div>
 <div class="grid grid-cols-3 gap-6">
-
-
 <div>
     {{ form_label(form.saison, 'Saison', {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-4'}}) }}
     {{ form_widget(form.saison, {'attr': {'class': ' px-4 py-2 border border-gray-200 rounded-lg', 'placeholder': '30'}}) }}
@@ -84,17 +88,11 @@
     {{ form_widget(form.preparations, {'attr': {'class': ' px-4 py-2 border border-gray-200 rounded-lg', 'placeholder': '30'}}) }}
     
 </div>
-{# <div>
-    {{ form_label(form.datePublication, 'date de publication', {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-4'}}) }}
-    {{ form_widget(form.datePublication, {'attr': {'class': ' px-4 py-2 border border-gray-200 rounded-lg', 'placeholder': '30'}}) }}
-</div>  #}
 <div>
     {{ form_label(form.difficulte, 'difficulte', {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-4'}}) }}
     {{ form_widget(form.difficulte, {'attr': {'class': ' px-4 py-2 border border-gray-200 rounded-lg', 'placeholder': '30'}}) }}
 </div>
 </div> 
-
-
 <div class="grid grid-cols-3 gap-6">
     <div>
         {{ form_label(form.tempsDePreparation, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-2'}}) }}
@@ -114,6 +112,7 @@
         {{ form_label(form.nombrePortions, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-2'}}) }}
         {{ form_widget(form.nombrePortions, {'attr': {'class': 'w-full px-4 py-2 border border-gray-200 rounded-lg', 'placeholder': '4'}}) }}
     </div>
+</div>
 </div>
 
 <div class="flex items-center justify-between pt-6">
@@ -185,57 +184,102 @@ reader.readAsDataURL(file);
 });
 }
 
-function addIngredient() {
-const container = document.getElementById('ingredientsContainer');
-const div = document.createElement('div');
-div.className = 'flex items-center space-x-4';
-div.innerHTML = `
-<input type="text" class="flex-grow px-4 py-2 border border-gray-200 rounded-lg" placeholder="Ingrédient">
-<input type="number" class="w-24 px-4 py-2 border border-gray-200 rounded-lg" placeholder="Quantité">
-<select class="w-32 px-4 py-2 border border-gray-200 rounded-lg">
-<option>g</option>
-<option>ml</option>
-<option>pcs</option>
-</select>
-<button type="button" class="text-gray-400 hover:text-gray-600" onclick="removeIngredient(this)">
-<i class="ri-delete-bin-line"></i>
-</button>
-`;
-container.appendChild(div);
-}
 
-function removeIngredient(button) {
-button.closest('div').remove();
+{# correct facon  #}
+function addIngredient() {
+    const container = document.getElementById('ingredientsContainer');
+    const prototype = container.dataset.prototype;
+    const index = container.children.length;
+    const newForm = prototype.replace(/__name__/g, index);
+
+    // Créer le wrapper
+    const wrapper = document.createElement('div');
+    wrapper.className = 'relative p-4 bg-gray-50 border border-gray-200 rounded-lg shadow-sm space-y-2';
+
+    // Injecte le formulaire généré
+    wrapper.innerHTML = `
+        <div class="flex flex-col sm:flex-row sm:items-center sm:space-x-4 space-y-2 sm:space-y-0">
+            ${newForm}
+        </div>
+        <button type="button" onclick="this.closest('div').remove()" class="absolute top-2 right-2 w-8 h-8 bg-white border border-gray-300 rounded-full flex items-center justify-center text-gray-400 hover:text-red-500 hover:border-red-300 transition">
+            <i class="ri-close-line text-lg"></i>
+        </button>
+    `;
+
+    container.appendChild(wrapper);
+
+    // Optionnel : styliser chaque champ individuellement après injection
+    const inputFields = wrapper.querySelectorAll('input, select');
+    inputFields.forEach(field => {
+        field.classList.add('px-4', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'w-full', 'focus:ring-2', 'focus:ring-primary', 'focus:outline-none');
+    });
 }
 
 function addStep() {
-const container = document.getElementById('stepsContainer');
-const stepNumber = container.children.length + 1;
-const div = document.createElement('div');
-div.className = 'flex items-start space-x-4';
-div.innerHTML = `
-<span class="flex-shrink-0 w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center">${stepNumber}</span>
-<div class="flex-grow">
-<textarea class="w-full px-4 py-2 border border-gray-200 rounded-lg" rows="3" placeholder="Décrivez cette étape"></textarea>
-<button type="button" class="mt-2 text-gray-500 hover:text-primary flex items-center space-x-2">
-<i class="ri-image-add-line"></i>
-<span>Ajouter une photo</span>
-</button>
-</div>
-<button type="button" class="text-gray-400 hover:text-gray-600" onclick="removeStep(this)">
-<i class="ri-delete-bin-line"></i>
-</button>
-`;
-container.appendChild(div);
+    const container = document.getElementById('stepsContainer');
+    const prototype = container.dataset.prototype;
+    const index = container.children.length;
+    const newFormHtml = prototype.replace(/__name__/g, index);
+
+    // Créer le wrapper principal
+    const wrapper = document.createElement('div');
+    wrapper.className = 'relative flex items-start space-x-4 p-4 bg-gray-50 border border-gray-200 rounded-lg shadow-sm';
+
+    // Badge de numéro
+    const numberBadge = document.createElement('span');
+    numberBadge.className = 'flex-shrink-0 w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center';
+    numberBadge.textContent = index;
+
+    // Préparer le champ
+    const fieldWrapper = document.createElement('div');
+    fieldWrapper.className = 'flex-grow space-y-3';
+
+    // Injecter le prototype (on suppose qu'il contient titre + description)
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = newFormHtml;
+
+    // Sélection des champs
+    const titreInput = tempDiv.querySelector('input[name*="[titre]"]');
+    const descriptionTextarea = tempDiv.querySelector('textarea[name*="[description]"]');
+
+    // Appliquer styles
+    if (titreInput) {
+        titreInput.className = 'w-full px-4 py-2 border border-gray-200 rounded-lg';
+        titreInput.placeholder = 'Titre de l\'étape';
+        fieldWrapper.appendChild(titreInput);
+    }
+
+    if (descriptionTextarea) {
+        descriptionTextarea.className = 'w-full px-4 py-2 border border-gray-200 rounded-lg';
+        descriptionTextarea.placeholder = 'Décrivez cette étape';
+        fieldWrapper.appendChild(descriptionTextarea);
+    }
+
+    // Bouton "Ajouter une image" (visuel seulement)
+    const addImageBtn = document.createElement('button');
+    addImageBtn.type = 'button';
+    addImageBtn.className = 'text-gray-500 hover:text-primary flex items-center space-x-2';
+    addImageBtn.innerHTML = `<i class="ri-image-add-line"></i><span>Ajouter une photo</span>`;
+    fieldWrapper.appendChild(addImageBtn);
+
+    // Bouton supprimer
+    const removeBtn = document.createElement('button');
+    removeBtn.type = 'button';
+    removeBtn.className = 'absolute top-2 right-2 text-gray-400 hover:text-red-500';
+    removeBtn.innerHTML = `<i class="ri-close-line text-xl"></i>`;
+    removeBtn.onclick = function () {
+        wrapper.remove();
+        updateStepNumbers();
+    };
+
+    // Assembler le tout
+    wrapper.appendChild(numberBadge);
+    wrapper.appendChild(fieldWrapper);
+    wrapper.appendChild(removeBtn);
+    container.appendChild(wrapper);
 }
 
-function removeStep(button) {
-button.closest('.flex').remove();
-const steps = document.getElementById('stepsContainer').children;
-Array.from(steps).forEach((step, index) => {
-step.querySelector('span').textContent = index + 1;
-});
-}
+
 
 function toggleTag(button) {
 button.classList.toggle('bg-primary');
@@ -304,6 +348,22 @@ previewModal.innerHTML = `
 `;
 document.body.appendChild(previewModal);
 }
+
+document.querySelector('#{{ form.image.vars.id }}').addEventListener('change', function(e) {
+    const previewContainer = document.getElementById('previewContainer');
+    previewContainer.innerHTML = ''; // Clear previous
+
+    Array.from(e.target.files).forEach(file => {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            const img = document.createElement('img');
+            img.src = event.target.result;
+            img.classList.add('w-full', 'h-32', 'object-cover', 'rounded');
+            previewContainer.appendChild(img);
+        };
+        reader.readAsDataURL(file);
+    });
+});
 </script>
 
 {% endblock %}
