@@ -50,7 +50,7 @@ class Recette
     private Saison $saison;
 
     #[ORM\Column (type:'string' ,length: 255, enumType: TypeDePlat::class)]
-    private ?TypeDePlat $typeDePlat;
+    private ?TypeDePlat $typeDePlat = null ;
 
     #[ORM\Column (type:"string" , enumType: Origine::class)]
     private Origine $origine  ;

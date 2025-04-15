@@ -9,6 +9,5 @@ enum TypeDePlat: string
     case  Dessert = 'Dessert';
     case  Boisson = 'Boisson';
     case Accompagnement = 'Accompagnement';
-    case Apertif = 'Apertif';
-    case Autre = 'Autre';
+    // case Apertif = 'Apertif';
 }

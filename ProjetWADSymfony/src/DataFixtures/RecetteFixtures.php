@@ -135,7 +135,7 @@ class RecetteFixtures extends Fixture implements DependentFixtureInterface
         $recette->setUtilisateur($this->getReference('utilisateur' . rand(0, 4)));
 
         $recette->setSaison(Saison::cases()[rand(0, 4)]);
-        $recette->setTypeDePlat(TypeDePlat::cases()[rand(0, 7)]);
+        $recette->setTypeDePlat(TypeDePlat::cases()[rand(0, 5)]);
         $recette->setOrigine(Origine::cases()[rand(0, 8)]);
         $recette->setPreparations(Preparations::cases()[rand(0, 16)]);
 

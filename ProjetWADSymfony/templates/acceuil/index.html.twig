@@ -101,43 +101,14 @@ Essayer gratuitement
   {# section de categories #}
 <section class="mb-12">
 <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+{% for typePlate in typeDePlats %}
 <a href="#" class="bg-white rounded-lg p-4 text-center hover:shadow-md transition-shadow">
 <div class="w-12 h-12 mx-auto mb-2 flex items-center justify-center text-primary">
 <i class="ri-restaurant-line text-2xl"></i>
 </div>
-<span class="text-gray-700">Entrées</span>
+<span class="text-gray-700">{{ typePlate.value }}</span>
 </a>
-<a href="#" class="bg-white rounded-lg p-4 text-center hover:shadow-md transition-shadow">
-<div class="w-12 h-12 mx-auto mb-2 flex items-center justify-center text-primary">
-<i class="ri-bowl-line text-2xl"></i>
-</div>
-<span class="text-gray-700">Plats</span>
-</a>
-<a href="#" class="bg-white rounded-lg p-4 text-center hover:shadow-md transition-shadow">
-<div class="w-12 h-12 mx-auto mb-2 flex items-center justify-center text-primary">
-<i class="ri-cake-line text-2xl"></i>
-</div>
-<span class="text-gray-700">Desserts</span>
-</a>
-<a href="#" class="bg-white rounded-lg p-4 text-center hover:shadow-md transition-shadow">
-<div class="w-12 h-12 mx-auto mb-2 flex items-center justify-center text-primary">
-<i class="ri-plant-line text-2xl"></i>
-</div>
-<span class="text-gray-700">Végétarien</span>
-</a>
-<a href="#" class="bg-white rounded-lg p-4 text-center hover:shadow-md transition-shadow">
-<div class="w-12 h-12 mx-auto mb-2 flex items-center justify-center text-primary">
-<i class="ri-timer-line text-2xl"></i>
-</div>
-<span class="text-gray-700">Rapide</span>
-</a>
-<a href="#" class="categorie-link bg-white rounded-lg p-4 text-center hover:shadow-md transition-shadow"
-   data-type="categorie" data-value="entrees">
-    <div class="w-12 h-12 mx-auto mb-2 flex items-center justify-center text-primary">
-        <i class="ri-restaurant-line text-2xl"></i>
-    </div>
-    <span class="text-gray-700">Charifa</span>
-</a>
+{% endfor %}
 </div>
 </section>
 

@@ -1,0 +1,115 @@
+{% extends 'base.html.twig' %}
+
+
+{% block title %}Hello AccueilController!{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {# {{ encore_entry_script_tags ('autre') }} #}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+   
+    {# {{ encore_entry_link_tags ('autre') }}		 #}
+{% endblock %}
+
+{% block body %}
+<main class="container mx-auto px-4 py-8">
+<div class="flex items-center justify-between mb-8">
+<div class="flex items-center space-x-4">
+<h1 class="text-3xl font-bold text-gray-900">Plats Principaux</h1>
+<span class="text-gray-500">(248 recettes)</span>
+</div>
+<div class="flex items-center space-x-4">
+<div class="relative filter-button">
+<button class="px-4 py-2 bg-white border border-gray-200 rounded-lg flex items-center space-x-2 text-sm hover:border-primary">
+<i class="ri-time-line"></i>
+<span>Temps de préparation</span>
+<i class="ri-arrow-down-s-line"></i>
+</button>
+<div class="filter-dropdown p-2">
+<label class="block p-2 hover:bg-gray-50 cursor-pointer">
+<input type="checkbox" class="mr-2"> - 15 minutes
+</label>
+<label class="block p-2 hover:bg-gray-50 cursor-pointer">
+<input type="checkbox" class="mr-2"> 15-30 minutes
+</label>
+<label class="block p-2 hover:bg-gray-50 cursor-pointer">
+<input type="checkbox" class="mr-2"> 30-45 minutes
+</label>
+<label class="block p-2 hover:bg-gray-50 cursor-pointer">
+<input type="checkbox" class="mr-2"> + 45 minutes
+</label>
+</div>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+{% for recette in recettes %}
+<div class="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow">
+<img src="https://public.readdy.ai/ai/img_res/dfa89ded299f375e5cd210c773919b45.jpg" alt="Blanquette de Veau" class="w-full h-48 object-cover">
+<div class="p-4">
+<div class="flex items-center justify-between mb-2">
+<span class="px-2 py-1 bg-gray-100 text-xs rounded-full">Française</span>
+<div class="flex text-yellow-400 text-sm">
+<i class="ri-star-fill"></i>
+<i class="ri-star-fill"></i>
+<i class="ri-star-fill"></i>
+<i class="ri-star-fill"></i>
+<i class="ri-star-half-fill"></i>
+<span class="ml-1 text-gray-600">(164)</span>
+</div>
+</div>
+<h3 class="text-lg font-semibold mb-2">Blanquette de Veau</h3>
+<div class="flex items-center justify-between text-sm text-gray-600 mb-4">
+<span><i class="ri-time-line mr-1"></i>2h15</span>
+<span><i class="ri-user-line mr-1"></i>6 pers.</span>
+<span><i class="ri-award-line mr-1"></i>Moyen</span>
+</div>
+<div class="flex items-center">
+<img src="https://public.readdy.ai/ai/img_res/2c2a1653e3a45bc017a7b942ddf2e47a.jpg" alt="Chef" class="w-8 h-8 rounded-full mr-2">
+<span class="text-sm text-gray-600">François Dupont</span>
+</div>
+</div>
+</div>
+{% endfor %}
+</div>
+<div class="flex justify-center space-x-2">
+<button class="w-10 h-10 flex items-center justify-center rounded-full border border-gray-200 text-gray-600 hover:border-primary hover:text-primary">
+<i class="ri-arrow-left-s-line"></i>
+</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-full bg-primary text-white">1</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-full border border-gray-200 text-gray-600 hover:border-primary hover:text-primary">2</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-full border border-gray-200 text-gray-600 hover:border-primary hover:text-primary">3</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-full border border-gray-200 text-gray-600 hover:border-primary hover:text-primary">
+<i class="ri-arrow-right-s-line"></i>
+</button>
+</div>
+</main>
+<button id="backToTop" class="fixed bottom-8 right-8 bg-primary text-white w-12 h-12 rounded-full flex items-center justify-center shadow-lg opacity-0 transition-opacity duration-300 cursor-pointer">
+<i class="ri-arrow-up-line text-xl"></i>
+</button>
+<script>
+const backToTop = document.getElementById('backToTop');
+window.addEventListener('scroll', () => {
+if (window.pageYOffset > 300) {
+backToTop.style.opacity = '1';
+} else {
+backToTop.style.opacity = '0';
+}
+});
+backToTop.addEventListener('click', () => {
+window.scrollTo({
+top: 0,
+behavior: 'smooth'
+});
+});
+const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+checkboxes.forEach(checkbox => {
+checkbox.addEventListener('change', () => {
+console.log('Filter changed:', checkbox.parentElement.textContent.trim());
+});
+});
+</script>
+{% endblock %}

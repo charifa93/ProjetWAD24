@@ -32,7 +32,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
                 'form' => $form->createView(),
                 'recettes' => $recettes, 
                 'recetteDifficile' => $recetteDifficile,
-                'recetteRapide' => $recetteRapide
+                'recetteRapide' => $recetteRapide, 
+                'typeDePlats' => TypeDePlat::cases()
             ]);
         }
     

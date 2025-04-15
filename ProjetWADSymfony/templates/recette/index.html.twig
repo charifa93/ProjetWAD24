@@ -184,11 +184,28 @@ Réinitialiser les filtres
 <h3 class="text-lg font-semibold mb-2">{{recette.titre}}</h3>
 <div class="flex items-center mb-2">
 <div class="flex text-yellow-400">
+ {% set moyenneNote = moyennesNotes[recette.id] %}
+ {% if moyenneNote >= 5 %}
+ <i class="ri-star-fill"></i>
 <i class="ri-star-fill"></i>
 <i class="ri-star-fill"></i>
 <i class="ri-star-fill"></i>
 <i class="ri-star-fill"></i>
-<i class="ri-star-half-fill"></i>
+ {% elseif moyenneNote >= 4 %}
+<i class="ri-star-fill"></i>
+<i class="ri-star-fill"></i>
+<i class="ri-star-fill"></i>
+<i class="ri-star-fill"></i>
+{% elseif moyenneNote >= 3 %}
+<i class="ri-star-fill"></i>
+<i class="ri-star-fill"></i>
+<i class="ri-star-fill"></i>
+{% elseif moyenneNote >= 2 %}
+<i class="ri-star-fill"></i>
+<i class="ri-star-fill"></i>
+{% elseif moyenneNote >= 1 %}
+<i class="ri-star-fill"></i>
+{% endif %}
 </div>
 <span class="ml-2 text-sm text-gray-600">({{ recette.recettesNote|length }} avis)</span>
 </div>

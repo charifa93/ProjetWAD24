@@ -56,14 +56,21 @@
 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 {% for recette in utilisateur.recettes %}
 <div onclick="window.location.href='{{ path('app_recette_show', {'id': recette.id}) }}'"  class="border rounded-lg overflow-hidden">
-<img src="{{recette.image}}" class="w-full h-48 object-cover">
+{# <img src="{{recette.image}}" class="w-full h-48 object-cover"> #}
+{% if recette.image starts with 'http' %}
+        <img src="{{ recette.image }}" alt="{{ recette.titre }}" class="w-full h-40 object-cover rounded-lg mb-3">
+    {% else %}
+        <img src="{{ asset('uploads/images/' ~ recette.image) }}" alt="{{ recette.titre }}" class="w-full h-40 object-cover rounded-lg mb-3">
+    {% endif %}
 <div class="p-4">
 <h3 class="font-medium mb-2">{{recette.titre}}</h3>
 <div class="flex items-center justify-between text-sm text-gray-500">
-<span>Publié le {{recette.datePublication}}</span>
+<span>Publié le  {{ recette.tempsDePreparation|date('Y-m-d') }}</span>
 <div class="flex items-center space-x-2">
 <i class="ri-heart-line"></i>
 <span>{{ recette.recettesNote|length }}</span>
+</div>
+</div>
 </div>
 </div>
 {% else %}
@@ -71,6 +78,8 @@
 {% endfor %}
 </div>
 </div>
+
+
 <div class="bg-white rounded-lg shadow p-6 mb-6">
 <h2 class="text-lg font-semibold mb-6">Mes Recettes Favorites</h2>
 {# <a href="{{ path('app_utilisateur_favoris', {'id': app.user.id})}}" class="text-primary hover:text-primary/90 flex items-center space-x-2">
